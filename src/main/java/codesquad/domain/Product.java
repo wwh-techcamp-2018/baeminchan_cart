@@ -25,8 +25,6 @@ public class Product {
     @DecimalMin(value = "0")
     private Long price;
 
-    private String bestTab;
-
     public Long getId() {
         return id;
     }
@@ -45,9 +43,5 @@ public class Product {
 
     public Long getPrice() {
         return price;
-    }
-
-    public String getBestTab() {
-        return bestTab;
     }
 }
