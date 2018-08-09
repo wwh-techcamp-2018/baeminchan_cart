@@ -32,6 +32,11 @@ public class BaeminchanController {
         return "cart";
     }
 
+    @GetMapping("/order")
+    public String order(Model model) {
+        return "redirect:/";
+    }
+
     @GetMapping("/")
     public String home() {
         return "/index";
