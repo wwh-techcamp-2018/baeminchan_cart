@@ -71,6 +71,7 @@
                                     <p class="origin-price"><del>{{price}}원</del></p>
                                 </dd>
                                 <dd class="prd_to_basket">
+                                    <input type="hidden" id="productId" value="{{id}}">
                                     <div class="prd_account clearfix">
                                         <label><input class="buy_cnt" type="text" name="amount" value="1" data-name="{{title}}" data-no="17435" data-price="" data-hash="H62C9" data-min="1" data-max="-1"></label>
                                         <span>
@@ -78,7 +79,7 @@
                                             <a href="#" title="수량 빼기" class="down">수량 빼기</a>
                                         </span>
                                     </div>
-                                    <button class="btn btn_gray prd_thumb_btn cart" data-role="add-to-cart-button" data-hash="H62C9" data-price="4640">
+                                    <button class="btn btn_gray prd_thumb_btn cart"data-role="add-to-cart-button" data-hash="H62C9" data-price="4640">
                                       <span>담기</span>
                                     </button>
                                 </dd>
@@ -108,4 +109,5 @@
             </div>
         </div>
     </div>
+<script type="module" src="/js/product.js"></script>
 {{/block}}
