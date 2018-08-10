@@ -20,11 +20,16 @@ public class ApiCartController {
 
     // TODO: 2018. 8. 10. 삽입, 수정, 삭제가 성공적으로 일어났는지를 상태에 따라 다르게 HttpStatus Code로 표현해야합니다.
 
+    @GetMapping("")
+    public ResponseEntity<Void> getProducts(HttpSession session) {
+        log.info("카트 조회 요청합니다.");
+        return new ResponseEntity(cartService.get(session), HttpStatus.OK);
+    }
+
     @PostMapping("")
     public ResponseEntity<Void> addProduct(HttpSession session, @RequestBody CartProductDTO cartProductDTO) {
         log.info("{} 카트에 추가 요청합니다.", cartProductDTO.toString());
-        cartService.add(session, cartProductDTO);
-        return new ResponseEntity(HttpStatus.CREATED);
+        return new ResponseEntity(cartService.add(session, cartProductDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("")

@@ -4,7 +4,9 @@ import codesquad.dto.CartProductDTO;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class Cart {
@@ -46,5 +48,11 @@ public class Cart {
 
     public boolean hasProduct(Long productId, Long quantity) {
         return hasProduct(productId) ? productsWithQuantity.get(productId) == quantity : false;
+    }
+
+    public List<CartProductDTO> toProductDTOList() {
+        return productsWithQuantity.entrySet().stream()
+                .map(x -> new CartProductDTO(x.getKey(), x.getValue()))
+                .collect(Collectors.toList());
     }
 }
