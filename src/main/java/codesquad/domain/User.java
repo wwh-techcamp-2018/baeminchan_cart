@@ -2,22 +2,39 @@ package codesquad.domain;
 
 import codesquad.dto.UserDTO;
 import codesquad.exception.UserVerificationException;
+import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import javax.swing.text.html.Option;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Entity
+@Builder
+@AllArgsConstructor
+@ToString
 public class User {
     public static final String FIELD_NAME_EMAIL = "email";
     public static final String FIELD_NAME_PASSWORD = "password";
 
+    public static User defaultUser = User.builder()
+            .id(1)
+            .email("junsulime@woowahan.com")
+            .password("junsulime")
+            .build();
+
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Getter
     @Column(length = 40, unique = true, nullable = false, updatable = false)
     private String email;
 
+    @Getter
     @Column(nullable = false)
     private String password;
 
@@ -60,17 +77,27 @@ public class User {
         return new User(userDTO.getEmail(), passwordEncoder.encode(userDTO.getPassword()), userDTO.getName(), userDTO.getPhoneNumber());
     }
 
-    public String getEmail() {
-        return email;
-    }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-
+//    public ProductBundle saveProductBundle(ProductBundle productBundle) {
+//        Optional<ProductBundle> maybeBundle = productBundles
+//                .stream()
+//                .filter(productBundle1 -> productBundle.isSameProduct(productBundle))
+//                .findFirst();
+//
+//        if (maybeBundle.isPresent())
+//            return maybeBundle.get().update(productBundle);
+//
+//        productBundles.add(productBundle);
+//        return productBundle;
+//    }
+//
+//    public ProductBundle removeProductBundle(ProductBundle productBundle) {
+//        ProductBundle bundle = productBundles
+//                .stream()
+//                .filter(productBundle1 -> productBundle.isSameProduct(productBundle))
+//                .findFirst()
+//                .orElseThrow(RuntimeException::new);
+//        productBundles.remove(bundle);
+//        return productBundle;
+//    }
 }

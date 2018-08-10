@@ -1,5 +1,7 @@
 package codesquad.domain;
 
+import lombok.*;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -8,6 +10,11 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Size;
 
 @Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,5 +50,9 @@ public class Product {
 
     public Long getPrice() {
         return price;
+    }
+
+    public boolean isSameId(Product product) {
+        return id.equals(product.id);
     }
 }

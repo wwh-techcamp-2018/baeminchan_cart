@@ -1,5 +1,6 @@
 package codesquad.support.test;
 
+import codesquad.domain.User;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +16,11 @@ public abstract class AcceptanceTest {
 
     public TestRestTemplate template() {
         return template;
+    }
+
+    public TestRestTemplate basicAuthTemplate() {
+        User defaultUser = User.defaultUser;
+        return template.withBasicAuth(defaultUser.getEmail(), defaultUser.getPassword());
     }
 }
 
