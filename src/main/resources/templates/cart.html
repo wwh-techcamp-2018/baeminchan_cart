@@ -51,6 +51,7 @@
                         </thead>
                         <tbody>
 
+                        {{#carts}}
                             <tr class="cart_prd_list" cart_no="12585780" data-hash="I9D6D" data-subscription-flag="0" data-delivery-limit-periods-flag="1"
                                 data-delivery-limit="2018-07-19~2018-08-15">
                                 <td>
@@ -66,25 +67,25 @@
                                 </td>
                                 <td class="left">
                                     <p class="title prd_name">
-                                        <a href="/shop/detail.php?hash=I9D6D&amp;cno=30011800">[집밥의완성] 공심채볶음 170g</a>
+                                        <a href="/shop/detail.php?hash=I9D6D&amp;cno=30011800">{{title}}</a>
                                     </p>
                                     <p class="soldout bf_red" style="display: none;">
                                         <strong class="soldout-text"></strong>
                                     </p>
 
-                                    <p class="cartItemMessage bf_red" style="display: none;"></p>
-                                    <p class="receipt_limit bf_red" style="">
-                                        배송 가능일이 한정되어 있는 상품입니다.
-                                        <strong class="limit-date">
-                                            <br>2018-07-19~2018-08-15</strong>
-                                    </p>
+                                    <!--<p class="cartItemMessage bf_red" style="display: none;"></p>-->
+                                    <!--<p class="receipt_limit bf_red" style="">-->
+                                        <!--배송 가능일이 한정되어 있는 상품입니다.-->
+                                        <!--<strong class="limit-date">-->
+                                            <!--<br>2018-07-19~2018-08-15</strong>-->
+                                    <!--</p>-->
                                 </td>
                                 <td>
-                                    <span cartdata="" id="productPrice">5,200</span>원</td>
+                                    <span cartdata="" id="productPrice">{{price}}</span>원</td>
                                 <td>
                                     <div class="prd_account">
                                         <label>
-                                            <input type="number" class="buy_cnt" min="1" max="999" value="4" data-quantity="4"
+                                            <input type="number" class="buy_cnt" min="1" max="999" value="{{count}}" data-quantity="4"
                                                 formnovalidate="">
                                         </label>
                                         <span>
@@ -95,7 +96,7 @@
                                     <button type="button" class="btn btn_white quantity_change_confirm">변경</button>
                                 </td>
                                 <td>
-                                    <span cartdata="origin/sum_final_sell_prc" id="sumSalePrice">20,800</span>원</td>
+                                    <span cartdata="origin/sum_final_sell_prc" id="sumSalePrice">{{totalPrice}}</span>원</td>
                                 <td>
                                     <span class="once_only bf_red">정기배송 불가</span>
                                 </td>
@@ -103,7 +104,7 @@
                                     <a class="ico-delete delete_cart_item" style="cursor:pointer">삭제</a>
                                 </td>
                             </tr>
-
+                        {{/carts}}
                         </tbody>
                     </table>
 
@@ -141,10 +142,10 @@
                             <dl class="price">
                                 <dt>상품 금액</dt>
                                 <dd>
-                                    <span pricedata="" id="salePrice">20,800</span>원</dd>
+                                    <span pricedata="" id="salePrice"></span>{{price}} 원</dd>
                                 <dt>배송비</dt>
                                 <dd>
-                                    <span pricedata="" id="shippingFee">2,500</span>원
+                                    <span pricedata="" id="shippingFee">{{deliveryPrice}}</span>원
                                     <p class="msg">40,000원 이상 구매 시 배송비 무료</p>
                                 </dd>
                             </dl>
@@ -152,7 +153,7 @@
                             <dl class="total">
                                 <dt>총 주문금액</dt>
                                 <dd>
-                                    <span class="number" pricedata="" id="totalPrice">23,300</span>
+                                    <span class="number" pricedata="" id="totalPrice">{{totalPrice}}</span>
                                     <span class="won">원</span>
                                     <p class="msg save-point">포인트
                                         <span id="mileage" pricedata="total_milage">208</span>p</p>

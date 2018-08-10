@@ -1,13 +1,18 @@
 package codesquad.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,23 +30,33 @@ public class Product {
     @DecimalMin(value = "0")
     private Long price;
 
-    public Long getId() {
-        return id;
+    @Column
+    @Size(min = 0, max = 100)
+    private Long discountRatio = 0L;
+
+    @Builder
+    public Product(@Size(min = 1, max = 255) String title, @Size(min = 1, max = 255) String description,
+                   @Size(min = 1, max = 255) String imgUrl, @DecimalMin(value = "0") Long price,
+                   @Size(min = 0, max = 100) Long discountRatio) {
+        this.title = title;
+        this.description = description;
+        this.imgUrl = imgUrl;
+        this.price = price;
+        this.discountRatio = discountRatio;
     }
 
-    public String getTitle() {
-        return title;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Objects.equals(id, product.id) &&
+                Objects.equals(title, product.title);
     }
 
-    public String getDescription() {
-        return description;
-    }
+    @Override
+    public int hashCode() {
 
-    public String getImgUrl() {
-        return imgUrl;
-    }
-
-    public Long getPrice() {
-        return price;
+        return Objects.hash(id, title);
     }
 }
