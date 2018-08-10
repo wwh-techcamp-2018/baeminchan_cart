@@ -1,10 +1,10 @@
 package codesquad.web;
 
 import codesquad.domain.User;
-import codesquad.exception.ValidationError;
-import codesquad.exception.ValidationErrorResponse;
 import codesquad.dto.LoginDTO;
 import codesquad.dto.UserDTO;
+import codesquad.exception.ValidationError;
+import codesquad.exception.ValidationErrorResponse;
 import codesquad.support.test.AcceptanceTest;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -23,10 +23,9 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 
 public class UserControllerAcceptanceTest extends AcceptanceTest {
 
-    private static final Logger log = LoggerFactory.getLogger(UserControllerAcceptanceTest.class);
-
     public static final String SIGNUP_URL = "/users/signup";
     public static final String LOGIN_URL = "/users/login";
+    private static final Logger log = LoggerFactory.getLogger(UserControllerAcceptanceTest.class);
     @Autowired
     PasswordEncoder passwordEncoder;
 

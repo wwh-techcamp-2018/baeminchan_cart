@@ -22,24 +22,24 @@ public class RedirectControllerTest extends AcceptanceTest {
     }
 
     @Test
-    public void login(){
-        requestToRedirectController(UserControllerAcceptanceTest.LOGIN_URL,HttpStatus.OK,"로그인");
+    public void login() {
+        requestToRedirectController(UserControllerAcceptanceTest.LOGIN_URL, HttpStatus.OK, "로그인");
     }
 
     @Test
-    public void signup(){
-        requestToRedirectController(UserControllerAcceptanceTest.SIGNUP_URL,HttpStatus.OK,"가입 완료");
+    public void signup() {
+        requestToRedirectController(UserControllerAcceptanceTest.SIGNUP_URL, HttpStatus.OK, "가입 완료");
     }
 
     @Test
-    public void home(){
-        requestToRedirectController("/",HttpStatus.OK,"메인반찬 전체보기");
+    public void home() {
+        requestToRedirectController("/", HttpStatus.OK, "메인반찬 전체보기");
     }
 
 
-    private void requestToRedirectController(String url, HttpStatus status, String confirm){
-        HttpEntity<MultiValueMap<String,Object>> request = builder.build();
-        ResponseEntity<String> responseEntity = template().getForEntity(url,String.class);
+    private void requestToRedirectController(String url, HttpStatus status, String confirm) {
+        HttpEntity<MultiValueMap<String, Object>> request = builder.build();
+        ResponseEntity<String> responseEntity = template().getForEntity(url, String.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(status);
         assertThat(responseEntity.getBody().contains(confirm)).isEqualTo(true);
 

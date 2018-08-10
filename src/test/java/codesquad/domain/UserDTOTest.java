@@ -15,7 +15,7 @@ public class UserDTOTest {
 
     @Before
     public void setUp() throws Exception {
-        user = new UserDTO("javajigi@tech.com", "12345678","12345678","javajigi","010-1234-5678");
+        user = new UserDTO("javajigi@tech.com", "12345678", "12345678", "javajigi", "010-1234-5678");
     }
 
     @Test

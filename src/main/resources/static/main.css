@@ -367,6 +367,12 @@ a:focus {
   display: none;
 }
 
+#snb .menu li.cart a span {
+  font-weight: bold;
+  color: #2ac1bc;
+}
+
+
 #header {
   grid-area: header;
   display: flex;

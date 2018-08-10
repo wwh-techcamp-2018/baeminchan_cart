@@ -1,111 +1,151 @@
-{{> base}}
-
-{{#block "header"}}
+{{> base}} {{#block "header"}}
 <link rel="stylesheet" type="text/css" href="https://cdn.bmf.kr/web/css/swiper/3.2.7/swiper.min.css">
-<link rel="stylesheet" type="text/css" href="https://cdn.bmf.kr/static/css/app.v-bdf170c3.css">
-{{/block}}
+<link rel="stylesheet" type="text/css" href="https://cdn.bmf.kr/static/css/app.v-bdf170c3.css"> {{/block}} {{#block "contents"}}
+<!--  skip navi -->
+<a href="#container" id="skip_navigation">본문 바로가기</a>
+<!--  skip navi -->
 
-{{#block "contents"}}
-    <!--  skip navi -->
-    <a href="#container" id="skip_navigation">본문 바로가기</a>
-    <!--  skip navi -->
+<div id="wrapper">
+    <div id="container">
+        <div class="wrap">
+            <div class="content">
 
-    <div id="wrapper">
-        <div id="container">
-             <div class="wrap">
-                <div class="content">
+                <ul class="breadcrumb list">
+                    <li>
+                        <a href="/">홈</a>
+                    </li>
+                    <li>
+                        <a href="/side-dish/list.php?cno=30010000">밑반찬</a>
+                    </li>
+                </ul>
 
-                    <ul class="breadcrumb list">
-                        <li><a href="/">홈</a></li><li><a href="/side-dish/list.php?cno=30010000">밑반찬</a></li>                    </ul>
+                <ul class="choice_category_lst">
+                    <li ga-category="PC-listCategory,side-dish,전체보기">
+                        <a href="list.php?cno=30010000" class="now">
+                            <span>전체보기</span>
+                        </a>
+                    </li>
+                    <li ga-category="PC-listCategory,side-dish,무침">
+                        <a href="list.php?cno=30010200">
+                            <span>무침</span>
+                        </a>
+                    </li>
+                    <li ga-category="PC-listCategory,side-dish,나물무침">
+                        <a href="list.php?cno=30011300">
+                            <span>나물무침</span>
+                        </a>
+                    </li>
+                    <li ga-category="PC-listCategory,side-dish,볶음">
+                        <a href="list.php?cno=30011800">
+                            <span>볶음</span>
+                        </a>
+                    </li>
+                    <li ga-category="PC-listCategory,side-dish,조림">
+                        <a href="list.php?cno=30010400">
+                            <span>조림</span>
+                        </a>
+                    </li>
+                    <li ga-category="PC-listCategory,side-dish,김치">
+                        <a href="list.php?cno=30010800">
+                            <span>김치</span>
+                        </a>
+                    </li>
+                    <li ga-category="PC-listCategory,side-dish,전">
+                        <a href="list.php?cno=30011400">
+                            <span>전</span>
+                        </a>
+                    </li>
+                    <li ga-category="PC-listCategory,side-dish,장아찌·피클">
+                        <a href="list.php?cno=30011600">
+                            <span>장아찌·피클</span>
+                        </a>
+                    </li>
+                    <li ga-category="PC-listCategory,side-dish,젓갈·장·소스">
+                        <a href="list.php?cno=30010500">
+                            <span>젓갈·장·소스</span>
+                        </a>
+                    </li>
+                    <li ga-category="PC-listCategory,side-dish,세트">
+                        <a href="list.php?cno=30011900">
+                            <span>세트</span>
+                        </a>
+                    </li>
+                </ul>
+                <h2 class="tlt_cate_h2">밑반찬</h2>
+                <ul id="products" class="prds_lst col4">
+                    {{#products}}
+                    <li>
+                        <div class="imgthumb">
+                            <img src="{{imgUrl}}" alt="">
 
-<ul class="choice_category_lst">
-        <li ga-category="PC-listCategory,side-dish,전체보기">
-            <a href="list.php?cno=30010000" class="now"><span>전체보기</span></a>
-        </li>
-        <li ga-category="PC-listCategory,side-dish,무침">
-            <a href="list.php?cno=30010200"><span>무침</span></a>
-        </li>
-        <li ga-category="PC-listCategory,side-dish,나물무침">
-            <a href="list.php?cno=30011300"><span>나물무침</span></a>
-        </li>
-        <li ga-category="PC-listCategory,side-dish,볶음">
-            <a href="list.php?cno=30011800"><span>볶음</span></a>
-        </li>
-        <li ga-category="PC-listCategory,side-dish,조림">
-            <a href="list.php?cno=30010400"><span>조림</span></a>
-        </li>
-        <li ga-category="PC-listCategory,side-dish,김치">
-            <a href="list.php?cno=30010800"><span>김치</span></a>
-        </li>
-        <li ga-category="PC-listCategory,side-dish,전">
-            <a href="list.php?cno=30011400"><span>전</span></a>
-        </li>
-        <li ga-category="PC-listCategory,side-dish,장아찌·피클">
-            <a href="list.php?cno=30011600"><span>장아찌·피클</span></a>
-        </li>
-        <li ga-category="PC-listCategory,side-dish,젓갈·장·소스">
-            <a href="list.php?cno=30010500"><span>젓갈·장·소스</span></a>
-        </li>
-        <li ga-category="PC-listCategory,side-dish,세트">
-            <a href="list.php?cno=30011900"><span>세트</span></a>
-        </li>
-</ul>                    <h2 class="tlt_cate_h2">밑반찬</h2>
-                    <ul id="products" class="prds_lst col4">
-                        {{#products}}
-                        <li>
-                            <div class="imgthumb">
-	                              <img src="{{imgUrl}}" alt="">
-
+                            <a href="/product/{{id}}" ga_id="17435" ga_name="{{description}}">
+                                <div class="thumb_badge">
+                                    <span class="num">20</span>
+                                    <span class="unit">%</span>
+                                </div>
+                            </a>
+                        </div>
+                        <dl class="prds_lst_info">
+                            <dt class="prd_tlt">
                                 <a href="/product/{{id}}" ga_id="17435" ga_name="{{description}}">
-                                  <div class="thumb_badge"><span class="num">20</span><span class="unit">%</span></div>
+                                    <span>{{description}}</span>
                                 </a>
-                            </div>
-                            <dl class="prds_lst_info">
-                                <dt class="prd_tlt">
-                                    <a href="/product/{{id}}" ga_id="17435" ga_name="{{description}}">
-                                        <span>{{description}}</span>
-                                    </a>
-                                </dt>
-                                <dd class="prd_thumb_price">
-                                    <p class="selling-price">4,640<span class="won">원</span></p>
-                                    <p class="origin-price"><del>{{price}}원</del></p>
-                                </dd>
-                                <dd class="prd_to_basket">
-                                    <div class="prd_account clearfix">
-                                        <label><input class="buy_cnt" type="text" name="amount" value="1" data-name="{{title}}" data-no="17435" data-price="" data-hash="H62C9" data-min="1" data-max="-1"></label>
-                                        <span>
-                                            <a href="#" title="수량 더하기" class="up">수량 더하기</a>
-                                            <a href="#" title="수량 빼기" class="down">수량 빼기</a>
-                                        </span>
-                                    </div>
-                                    <button class="btn btn_gray prd_thumb_btn cart" data-role="add-to-cart-button" data-hash="H62C9" data-price="4640">
-                                      <span>담기</span>
-                                    </button>
-                                </dd>
-                            </dl>
+                            </dt>
+                            <dd class="prd_thumb_price">
+                                <p class="selling-price">4,640
+                                    <span class="won">원</span>
+                                </p>
+                                <p class="origin-price">
+                                    <del>{{price}}원</del>
+                                </p>
+                            </dd>
+                            <dd class="prd_to_basket">
+                                <div class="prd_account clearfix">
+                                    <label>
+                                        <input class="buy_cnt" type="text" name="amount" value="1" data-name="{{title}}" data-product-id="{{id}}"
+                                            data-price="" data-hash="H62C9" data-min="1" data-max="-1">
+                                    </label>
+                                    <span>
+                                        <a href="javascript:void(0);" title="수량 더하기" class="up">수량 더하기</a>
+                                        <a href="javascript:void(0);" title="수량 빼기" class="down">수량 빼기</a>
+                                    </span>
+                                </div>
+                                <button class="btn btn_gray prd_thumb_btn cart" data-role="add-to-cart-button" data-hash="H62C9" data-price="4640">
+                                    담기
+                                </button>
+                            </dd>
+                        </dl>
 
-                        </li>
-                        {{/products}}
-                    </ul>
+                    </li>
+                    {{/products}}
+                </ul>
+            </div>
+            <div class="put_in_basket sticky_box">
+                <h3>
+                    <span class="">장바구니</span>
+                </h3>
+                <div class="empty">
+                    <p class="top_box_number">
+                        <span class="txt" style="display:;" id="cart_display_none">담은상품이
+                            <br>없습니다.</span>
+                        <strong class="number" id="cart_display_exist" style="display:none">
+                            <span id="basket-counter" class="number_txt">0</span>
+                            <span class="unit">개</span>
+                        </strong>
+                    </p>
+                    <a href="/cart" id="go_to_cart" class="go_to_basket">장바구니 이동
+                        <span>&gt;</span>
+                    </a>
                 </div>
-                <div class="put_in_basket sticky_box">
-                    <h3>
-                        <span class="">장바구니</span>
-                    </h3>
-                    <div class="empty">
-                        <p class="top_box_number">
-                            <span class="txt" style="display:;" id="cart_display_none">담은상품이<br>없습니다.</span>
-                            <strong class="number" id="cart_display_exist" style="display:none"><span id="basket-counter" class="number_txt">0</span><span class="unit">개</span></strong>
-                        </p>
-                        <a href="/cart" id="go_to_cart" class="go_to_basket">장바구니 이동 <span>&gt;</span></a>
-                    </div>
-                    <div id="basket-toaster" class="tooltip" style="display: none;">
-                        <i class="tooltip_arr"></i>
-                        <span class="prd_name">상품</span>
-                        담기완료
-                    </div>
+                <div id="basket-toaster" class="tooltip" style="display: none;">
+                    <i class="tooltip_arr"></i>
+                    <span class="prd_name">상품</span>
+                    담기완료
                 </div>
             </div>
         </div>
     </div>
-{{/block}}
+</div>
+{{/block}} {{#block "footer"}}
+<script src="/js/main.js"></script>
+<script src="/js/cart.js"></script> {{/block}}
