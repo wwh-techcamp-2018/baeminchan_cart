@@ -8,8 +8,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Optional;
-
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -25,8 +23,6 @@ public class CartItemServiceTest {
     private CartItemService cartItemService;
     @Test
     public void createTest() {
-
-
         CartItem cartItem = new CartItem();
         User user = new User();
         Product product = new Product();

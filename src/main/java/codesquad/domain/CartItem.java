@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-public class CartItem extends AuditorEntity{
+public class CartItem {
     @Id
     @GeneratedValue
     private Long id;
