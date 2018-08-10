@@ -27,8 +27,6 @@ public class UserControllerAcceptanceTest extends AcceptanceTest {
 
     public static final String SIGNUP_URL = "/users/signup";
     public static final String LOGIN_URL = "/users/login";
-    @Autowired
-    PasswordEncoder passwordEncoder;
 
     private UserDTO user;
 
