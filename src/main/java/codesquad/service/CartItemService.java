@@ -2,6 +2,7 @@ package codesquad.service;
 
 import codesquad.domain.CartItem;
 import codesquad.domain.CartItemRepository;
+import codesquad.exception.NoCartItemException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,11 @@ public class CartItemService{
     }
 
     public CartItem findByUserIdAndProductId(Long userId, Long productId){
-        return cartItemRepository.findByUserIdAndProductId(userId,productId).orElseGet(null);
+        try {
+            return cartItemRepository.findByUserIdAndProductId(userId, productId).orElseThrow(() -> new NoCartItemException());
+        } catch (NoCartItemException e){
+            return null;
+        }
     }
 
     public void save(CartItem cartItem) {

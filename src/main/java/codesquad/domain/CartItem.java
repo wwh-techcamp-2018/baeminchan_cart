@@ -21,7 +21,6 @@ public class CartItem extends BaseTimeEntity {
     private User user;
 
     @Column
-    @Size(min = 1)
     private Long quantity;
 
     @Column
