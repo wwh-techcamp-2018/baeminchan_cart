@@ -42,6 +42,13 @@ public class Cart {
         return items.contains(item);
     }
 
+    public CartItem get(Long itemId) {
+        return items.stream()
+                .filter(item -> item.getId() == itemId)
+                .findFirst()
+                .orElseThrow(EntityNotFoundException::new);
+    }
+
     public static Cart of() {
         return new Cart();
     }

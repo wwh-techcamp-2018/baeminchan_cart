@@ -24,6 +24,9 @@ public class CartService {
             cart.add(cartItem);
         }
 
+        CartItem item = cart.get(cartItem.getId());
+        item = cartItem;
+
         return cartRepository.save(cart);
     }
 }
