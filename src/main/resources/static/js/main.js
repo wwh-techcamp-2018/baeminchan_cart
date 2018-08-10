@@ -11,7 +11,7 @@ function fetchManager({url, method, body, headers, callback}) {
         .then((response) => {
             const value = response;
             if(200 <= value.status && value.status < 400) {
-                return value.json();
+                return value.json().catch(() => {});
             } 
         }).then((result) => {
             callback(result);
