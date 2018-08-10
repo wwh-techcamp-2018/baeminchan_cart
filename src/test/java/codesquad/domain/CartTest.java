@@ -1,5 +1,6 @@
-import static org.junit.Assert.*;
+package codesquad.domain;
+
+import java.util.Arrays;
 
 public class CartTest {
-
 }

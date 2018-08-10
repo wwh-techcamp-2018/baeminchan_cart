@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CartDTOPost {
+public class CartItemPostDTO {
 
-    private Long id;
+    private String productName;
     private Long count;
 }
