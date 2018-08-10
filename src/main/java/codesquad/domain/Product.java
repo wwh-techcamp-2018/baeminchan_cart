@@ -25,6 +25,17 @@ public class Product {
     @DecimalMin(value = "0")
     private Long price;
 
+    public Product() {
+    }
+
+    public Product(Long id, String title, String description, String imgUrl, Long price) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.imgUrl = imgUrl;
+        this.price = price;
+    }
+
     public Long getId() {
         return id;
     }
@@ -43,5 +54,20 @@ public class Product {
 
     public Long getPrice() {
         return price;
+    }
+
+    public Long getTotalPrice(int count) {
+        return this.price * count;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", imgUrl='" + imgUrl + '\'' +
+                ", price=" + price +
+                '}';
     }
 }
