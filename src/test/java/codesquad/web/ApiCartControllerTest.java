@@ -3,6 +3,7 @@ package codesquad.web;
 import codesquad.dto.CartItem;
 import codesquad.support.test.AcceptanceTest;
 import org.junit.Test;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -18,6 +19,13 @@ public class ApiCartControllerTest extends AcceptanceTest {
                 .build();
 
         ResponseEntity<Void> response = template().postForEntity("/cart/hold", cartItem, Void.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    public void removeItemFromCart() {
+        Long targetId = 1L;
+        ResponseEntity<Void> response = template().exchange("/cart/" + targetId, HttpMethod.DELETE, createHttpEntity(), Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 }
