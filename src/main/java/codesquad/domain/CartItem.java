@@ -33,7 +33,7 @@ public class CartItem extends BaseTimeEntity {
         this(null, null, null);
     }
 
-    public CartItem(Product product, User user, @Size(min = 1) Long quantity) {
+    public CartItem(Product product, User user, Long quantity) {
         this.product = product;
         this.user = user;
         this.quantity = quantity;
