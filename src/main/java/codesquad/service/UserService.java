@@ -5,6 +5,7 @@ import codesquad.domain.UserRepository;
 import codesquad.dto.LoginDTO;
 import codesquad.dto.UserDTO;
 import codesquad.exception.UserVerificationException;
+import codesquad.security.SessionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

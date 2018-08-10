@@ -2,6 +2,7 @@ package codesquad.domain;
 
 import codesquad.dto.UserDTO;
 import codesquad.exception.UserVerificationException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
@@ -10,7 +11,7 @@ import javax.persistence.*;
 public class User {
     public static final String FIELD_NAME_EMAIL = "email";
     public static final String FIELD_NAME_PASSWORD = "password";
-
+    public static final GuestUser GUEST_USER = new GuestUser();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -30,6 +31,10 @@ public class User {
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
     private UserPermissions permissions;
+
+    //hint 삭제?
+    @OneToOne (mappedBy = "user")
+    private Cart cart;
 
     public User() {
         permissions = UserPermissions.NORMAL;
@@ -70,6 +75,18 @@ public class User {
 
     public String getName() {
         return name;
+    }
+
+    @JsonIgnore
+    public boolean isGuestUser() {
+        return false;
+    }
+
+    private static class GuestUser extends User {
+        @Override
+        public boolean isGuestUser() {
+            return true;
+        }
     }
 
 

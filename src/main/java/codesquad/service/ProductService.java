@@ -1,7 +1,6 @@
 package codesquad.service;
 
-import codesquad.domain.Product;
-import codesquad.domain.ProductRepository;
+import codesquad.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,4 +18,7 @@ public class ProductService {
     public Product findById(long id) {
         return productRepository.findById(id).get();
     }
+
+    public List<Product> findByCategoryId(Long categoryId) { return productRepository.findByCategoryId(categoryId); }
+
 }

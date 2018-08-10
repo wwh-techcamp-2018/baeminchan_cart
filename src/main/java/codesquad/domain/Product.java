@@ -1,13 +1,16 @@
 package codesquad.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Size;
 
 @Entity
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,23 +28,14 @@ public class Product {
     @DecimalMin(value = "0")
     private Long price;
 
-    public Long getId() {
-        return id;
-    }
+    //todo categoryId
+    @ManyToOne(optional = false)
+    private Category category;
 
-    public String getTitle() {
-        return title;
-    }
+    //todo discountRate -- int? long?
+    @Column(nullable = false)
+    private Long discountRate = 0L;
 
-    public String getDescription() {
-        return description;
-    }
-
-    public String getImgUrl() {
-        return imgUrl;
-    }
-
-    public Long getPrice() {
-        return price;
-    }
+    @Column(nullable = false)
+    private boolean isDeliverable = false;
 }

@@ -27,6 +27,8 @@ public class BaeminchanController {
         return "product";
     }
 
+
+
     @GetMapping("/cart")
     public String cart(Model model) {
         return "cart";
