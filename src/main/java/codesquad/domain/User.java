@@ -31,8 +31,14 @@ public class User {
     @Column(nullable = false)
     private UserPermissions permissions;
 
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+    @JoinColumn(name = "User_id")
+    private Cart cart;
+
     public User() {
-        permissions = UserPermissions.NORMAL;
+        this.permissions = UserPermissions.NORMAL;
+        this.cart = new Cart();
     }
 
     public User(long id, String email, String password, String name, String phoneNumber) {
@@ -71,6 +77,8 @@ public class User {
     public String getName() {
         return name;
     }
+
+    public Cart getCart() {return cart;}
 
 
 }

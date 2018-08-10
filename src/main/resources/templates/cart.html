@@ -50,7 +50,7 @@
                             </tr>
                         </thead>
                         <tbody>
-
+                            {{#cartProducts}}
                             <tr class="cart_prd_list" cart_no="12585780" data-hash="I9D6D" data-subscription-flag="0" data-delivery-limit-periods-flag="1"
                                 data-delivery-limit="2018-07-19~2018-08-15">
                                 <td>
@@ -61,12 +61,12 @@
                                 </td>
                                 <td class="thumb">
                                     <a href="/shop/detail.php?hash=I9D6D&amp;cno=30011800">
-                                        <img src="https://cdn.bmf.kr/_data/product/I9D6D/88bd9878ff327da7adc71a9f81e3488b.jpg">
+                                        <img src="{{product.imgUrl}}">
                                     </a>
                                 </td>
                                 <td class="left">
                                     <p class="title prd_name">
-                                        <a href="/shop/detail.php?hash=I9D6D&amp;cno=30011800">[집밥의완성] 공심채볶음 170g</a>
+                                        <a href="/shop/detail.php?hash=I9D6D&amp;cno=30011800">{{product.title}}</a>
                                     </p>
                                     <p class="soldout bf_red" style="display: none;">
                                         <strong class="soldout-text"></strong>
@@ -80,11 +80,11 @@
                                     </p>
                                 </td>
                                 <td>
-                                    <span cartdata="" id="productPrice">5,200</span>원</td>
+                                    <span cartdata="" id="productPrice">{{product.price}}</span>원</td>
                                 <td>
                                     <div class="prd_account">
                                         <label>
-                                            <input type="number" class="buy_cnt" min="1" max="999" value="4" data-quantity="4"
+                                            <input type="number" class="buy_cnt" min="1" max="999" value="{{count}}" data-quantity="4"
                                                 formnovalidate="">
                                         </label>
                                         <span>
@@ -95,7 +95,7 @@
                                     <button type="button" class="btn btn_white quantity_change_confirm">변경</button>
                                 </td>
                                 <td>
-                                    <span cartdata="origin/sum_final_sell_prc" id="sumSalePrice">20,800</span>원</td>
+                                    <span cartdata="origin/sum_final_sell_prc" id="sumSalePrice">{{totalPrice}}</span>원</td>
                                 <td>
                                     <span class="once_only bf_red">정기배송 불가</span>
                                 </td>
@@ -103,6 +103,7 @@
                                     <a class="ico-delete delete_cart_item" style="cursor:pointer">삭제</a>
                                 </td>
                             </tr>
+                            {{/cartProducts}}
 
                         </tbody>
                     </table>
