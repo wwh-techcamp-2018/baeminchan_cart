@@ -54,7 +54,7 @@
                         {{#products}}
                         <li>
                             <div class="imgthumb">
-	                              <img src="{{imgUrl}}" alt="">
+	                              <img id="product-{{id}}" src="{{imgUrl}}" alt="">
 
                                 <a href="/product/{{id}}" ga_id="17435" ga_name="{{description}}">
                                   <div class="thumb_badge"><span class="num">20</span><span class="unit">%</span></div>
@@ -62,24 +62,24 @@
                             </div>
                             <dl class="prds_lst_info">
                                 <dt class="prd_tlt">
-                                    <a href="/product/{{id}}" ga_id="17435" ga_name="{{description}}">
+                                    <a href="/product/{{id}}" id="product-title-{{id}}" ga_id="17435" ga_name="{{description}}">
                                         <span>{{description}}</span>
                                     </a>
                                 </dt>
                                 <dd class="prd_thumb_price">
-                                    <p class="selling-price">4,640<span class="won">원</span></p>
+                                    <p class="selling-price-{{id}}">4,640<span class="won">원</span></p>
                                     <p class="origin-price"><del>{{price}}원</del></p>
                                 </dd>
                                 <dd class="prd_to_basket">
-                                    <div class="prd_account clearfix">
-                                        <label><input class="buy_cnt" type="text" name="amount" value="1" data-name="{{title}}" data-no="17435" data-price="" data-hash="H62C9" data-min="1" data-max="-1"></label>
+                                    <div class="prd_account clearfix add-count-form">
+                                        <label><input class="buy-cnt-{{id}}" id="amount" type="text" name="amount" value="1" data-name="{{title}}" data-no="17435" data-price="" data-hash="H62C9" data-min="1" data-max="-1"></label>
                                         <span>
                                             <a href="#" title="수량 더하기" class="up">수량 더하기</a>
                                             <a href="#" title="수량 빼기" class="down">수량 빼기</a>
                                         </span>
                                     </div>
-                                    <button class="btn btn_gray prd_thumb_btn cart" data-role="add-to-cart-button" data-hash="H62C9" data-price="4640">
-                                      <span>담기</span>
+                                    <button class="btn btn_gray prd_thumb_btn cart" id="add-cart" data-role="add-to-cart-button" data-hash="H62C9" data-id="{{id}}" data-price="4640">
+                                      <span id="add-cart-span">담기</span>
                                     </button>
                                 </dd>
                             </dl>
@@ -94,10 +94,10 @@
                     </h3>
                     <div class="empty">
                         <p class="top_box_number">
-                            <span class="txt" style="display:;" id="cart_display_none">담은상품이<br>없습니다.</span>
+                            <span class="txt" style="display:none;" id="cart_display_none">담은상품이<br>없습니다.</span>
                             <strong class="number" id="cart_display_exist" style="display:none"><span id="basket-counter" class="number_txt">0</span><span class="unit">개</span></strong>
                         </p>
-                        <a href="/cart" id="go_to_cart" class="go_to_basket">장바구니 이동 <span>&gt;</span></a>
+                        <a href="/cart" id="go_to_cart" class="go_to_basket go-to-cart-active">장바구니 이동 <span>&gt;</span></a>
                     </div>
                     <div id="basket-toaster" class="tooltip" style="display: none;">
                         <i class="tooltip_arr"></i>
@@ -108,4 +108,11 @@
             </div>
         </div>
     </div>
+{{/block}}
+
+<!-- script references -->
+{{#block "footer"}}
+<script src="/js/util.js"></script>
+<script src="/js/common.js"></script>
+<script src="/js/cart.js"></script>
 {{/block}}
