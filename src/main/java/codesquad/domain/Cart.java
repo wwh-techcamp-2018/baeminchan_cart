@@ -22,7 +22,6 @@ public class Cart {
     private User buyer;
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_cart_product"))
     private Product product;
 

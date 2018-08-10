@@ -1,5 +1,7 @@
 package codesquad.domain;
 
+import lombok.ToString;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -8,6 +10,7 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Size;
 
 @Entity
+@ToString
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

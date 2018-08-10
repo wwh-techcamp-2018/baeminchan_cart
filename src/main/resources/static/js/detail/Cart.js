@@ -1,10 +1,30 @@
 export class Cart {
     constructor() {
         document.addEventListener("DOMContentLoaded", this.addEventListeners.bind(this));
+        document.addEventListener("DOMContentLoaded", this.requestCartList.bind(this));
     }
 
     addEventListeners() {
         $_All(".prd-quantity-dd").forEach((element) => {element.addEventListener("click", this.onClickButton.bind(this))});
+    }
+
+    requestCartList() {
+        fetchManager({
+            url: '/carts',
+            method: 'GET',
+            headers: { 'content-type': 'application/json'},
+            callback: this.onCompleteCartListRequest.bind(this),
+            errCallback: this.onFailure.bind(this)
+        });
+    }
+
+    onCompleteCartListRequest(response) {
+        response.json().then((result) => {
+            if (result.length !== 0) {
+                this.toggleInvisibleClass();
+                this.addQuantity(result.length);
+            }
+        });
     }
 
     onClickButton({target}) {
@@ -38,7 +58,7 @@ export class Cart {
                 "quantity": quantity
             }),
             callback: this.onCompleteCartRequest.bind(this),
-            errCallback: this.onFailureCartRequest.bind(this)
+            errCallback: this.onFailure.bind(this)
         });
     }
 
@@ -55,9 +75,9 @@ export class Cart {
             $("#cart_display_exist").classList.remove("invisible");
     }
 
-    addQuantity() {
+    addQuantity(number) {
         const quantitySpan = $("#cart_display_exist").querySelector("span");
-        quantitySpan.innerHTML = Number(quantitySpan.innerHTML) + 1;
+        quantitySpan.innerHTML = Number(quantitySpan.innerHTML) + (number || 1);
     }
 
     showToast(title) {
@@ -70,7 +90,7 @@ export class Cart {
         $("#basket-toaster").classList.toggle("opacity-none");
     }
 
-    onFailureCartRequest() {
+    onFailure() {
         console.log('AJAX 요청 실패');
     }
 }

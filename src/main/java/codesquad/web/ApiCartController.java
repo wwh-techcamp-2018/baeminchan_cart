@@ -44,7 +44,7 @@ public class ApiCartController {
     }
 
     @GetMapping("")
-    public ResponseEntity<Iterable> list(HttpSession httpSession) {
+    public ResponseEntity<Iterable<Cart>> list(HttpSession httpSession) {
         if(SessionUtils.isLoginUser(httpSession)) {
             return ResponseEntity.status(HttpStatus.OK).body(cartService.list(SessionUtils.getUserFromSession(httpSession)));
         }

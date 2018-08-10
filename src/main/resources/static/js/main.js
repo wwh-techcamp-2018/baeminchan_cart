@@ -13,14 +13,12 @@ function $_value(selector) {
 function fetchManager({url, method, body, headers, callback}) {
     fetch(url, {method, body, headers, credentials: "same-origin"})
         .then((response) => {
-            const value = response;
-            if(value.status == 200) {
-                return;
+            if(response.status == 200) {
+                return callback(response);
             } else {
-                return value.json();
+                return response.json().then((result) => {
+                    callback(result);
+                });
             }
-
-        }).then((result) => {
-            callback(result);
-        });
+        })
 }
