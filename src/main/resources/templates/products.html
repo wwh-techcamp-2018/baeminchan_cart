@@ -72,14 +72,14 @@
                                 </dd>
                                 <dd class="prd_to_basket">
                                     <div class="prd_account clearfix">
-                                        <label><input class="buy_cnt_{{id}}" type="text" name="amount" value="1" data-name="{{title}}" data-no="17435" data-price="" data-hash="H62C9" data-min="1" data-max="-1"></label>
+                                        <label><input class="buy_cnt" type="text" name="amount" value="1" data-name="{{title}}" data-no="17435" data-price="" data-hash="H62C9" data-min="1" data-max="-1"></label>
                                         <span>
-                                            <a href="#" title="수량 더하기" class="up" data-index="{{id}}">수량 더하기</a>
-                                            <a href="#" title="수량 빼기" class="down" data-index="{{id}}">수량 빼기</a>
+                                            <a title="수량 더하기" class="up">수량 더하기</a>
+                                            <a title="수량 빼기" class="down">수량 빼기</a>
                                         </span>
                                     </div>
-                                    <button class="btn btn_gray prd_thumb_btn cart" data-role="add-to-cart-button" data-index="{{id}}" data-hash="H62C9" data-price="4640">
-                                      <span>담기</span>
+                                    <button class="btn btn_gray prd_thumb_btn cart" data-role="add-to-cart-button" data-hash="H62C9" data-index="{{id}}" data-price="{{price}}">
+                                    담기
                                     </button>
                                 </dd>
                             </dl>
@@ -99,8 +99,8 @@
                         </p>
                         <a href="/cart" id="go_to_cart" class="go_to_basket">장바구니 이동 <span>&gt;</span></a>
                     </div>
-                    <div id="basket-toaster" class="tooltip" style="display: none;">
-                        <i class="tooltip_arr"></i>
+                    <div id="basket-toaster" class="tooltip">
+                        <li class="tooltip_arr"></li>
                         <span class="prd_name">상품</span>
                         담기완료
                     </div>
@@ -109,4 +109,5 @@
         </div>
     </div>
 <script src="/js/basket.js"></script>
+<script src="/js/main.js"></script>
 {{/block}}

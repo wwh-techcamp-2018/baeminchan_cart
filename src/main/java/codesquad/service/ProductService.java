@@ -23,21 +23,15 @@ public class ProductService {
     }
 
     public Product findById(long id) {
-        return productRepository.findById(id).get();
-    }
-
-
-    @Transactional
-    public void updateBasketEa(BasketDto basketDto){
-        Product product = productRepository.findById(basketDto.getId()).orElseThrow(RuntimeException::new);
-        product.updateBasketEaOfProduct(basketDto.getEa());
+        return productRepository.findById(id).orElseThrow(RuntimeException::new);
     }
 
     public List<BasketProductDto> getBasketProduct(List<BasketDto> basketDtoList) {
         List<BasketProductDto> basketProductDtos = new ArrayList<>();
-        if(basketDtoList ==null){
-            return null;
+        if(basketDtoList == null){
+            throw new RuntimeException();
         }
+
         for (BasketDto basketDto: basketDtoList) {
              basketProductDtos.add(BasketProductDto.createBasketProductDto(productRepository.
                      findById(basketDto.getId()).get(),basketDto.getEa()));

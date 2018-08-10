@@ -1512,3 +1512,20 @@ a:focus {
   width: 250px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
+#basket-toaster {
+  display:block;
+  opacity: 0;
+  transition: opacity 1s;
+  font-size:10px;
+}
+
+#basket-toaster > li {
+width: 100%;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+}
+
+#basket-toaster > span {
+font-size:8px;
+}

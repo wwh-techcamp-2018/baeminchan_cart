@@ -26,9 +26,6 @@ public class Product {
     @DecimalMin(value = "0")
     private Long price;
 
-    @Column(columnDefinition ="bigint default 0")
-    private Long BasketEa;
-
 
 
     public Long getId() {
@@ -51,7 +48,4 @@ public class Product {
         return price;
     }
 
-    public void updateBasketEaOfProduct(Long ea) {
-        this.BasketEa += ea;
-    }
 }
