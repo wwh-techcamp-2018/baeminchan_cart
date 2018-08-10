@@ -1,7 +1,6 @@
 package codesquad.domain;
 
 
-import codesquad.exception.UserVerificationException;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,7 +18,7 @@ public class UserTest {
         user = new User("javajigi@tech.com", passwordEncoder.encode("12345678"), "javajigi", "010-1234-5678");
     }
 
-    @Test(expected = UserVerificationException.class)
+    @Test
     public void passwordMatch() {
         user.matchPassword("12345678", passwordEncoder);
     }

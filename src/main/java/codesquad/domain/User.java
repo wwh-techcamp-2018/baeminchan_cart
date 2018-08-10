@@ -60,6 +60,10 @@ public class User {
         return new User(userDTO.getEmail(), passwordEncoder.encode(userDTO.getPassword()), userDTO.getName(), userDTO.getPhoneNumber());
     }
 
+    public long getId() {
+        return id;
+    }
+
     public String getEmail() {
         return email;
     }
