@@ -2,6 +2,7 @@ package codesquad.domain;
 
 import codesquad.dto.UserDTO;
 import codesquad.exception.UserVerificationException;
+import lombok.Getter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
@@ -15,9 +16,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Getter
     @Column(length = 40, unique = true, nullable = false, updatable = false)
     private String email;
 
+    @Getter
     @Column(nullable = false)
     private String password;
 
@@ -30,6 +33,10 @@ public class User {
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
     private UserPermissions permissions;
+
+    @Getter
+    @OneToOne
+    private Cart cart;
 
     public User() {
         permissions = UserPermissions.NORMAL;
@@ -59,18 +66,4 @@ public class User {
             throw new UserVerificationException(FIELD_NAME_PASSWORD, "비밀번호를 확인하기 바랍니다.");
         return new User(userDTO.getEmail(), passwordEncoder.encode(userDTO.getPassword()), userDTO.getName(), userDTO.getPhoneNumber());
     }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-
 }
