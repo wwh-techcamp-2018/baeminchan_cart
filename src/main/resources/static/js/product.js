@@ -27,7 +27,15 @@ const clickAddCart = async (event) => {
     $('#basket-counter').innerText = num;
     $('#cart_display_none').style.display = 'none';
     $('#cart_display_exist').style.display = 'block';
+    setviewToast();
 };
+
+const setviewToast = () => {
+    $('#basket-toaster').classList.toggle('on', true);
+    setTimeout(()=> {
+        $('#basket-toaster').classList.toggle('on', false);
+    }, 3000);
+}
 
 const getCartInfo = (target) => {
     const quantity = target.querySelector('.buy_cnt').value;
