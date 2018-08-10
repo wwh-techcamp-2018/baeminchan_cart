@@ -1,5 +1,8 @@
 package codesquad.domain;
 
+import codesquad.exception.PermissionVerificationException;
+import codesquad.exception.UserVerificationException;
+
 import java.util.Arrays;
 
 public enum UserPermissions {
@@ -16,7 +19,7 @@ public enum UserPermissions {
         return Arrays.stream(UserPermissions.values())
                 .filter(p -> p.permissions == permissions)
                 .findFirst()
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new PermissionVerificationException("권한이 없습니다."));
         // TODO: Exception 처리 잘 해봐요 ㅎ_ㅎ
     }
 
