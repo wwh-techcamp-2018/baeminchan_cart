@@ -52,7 +52,7 @@
 </ul>                    <h2 class="tlt_cate_h2">밑반찬</h2>
                     <ul id="products" class="prds_lst col4">
                         {{#products}}
-                        <li>
+                        <li id ="product-{{id}}">
                             <div class="imgthumb">
 	                              <img src="{{imgUrl}}" alt="">
 
@@ -74,8 +74,8 @@
                                     <div class="prd_account clearfix">
                                         <label><input class="buy_cnt" type="text" name="amount" value="1" data-name="{{title}}" data-no="17435" data-price="" data-hash="H62C9" data-min="1" data-max="-1"></label>
                                         <span>
-                                            <a href="#" title="수량 더하기" class="up">수량 더하기</a>
-                                            <a href="#" title="수량 빼기" class="down">수량 빼기</a>
+                                            <a id = "product-{{id}}-up" href="#" title="수량 더하기" class="up">수량 더하기</a>
+                                            <a id = "product-{{id}}-down" href="#" title="수량 빼기" class="down">수량 빼기</a>
                                         </span>
                                     </div>
                                     <button class="btn btn_gray prd_thumb_btn cart" data-role="add-to-cart-button" data-hash="H62C9" data-price="4640">
@@ -108,4 +108,10 @@
             </div>
         </div>
     </div>
+{{/block}}
+
+{{#block "footer"}}
+<script src="/js/products.js"></script>
+<script src="/js/class/product.js"></script>
+<script src="/js/main.js"></script>
 {{/block}}

@@ -1,7 +1,10 @@
 package codesquad.web;
 
 import codesquad.security.SessionUtils;
+import codesquad.service.CartService;
 import codesquad.service.ProductService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,8 +15,13 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class BaeminchanController {
+    
+    private static final Logger log = LoggerFactory.getLogger(BaeminchanController.class);
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private CartService cartService;
 
     @GetMapping("/products")
     public String products(Model model) {
@@ -27,8 +35,10 @@ public class BaeminchanController {
         return "product";
     }
 
-    @GetMapping("/cart")
-    public String cart(Model model) {
+    @GetMapping("/cart/{id}")
+    public String cart(@PathVariable Long id, Model model) {
+        model.addAttribute("cart", cartService.findById(id));
+        log.debug("current : {}" , cartService.findById(id));
         return "cart";
     }
 
