@@ -24,6 +24,9 @@ public class ApiCartController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private CartLogService cartLogService;
+
     @PostMapping("")
     public RestResponse<CartItem> addCartItem(@LoginUser(required=false) User user,
                                                  @RequestBody CartItemDTO dto,
@@ -31,6 +34,7 @@ public class ApiCartController {
         Product product = productService.findById(dto.getProductId());
         CartItem cartItem = new CartItem(product, dto.getCount());
         SessionUtils.addCartItemInSession(session, cartItem);
+        cartLogService.addCartLog(user, cartItem);
         return RestResponse.success(cartItem);
     }
 }
