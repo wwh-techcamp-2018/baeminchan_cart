@@ -21,7 +21,7 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         Optional<User> maybeUser = SessionUtils.getUserFromSession(webRequest);
         if (maybeUser.isPresent()) {
-            return maybeUser;
+            return maybeUser.get();
         }
 
         LoginUser loginUser = parameter.getParameterAnnotation(LoginUser.class);
