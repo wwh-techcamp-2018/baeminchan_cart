@@ -1,0 +1,8 @@
+.put_in_basket #basket-toaster {
+    font-size: 7px;
+    font-color: gray;
+}
+
+.put_in_basket p.top_box_number strong {
+    line-height: 100px;
+}

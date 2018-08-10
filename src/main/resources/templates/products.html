@@ -3,6 +3,7 @@
 {{#block "header"}}
 <link rel="stylesheet" type="text/css" href="https://cdn.bmf.kr/web/css/swiper/3.2.7/swiper.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.bmf.kr/static/css/app.v-bdf170c3.css">
+
 {{/block}}
 
 {{#block "contents"}}
@@ -52,12 +53,12 @@
 </ul>                    <h2 class="tlt_cate_h2">밑반찬</h2>
                     <ul id="products" class="prds_lst col4">
                         {{#products}}
-                        <li>
+                        <li id="product-list-{{id}}">
                             <div class="imgthumb">
 	                              <img src="{{imgUrl}}" alt="">
 
                                 <a href="/product/{{id}}" ga_id="17435" ga_name="{{description}}">
-                                  <div class="thumb_badge"><span class="num">20</span><span class="unit">%</span></div>
+                                  <div class="thumb_badge"><span class="num">{{discountPercent}}</span><span class="unit">%</span></div>
                                 </a>
                             </div>
                             <dl class="prds_lst_info">
@@ -67,7 +68,7 @@
                                     </a>
                                 </dt>
                                 <dd class="prd_thumb_price">
-                                    <p class="selling-price">4,640<span class="won">원</span></p>
+                                    <p class="selling-price"><span class="money">{{price}}</span><span class="won">원</span></p>
                                     <p class="origin-price"><del>{{price}}원</del></p>
                                 </dd>
                                 <dd class="prd_to_basket">
@@ -109,3 +110,6 @@
         </div>
     </div>
 {{/block}}
+
+<script src = "/js/products.js"></script>
+<script src = "/js/main.js"></script>
