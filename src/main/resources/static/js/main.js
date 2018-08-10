@@ -42,7 +42,13 @@ const localeStringToNumber = (string) => {
 
 const registClickEvent = (target, whatToDo) => {
     target.addEventListener("click", (event) => {
-        event.preventDefault();
+        if(event.target.classList.contains('up' || 'down' || 'cart')){
+            event.preventDefault();
+        }
         whatToDo(event);
     });
+};
+
+const urlToId = (string) => {
+    return Number(string.replace(/[\/[a-z]*]*/g, ""));
 };

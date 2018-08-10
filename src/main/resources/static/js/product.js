@@ -65,6 +65,7 @@ const changeQuantity = (target, number) => {
 }
 
 const clickEventController = (event) => {
+    console.log(event.target);
     const targetClass = event.target.classList;
     if(targetClass.contains('up')){
         clickUp(event);
@@ -75,9 +76,7 @@ const clickEventController = (event) => {
     }
 };
 
-const urlToId = (string) => {
-    return Number(string.replace(/[\/[a-z]*]*/g, ""));
-};
+
 
 document.addEventListener('DOMContentLoaded', () => {
     registClickEvent($('#products'), clickEventController);
