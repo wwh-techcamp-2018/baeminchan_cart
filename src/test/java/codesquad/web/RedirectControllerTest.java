@@ -33,7 +33,7 @@ public class RedirectControllerTest extends AcceptanceTest {
 
     @Test
     public void home(){
-        requestToRedirectController("/",HttpStatus.OK,"메인반찬 전체보기");
+        requestToRedirectController("/", HttpStatus.OK, "메인반찬");
     }
 
 

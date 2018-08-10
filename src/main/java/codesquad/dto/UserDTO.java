@@ -37,6 +37,10 @@ public class UserDTO {
         this.phoneNumber = phoneNumber;
     }
 
+    public String getPasswordConfirm() {
+        return passwordConfirm;
+    }
+
     public boolean passwordConfirm() {
         return password.equals(passwordConfirm);
     }

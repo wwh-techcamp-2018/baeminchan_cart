@@ -1594,3 +1594,13 @@ div.btn_area {
     -moz-transition: all .2s;
     transition: all .2s
 }
+
+#basket-toaster {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s ease-in 0.5s;
+}
+
+#basket-toaster.show {
+    display: block;
+}
