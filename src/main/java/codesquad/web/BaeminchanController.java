@@ -1,6 +1,7 @@
 package codesquad.web;
 
 import codesquad.security.SessionUtils;
+import codesquad.service.CartService;
 import codesquad.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,9 +16,15 @@ public class BaeminchanController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private CartService cartService;
+
     @GetMapping("/products")
-    public String products(Model model) {
+    public String products(Model model, HttpSession session) {
         model.addAttribute("products", productService.findAll());
+        if (!SessionUtils.exitsShoppingCart(session)) {
+            SessionUtils.setCartInSession(session, cartService.makeCart(session));
+        }
         return "products";
     }
 

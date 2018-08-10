@@ -72,5 +72,7 @@ public class User {
         return name;
     }
 
-
+    public long getId() {
+        return id;
+    }
 }
