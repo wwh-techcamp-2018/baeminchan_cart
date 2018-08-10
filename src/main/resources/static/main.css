@@ -1512,3 +1512,20 @@ a:focus {
   width: 250px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
+
+/**
+ *  커스텀 css
+ */
+
+/** ================================================
+  page - products
+================================================ */
+.invisible{
+  display: none !important;
+}
+
+.opacity-none{
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+

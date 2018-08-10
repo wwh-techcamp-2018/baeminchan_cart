@@ -25,6 +25,9 @@ public class Product {
     @DecimalMin(value = "0")
     private Long price;
 
+    @DecimalMin(value = "0")
+    private Double salePercent;
+
     public Long getId() {
         return id;
     }
