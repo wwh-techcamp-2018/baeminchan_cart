@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.dto.ProductBundleDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -8,33 +9,45 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Builder
-@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
-@EqualsAndHashCode
+@AllArgsConstructor
 public class ProductBundle {
 
-    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Getter
     @NotNull
-    @OneToOne
+    @ManyToOne
     private Product product;
 
     @NotNull
-    @OneToOne
-    private Cart cart;
+    @ManyToOne
+    private User user;
 
-    @Getter
     @NotNull
     @Column(nullable = false)
     @Min(1)
     private long count;
 
-    public ProductBundle update(ProductBundle bundle) {
-        count = bundle.count;
+
+    public ProductBundle update(ProductBundleDto dto) {
+        count = dto.getCount();
         return this;
+    }
+
+    public boolean isSameProduct(ProductBundle bundle) {
+        return product.isSameId(bundle.product);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProductBundle bundle = (ProductBundle) o;
+        return id == bundle.id;
     }
 }

@@ -3,6 +3,7 @@ package codesquad.security;
 import codesquad.domain.User;
 
 import javax.servlet.http.HttpSession;
+import java.util.Optional;
 
 public class SessionUtils {
     public static final String USER_SESSION_KEY = "loginedUser";
@@ -17,5 +18,12 @@ public class SessionUtils {
 
     public static void removeUserInSession(HttpSession session){
         session.removeAttribute(USER_SESSION_KEY);
+    }
+
+    public static User getUserInSession(HttpSession session) {
+        return Optional
+                .ofNullable((User)session.getAttribute(USER_SESSION_KEY))
+                .orElseThrow(RuntimeException::new);
+        // TODO: customize exception for authentication
     }
 }
