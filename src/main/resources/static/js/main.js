@@ -2,6 +2,10 @@ function $(selector) {
     return document.querySelector(selector);
 }
 
+function $All(selector) {
+    return document.querySelectorAll(selector);
+} 
+
 function $_value(selector) {
     return $(selector).value;
 }
@@ -11,7 +15,7 @@ function fetchManager({url, method, body, headers, callback}) {
         .then((response) => {
             const value = response;
             if(value.status == 200) {
-                return;
+                return value.json();
             } else {
                 return value.json();
             }
