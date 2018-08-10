@@ -12,21 +12,6 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class BaeminchanController {
-    @Autowired
-    private ProductService productService;
-
-    @GetMapping("/products")
-    public String products(Model model) {
-        model.addAttribute("products", productService.findAll());
-        return "products";
-    }
-
-    @GetMapping("/product/{id}")
-    public String product(@PathVariable long id, Model model) {
-        model.addAttribute("product", productService.findById(id));
-        return "product";
-    }
-
     @GetMapping("/cart")
     public String cart(Model model) {
         return "cart";
