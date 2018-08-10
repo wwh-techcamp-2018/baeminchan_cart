@@ -2,18 +2,22 @@ package codesquad.domain;
 
 import codesquad.dto.UserDTO;
 import codesquad.exception.UserVerificationException;
+import lombok.Builder;
+import lombok.Getter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
+@Getter
 public class User {
     public static final String FIELD_NAME_EMAIL = "email";
     public static final String FIELD_NAME_PASSWORD = "password";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(length = 40, unique = true, nullable = false, updatable = false)
     private String email;
@@ -35,6 +39,7 @@ public class User {
         permissions = UserPermissions.NORMAL;
     }
 
+    @Builder
     public User(long id, String email, String password, String name, String phoneNumber) {
         this(email, password, name, phoneNumber);
         this.id = id;
@@ -60,17 +65,17 @@ public class User {
         return new User(userDTO.getEmail(), passwordEncoder.encode(userDTO.getPassword()), userDTO.getName(), userDTO.getPhoneNumber());
     }
 
-    public String getEmail() {
-        return email;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id;
     }
 
-    public String getPassword() {
-        return password;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
-
-    public String getName() {
-        return name;
-    }
-
 
 }

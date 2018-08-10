@@ -8,6 +8,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import java.util.Optional;
+
 public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -17,10 +19,16 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        User user = SessionUtils.getUserFromSession(webRequest);
-        if (user == null) {
+        Optional<User> maybeUser = SessionUtils.getUserFromSession(webRequest);
+        if (maybeUser.isPresent()) {
+            return maybeUser;
+        }
+
+        LoginUser loginUser = parameter.getParameterAnnotation(LoginUser.class);
+        if (loginUser.required()) {
             throw new UnAuthorizedException();
         }
-        return user;
+
+        return null;
     }
 }

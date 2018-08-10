@@ -3,6 +3,8 @@
 {{#block "header"}}
 <link rel="stylesheet" type="text/css" href="https://cdn.bmf.kr/web/css/swiper/3.2.7/swiper.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.bmf.kr/static/css/app.v-bdf170c3.css">
+<script src="/js/main.js"></script>
+<script src="/js/cart.js"></script>
 {{/block}}
 
 {{#block "contents"}}
@@ -52,7 +54,7 @@
 </ul>                    <h2 class="tlt_cate_h2">밑반찬</h2>
                     <ul id="products" class="prds_lst col4">
                         {{#products}}
-                        <li>
+                        <li data-id="{{id}}">
                             <div class="imgthumb">
 	                              <img src="{{imgUrl}}" alt="">
 
@@ -67,18 +69,18 @@
                                     </a>
                                 </dt>
                                 <dd class="prd_thumb_price">
-                                    <p class="selling-price">4,640<span class="won">원</span></p>
+                                    <p class="selling-price">{{price}}<span class="won">원</span></p>
                                     <p class="origin-price"><del>{{price}}원</del></p>
                                 </dd>
                                 <dd class="prd_to_basket">
                                     <div class="prd_account clearfix">
-                                        <label><input class="buy_cnt" type="text" name="amount" value="1" data-name="{{title}}" data-no="17435" data-price="" data-hash="H62C9" data-min="1" data-max="-1"></label>
+                                        <label><input class="buy_cnt" type="text" name="amount" value="1" data-name="{{title}}" data-no="17435" data-price="{{price}}" data-hash="H62C9" data-min="1" data-max="-1"></label>
                                         <span>
                                             <a href="#" title="수량 더하기" class="up">수량 더하기</a>
                                             <a href="#" title="수량 빼기" class="down">수량 빼기</a>
                                         </span>
                                     </div>
-                                    <button class="btn btn_gray prd_thumb_btn cart" data-role="add-to-cart-button" data-hash="H62C9" data-price="4640">
+                                    <button class="btn btn_gray prd_thumb_btn cart" data-role="add-to-cart-button" data-hash="H62C9" data-price="{{price}}">
                                       <span>담기</span>
                                     </button>
                                 </dd>
