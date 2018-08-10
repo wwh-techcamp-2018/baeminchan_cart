@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ProductService {
@@ -17,6 +18,6 @@ public class ProductService {
     }
 
     public Product findById(long id) {
-        return productRepository.findById(id).get();
+        return productRepository.findById(id).orElseThrow(() -> new NoSuchElementException("해당하는 반찬을 찾을 수 없습니다."));
     }
 }

@@ -3,6 +3,7 @@ package codesquad.security;
 import codesquad.domain.User;
 
 import javax.servlet.http.HttpSession;
+import java.util.Optional;
 
 public class SessionUtils {
     public static final String USER_SESSION_KEY = "loginedUser";
@@ -13,6 +14,10 @@ public class SessionUtils {
 
     public static boolean isLoginUser(HttpSession session) {
         return session.getAttribute(USER_SESSION_KEY) != null;
+    }
+
+    public static Optional<User> getLoginUser(HttpSession session) {
+        return Optional.ofNullable((User)session.getAttribute(USER_SESSION_KEY));
     }
 
     public static void removeUserInSession(HttpSession session){
