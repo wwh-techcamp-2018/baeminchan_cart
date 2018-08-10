@@ -2,6 +2,10 @@ function $(selector) {
     return document.querySelector(selector);
 }
 
+function $_all(seletor) {
+    return document.querySelectorAll(seletor);
+}
+
 function $_value(selector) {
     return $(selector).value;
 }
@@ -9,13 +13,13 @@ function $_value(selector) {
 function fetchManager({url, method, body, headers, callback}) {
     fetch(url, {method, body, headers, credentials: "same-origin"})
         .then((response) => {
-            const value = response;
-            if(value.status == 200) {
+            if(response.status === 200){
                 return;
-            } else {
-                return value.json();
+            }else if(response.status === 500){
+                return;
+            }else {
+                return response.json();
             }
-
         }).then((result) => {
             callback(result);
     });

@@ -3,6 +3,7 @@
 {{#block "header"}}
 <link rel="stylesheet" type="text/css" href="https://cdn.bmf.kr/web/css/swiper/3.2.7/swiper.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.bmf.kr/static/css/app.v-bdf170c3.css">
+<link rel="stylesheet" type="text/css" href="/products.css">
 {{/block}}
 
 {{#block "contents"}}
@@ -52,17 +53,17 @@
 </ul>                    <h2 class="tlt_cate_h2">밑반찬</h2>
                     <ul id="products" class="prds_lst col4">
                         {{#products}}
-                        <li>
+                        <li data-id="{{id}}">
                             <div class="imgthumb">
 	                              <img src="{{imgUrl}}" alt="">
 
-                                <a href="/product/{{id}}" ga_id="17435" ga_name="{{description}}">
+                                <a href="/product/{{id}}" da="{{id}}" ga_name="{{description}}">
                                   <div class="thumb_badge"><span class="num">20</span><span class="unit">%</span></div>
                                 </a>
                             </div>
                             <dl class="prds_lst_info">
                                 <dt class="prd_tlt">
-                                    <a href="/product/{{id}}" ga_id="17435" ga_name="{{description}}">
+                                    <a href="/product/{{id}}" ga_id="{{id}}" ga_name="{{description}}">
                                         <span>{{description}}</span>
                                     </a>
                                 </dt>
@@ -72,7 +73,7 @@
                                 </dd>
                                 <dd class="prd_to_basket">
                                     <div class="prd_account clearfix">
-                                        <label><input class="buy_cnt" type="text" name="amount" value="1" data-name="{{title}}" data-no="17435" data-price="" data-hash="H62C9" data-min="1" data-max="-1"></label>
+                                        <label><input id = "buy_cnt_{{id}}"class="buy_cnt" type="text" name="amount" value="1" data-name="{{title}}" data-no="{{id}}" data-price="" data-hash="H62C9" data-min="1" data-max="-1"></label>
                                         <span>
                                             <a href="#" title="수량 더하기" class="up">수량 더하기</a>
                                             <a href="#" title="수량 빼기" class="down">수량 빼기</a>
@@ -95,11 +96,11 @@
                     <div class="empty">
                         <p class="top_box_number">
                             <span class="txt" style="display:;" id="cart_display_none">담은상품이<br>없습니다.</span>
-                            <strong class="number" id="cart_display_exist" style="display:none"><span id="basket-counter" class="number_txt">0</span><span class="unit">개</span></strong>
+                            <strong class="number" id="cart_display_exist" style="display:none;"><span id="cart_counter" class="number_txt">0</span><span class="unit">개</span></strong>
                         </p>
                         <a href="/cart" id="go_to_cart" class="go_to_basket">장바구니 이동 <span>&gt;</span></a>
                     </div>
-                    <div id="basket-toaster" class="tooltip" style="display: none;">
+                    <div id="cart_toaster" class="tooltip" style="opacity: 0;">
                         <i class="tooltip_arr"></i>
                         <span class="prd_name">상품</span>
                         담기완료
@@ -108,4 +109,6 @@
             </div>
         </div>
     </div>
+<script src = "/js/main.js"></script>
+<script src = "/js/products.js"></script>
 {{/block}}

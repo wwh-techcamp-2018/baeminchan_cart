@@ -1,6 +1,9 @@
 package codesquad.web;
 
+import codesquad.domain.CartItem;
+import codesquad.dto.CartInfoDTO;
 import codesquad.security.SessionUtils;
+import codesquad.service.CartItemService;
 import codesquad.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +17,9 @@ import javax.servlet.http.HttpSession;
 public class BaeminchanController {
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private CartItemService cartItemService;
 
     @GetMapping("/products")
     public String products(Model model) {

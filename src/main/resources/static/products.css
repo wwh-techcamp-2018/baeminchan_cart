@@ -1,0 +1,3 @@
+.put_in_basket.sticky_box #cart_toaster {
+    transition: opacity 0.5s;
+}
