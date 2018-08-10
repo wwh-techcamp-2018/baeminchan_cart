@@ -67,7 +67,7 @@
                                     </a>
                                 </dt>
                                 <dd class="prd_thumb_price">
-                                    <p class="selling-price">4,640<span class="won">원</span></p>
+                                    <p class="selling-price">{{price}}<span class="won">원</span></p>
                                     <p class="origin-price"><del>{{price}}원</del></p>
                                 </dd>
                                 <dd class="prd_to_basket">
@@ -78,8 +78,8 @@
                                             <a href="#" title="수량 빼기" class="down">수량 빼기</a>
                                         </span>
                                     </div>
-                                    <button class="btn btn_gray prd_thumb_btn cart" data-role="add-to-cart-button" data-hash="H62C9" data-price="4640">
-                                      <span>담기</span>
+                                    <button class="btn btn_gray prd_thumb_btn cart" data-id="{{id}}" data-role="add-to-cart-button" data-hash="H62C9" data-price="4640">
+                                      담기
                                     </button>
                                 </dd>
                             </dl>
@@ -95,17 +95,19 @@
                     <div class="empty">
                         <p class="top_box_number">
                             <span class="txt" style="display:;" id="cart_display_none">담은상품이<br>없습니다.</span>
-                            <strong class="number" id="cart_display_exist" style="display:none"><span id="basket-counter" class="number_txt">0</span><span class="unit">개</span></strong>
+                            <strong class="number" id="cart_display_exist" style="display:none"><span id="basket-counter" class="number_txt"></span><span class="unit">개</span></strong>
                         </p>
                         <a href="/cart" id="go_to_cart" class="go_to_basket">장바구니 이동 <span>&gt;</span></a>
                     </div>
                     <div id="basket-toaster" class="tooltip" style="display: none;">
                         <i class="tooltip_arr"></i>
-                        <span class="prd_name">상품</span>
+                        <span class="prd_name"></span>
                         담기완료
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+<script src="/js/products.js"></script>
 {{/block}}
