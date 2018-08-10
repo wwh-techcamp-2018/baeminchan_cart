@@ -1,5 +1,6 @@
 package codesquad;
 
+import codesquad.annotation.CartHandlerMethodArgumentResolver;
 import codesquad.security.BasicAuthInterceptor;
 import codesquad.security.FixedPasswordEncoder;
 import org.springframework.context.MessageSource;
@@ -8,8 +9,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.List;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -30,6 +34,17 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public MessageSourceAccessor messageSourceAccessor() {
         return new MessageSourceAccessor(messageSource());
+    }
+
+
+    @Bean
+    public CartHandlerMethodArgumentResolver cartUserArgumentResolver() {
+        return new CartHandlerMethodArgumentResolver();
+    }
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+        argumentResolvers.add(cartUserArgumentResolver());
     }
 
     @Bean
