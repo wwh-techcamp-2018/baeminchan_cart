@@ -39,6 +39,7 @@ const localeStringToNumber = (string) => {
     return Number(string.replace(/[,원]/gi, ""));
 };
 
+
 const registClickEvent = (target, whatToDo) => {
     target.addEventListener("click", (event) => {
         event.preventDefault();
