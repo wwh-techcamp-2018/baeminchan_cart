@@ -18,3 +18,9 @@ insert into product(img_url, description, title, price) values('https://cdn.bmf.
 insert into product(img_url, description, title, price) values('https://cdn.bmf.kr/_data/product/IC5BB/7db9fa5a56f6203836ae7c90ab67b3ce.jpg','[정한뿌리죽] 냉호박죽 360g','차갑게 먹는 여름 별미식, 달콤한 호박죽 한 그릇!',5850);
 insert into product(img_url, description, title, price) values('https://cdn.bmf.kr/_data/product/IC927/c65c607751e9f1cb2057092d111d7e78.jpg','[올반키친] 찰핫도그 80g','모짜렐라 반, 소시지 반!',1900);
 insert into product(img_url, description, title, price) values('https://cdn.bmf.kr/_data/product/H5D38/245501ac785549711e399ee0a15714a0.jpg','[소중한식사] 단팥죽과 몰랑몰랑 인절미 400g','여름별미! 차갑게 먹는 달콤한 단팥죽과 쫄깃한 인절미',8700);
+
+insert into product(id, title, price) values (20, '연어', 10000);
+insert into product(id, title, price) values (21, '피자', 15500);
+insert into cart(id) values (1);
+insert into cart_item(id, product_id, count, cart_id) values (1, 20, 1, 1);
+insert into cart_item(id, product_id, count, cart_id) values (2, 21, 2, 1);
