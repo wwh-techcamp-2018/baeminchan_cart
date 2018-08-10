@@ -57,7 +57,7 @@
 	                              <img src="{{imgUrl}}" alt="">
 
                                 <a href="/product/{{id}}" ga_id="17435" ga_name="{{description}}">
-                                  <div class="thumb_badge"><span class="num">20</span><span class="unit">%</span></div>
+                                  <div class="thumb_badge"><span class="num">{{discountRate}}</span><span class="unit">%</span></div>
                                 </a>
                             </div>
                             <dl class="prds_lst_info">
@@ -67,18 +67,18 @@
                                     </a>
                                 </dt>
                                 <dd class="prd_thumb_price">
-                                    <p class="selling-price">4,640<span class="won">원</span></p>
+                                    <p class="selling-price">{{discountedPrice}}<span class="won">원</span></p>
                                     <p class="origin-price"><del>{{price}}원</del></p>
                                 </dd>
                                 <dd class="prd_to_basket">
                                     <div class="prd_account clearfix">
                                         <label><input class="buy_cnt" type="text" name="amount" value="1" data-name="{{title}}" data-no="17435" data-price="" data-hash="H62C9" data-min="1" data-max="-1"></label>
                                         <span>
-                                            <a href="#" title="수량 더하기" class="up">수량 더하기</a>
-                                            <a href="#" title="수량 빼기" class="down">수량 빼기</a>
+                                            <a href="#" title="수량 더하기" class="up count_up">수량 더하기</a>
+                                            <a href="#" title="수량 빼기" class="down count_down">수량 빼기</a>
                                         </span>
                                     </div>
-                                    <button class="btn btn_gray prd_thumb_btn cart" data-role="add-to-cart-button" data-hash="H62C9" data-price="4640">
+                                    <button class="btn btn_gray prd_thumb_btn cart" data-role="add-to-cart-button" data-hash="H62C9" data-price="4640" product-id="{{id}}">
                                       <span>담기</span>
                                     </button>
                                 </dd>
@@ -108,4 +108,8 @@
             </div>
         </div>
     </div>
+{{/block}}
+{{#block "footer"}}
+<script src="/js/main.js"></script>
+<script src="/js/products.js"></script>
 {{/block}}
