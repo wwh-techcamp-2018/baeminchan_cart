@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @Builder
 @AllArgsConstructor
-public class ProductBundleDto {
+public class ProductBundleInputDto {
 
     @NotNull
     @Min(1)

@@ -1,6 +1,6 @@
 package codesquad.domain;
 
-import codesquad.dto.ProductBundleDto;
+import codesquad.dto.ProductBundleInputDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -34,7 +34,12 @@ public class ProductBundle {
     private long count;
 
 
-    public ProductBundle update(ProductBundleDto dto) {
+    public ProductBundle update(ProductBundleInputDto dto) {
+        count += dto.getCount();
+        return this;
+    }
+
+    public ProductBundle reset(ProductBundleInputDto dto) {
         count = dto.getCount();
         return this;
     }

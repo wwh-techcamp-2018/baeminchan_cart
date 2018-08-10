@@ -1,16 +1,15 @@
 package codesquad.web;
 
 import codesquad.domain.*;
-import codesquad.dto.ProductBundleDto;
+import codesquad.dto.ProductBundleInputDto;
+import codesquad.dto.ProductBundleOutputDto;
 import codesquad.support.test.AcceptanceTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,9 +19,9 @@ public class CartControllerAcceptanceTest extends AcceptanceTest {
 
     private static final String CART_URL = "/cart/products";
 
-    private ProductBundleDto dto;
+    private ProductBundleInputDto dto;
 
-    private ProductBundleDto updateDto;
+    private ProductBundleInputDto updateDto;
 
     @Autowired
     private UserRepository userRepository;
@@ -32,11 +31,11 @@ public class CartControllerAcceptanceTest extends AcceptanceTest {
 
     @Before
     public void setUp() throws Exception {
-        dto = ProductBundleDto.builder()
+        dto = ProductBundleInputDto.builder()
                 .count(4L)
                 .build();
 
-        updateDto = ProductBundleDto.builder()
+        updateDto = ProductBundleInputDto.builder()
                 .count(6L)
                 .build();
     }
@@ -44,29 +43,46 @@ public class CartControllerAcceptanceTest extends AcceptanceTest {
     @Test
     public void saveProductBundle() {
         String url = CART_URL + "/2";
-        ResponseEntity<ProductBundle> entity = basicAuthTemplate().postForEntity(url, dto, ProductBundle.class);
+        ResponseEntity<ProductBundleOutputDto> entity = basicAuthTemplate().postForEntity(url, dto, ProductBundleOutputDto.class);
         assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        assertThat(productBundleRepository.findAllByUser(User.defaultUser)).contains(entity.getBody());
+        assertThat(productBundleRepository.findAllByUser(User.defaultUser)).contains(entity.getBody().getRecentBundle());
 
-        entity = basicAuthTemplate().postForEntity(url, updateDto, ProductBundle.class);
+        entity = basicAuthTemplate().postForEntity(url, updateDto, ProductBundleOutputDto.class);
         assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        ProductBundle bundle = entity.getBody();
-        assertThat(bundle.getCount()).isEqualTo(updateDto.getCount());
+        ProductBundleOutputDto bundleOutputDto = entity.getBody();
+        assertThat(bundleOutputDto.getRecentBundle().getCount()).isEqualTo(updateDto.getCount() + dto.getCount());
+    }
+
+    @Test
+    public void resetProductBundle() {
+        ProductBundle productBundle = productBundleRepository.findById(1L).get();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        ResponseEntity<ProductBundleOutputDto> entity = basicAuthTemplate().exchange(
+                CART_URL + "/" + productBundle.getId(),
+                HttpMethod.PUT,
+                new HttpEntity<ProductBundleInputDto>(updateDto, headers),
+                ProductBundleOutputDto.class
+        );
+
+        assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(entity.getBody().getRecentBundle()).isEqualTo(productBundle);
     }
 
     @Test
     public void removeProductBundle() {
         ProductBundle productBundle = productBundleRepository.findById(1L).get();
-        ResponseEntity<ProductBundle> entity = basicAuthTemplate().exchange(
+        ResponseEntity<ProductBundleOutputDto> entity = basicAuthTemplate().exchange(
                 CART_URL + "/1",
                 HttpMethod.DELETE,
                 null,
-                ProductBundle.class
+                ProductBundleOutputDto.class
         );
 
         assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(entity.getBody()).isEqualTo(productBundle);
+        assertThat(entity.getBody().getRecentBundle()).isEqualTo(productBundle);
     }
 }

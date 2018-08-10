@@ -1,7 +1,8 @@
 package codesquad.web;
 
 import codesquad.domain.ProductBundle;
-import codesquad.dto.ProductBundleDto;
+import codesquad.dto.ProductBundleInputDto;
+import codesquad.dto.ProductBundleOutputDto;
 import codesquad.security.SessionUtils;
 import codesquad.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,16 +21,27 @@ public class ApiCartController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public ProductBundle saveProductBundle(
+    public ProductBundleOutputDto saveProductBundle(
             HttpSession session,
-            @RequestBody @Valid ProductBundleDto dto,
+            @RequestBody @Valid ProductBundleInputDto dto,
             @PathVariable(value = "product_id") Long id
     ) {
         return cartService.saveProductBundle(SessionUtils.getUserInSession(session), dto, id);
     }
 
+    @PutMapping("")
+    @ResponseStatus(HttpStatus.OK)
+    public ProductBundleOutputDto resetProductBundle(
+            HttpSession session,
+            @RequestBody @Valid ProductBundleInputDto dto,
+            @PathVariable(value = "product_id") Long id
+    ) {
+        return cartService.resetProductBundle(SessionUtils.getUserInSession(session), dto, id);
+    }
+
     @DeleteMapping("")
-    public ProductBundle removeProductBundle(
+    @ResponseStatus(HttpStatus.OK)
+    public ProductBundleOutputDto removeProductBundle(
             HttpSession session,
             @PathVariable(value = "product_id") long id
     ) {
