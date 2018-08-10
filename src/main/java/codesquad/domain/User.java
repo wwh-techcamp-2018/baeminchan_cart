@@ -2,6 +2,7 @@ package codesquad.domain;
 
 import codesquad.dto.UserDTO;
 import codesquad.exception.UserVerificationException;
+import lombok.Data;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
@@ -33,6 +34,10 @@ public class User {
 
     public User() {
         permissions = UserPermissions.NORMAL;
+    }
+
+    public User(Long id){
+        this.id = id;
     }
 
     public User(long id, String email, String password, String name, String phoneNumber) {

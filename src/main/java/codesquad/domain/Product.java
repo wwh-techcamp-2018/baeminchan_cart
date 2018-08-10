@@ -1,13 +1,14 @@
 package codesquad.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Size;
 
 @Entity
+@NoArgsConstructor
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +25,11 @@ public class Product {
 
     @DecimalMin(value = "0")
     private Long price;
+
+    @Column(columnDefinition ="bigint default 0")
+    private Long BasketEa;
+
+
 
     public Long getId() {
         return id;
@@ -43,5 +49,9 @@ public class Product {
 
     public Long getPrice() {
         return price;
+    }
+
+    public void updateBasketEaOfProduct(Long ea) {
+        this.BasketEa += ea;
     }
 }
