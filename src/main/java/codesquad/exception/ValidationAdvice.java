@@ -26,11 +26,11 @@ public class ValidationAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ValidationErrorResponse handlerValidationException(MethodArgumentNotValidException exception){
+    public ValidationErrorResponse handlerValidationException(MethodArgumentNotValidException exception) {
         ValidationErrorResponse response = new ValidationErrorResponse();
         List<ObjectError> errors = exception.getBindingResult().getAllErrors();
-        for(ObjectError objectError : errors){
-            FieldError fieldError = (FieldError)objectError;
+        for (ObjectError objectError : errors) {
+            FieldError fieldError = (FieldError) objectError;
             response.addError(new ValidationError(fieldError.getField(), getErrorMessage(fieldError)));
         }
         return response;
@@ -38,14 +38,14 @@ public class ValidationAdvice {
 
     private String getErrorMessage(FieldError fieldError) {
         Optional<String> code = getFirstCode(fieldError);
-        if(!code.isPresent())
+        if (!code.isPresent())
             return null;
         return messageSourceAccessor.getMessage(code.get(), fieldError.getArguments(), fieldError.getDefaultMessage());
     }
 
-    private Optional<String> getFirstCode(FieldError fieldError){
+    private Optional<String> getFirstCode(FieldError fieldError) {
         String[] codes = fieldError.getCodes();
-        if(codes == null || codes.length == 0) {
+        if (codes == null || codes.length == 0) {
             return Optional.empty();
         }
         return Optional.of(codes[0]);
@@ -53,7 +53,7 @@ public class ValidationAdvice {
 
     @ExceptionHandler(UserVerificationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ValidationErrorResponse ununiqueException(UserVerificationException exception){
+    public ValidationErrorResponse ununiqueException(UserVerificationException exception) {
         return new ValidationErrorResponse().addError(exception.getError());
     }
 
