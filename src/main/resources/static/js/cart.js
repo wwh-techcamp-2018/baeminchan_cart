@@ -8,9 +8,18 @@ function getCartList() {
         .then(renderCartList)
 }
 
-function addCart(e) {
-    const target = e.target.closest('.btn.cart');
-    if (!target || !target.classList.contains('btn') || !target.classList.contains('cart')) {
+function handleProductClicked({ target }) {
+    const cartButton = target.closest('.btn.cart');
+    const countUpButton = target.closest('.prd_account .up');
+    const countDownButton = target.closest('.prd_account .down');
+
+    cartButton && addCart({ target });
+    countUpButton && updateProductCount({ target }, 1);
+    countDownButton && updateProductCount({ target }, -1);
+}
+
+function addCart({ target }) {
+    if (!target.classList.contains('btn') || !target.classList.contains('cart')) {
         return;
     }
 
@@ -25,8 +34,34 @@ function addCart(e) {
         .then(animateBasketToaster)
 }
 
+function updateProductCount({ target }, count) {
+    const countInput = target.closest('.prd_account').querySelector('.buy_cnt');
+    countInput.value = parseInt(countInput.value) + count;
+    validateProductCount({ target: countInput });
+}
+
+function validateProductCount({ target }) {
+    if (!target.classList.contains('buy_cnt')) {
+        return;
+    }
+    if (isNaN(target.value) || parseInt(target.value) < 1) {
+        target.value = 1;
+    }
+}
+
+function countProductByArrowKey({ target, key }) {
+    switch (key) {
+        case "ArrowUp":
+            updateProductCount({ target }, 1);
+            break;
+        case "ArrowDown":
+            updateProductCount({ target }, -1);
+            break;
+    }
+}
+
 function renderCartList({ data }) {
-    const totalCount = Object.values(data).reduce((sum, count) => sum += count);
+    const totalCount = Object.values(data).reduce((sum, count) => sum += count, 0);
     totalCount ? displayExist(totalCount) : displayNotExist();
 }
 
@@ -48,4 +83,7 @@ function animateBasketToaster() {
 }
 
 document.addEventListener('DOMContentLoaded', getCartList);
-$('#products').addEventListener('click', addCart);
+$('#products').addEventListener('click', handleProductClicked);
+$('#products').addEventListener('input', validateProductCount);
+$('#products').addEventListener('change', validateProductCount);
+$('#products').addEventListener('keyup', countProductByArrowKey);
