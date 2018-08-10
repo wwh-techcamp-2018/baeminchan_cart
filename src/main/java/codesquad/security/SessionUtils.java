@@ -11,6 +11,10 @@ public class SessionUtils {
         session.setAttribute(USER_SESSION_KEY, loginUser);
     }
 
+    public static User getUser(HttpSession session) {
+        return (User) session.getAttribute(USER_SESSION_KEY);
+    }
+
     public static boolean isLoginUser(HttpSession session) {
         return session.getAttribute(USER_SESSION_KEY) != null;
     }
