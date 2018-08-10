@@ -2,6 +2,7 @@ package codesquad;
 
 import codesquad.security.BasicAuthInterceptor;
 import codesquad.security.FixedPasswordEncoder;
+import codesquad.service.CartInterceptor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,8 +38,12 @@ public class WebConfig implements WebMvcConfigurer {
         return new BasicAuthInterceptor();
     }
 
+    @Bean
+    public CartInterceptor cartInterceptor() {return new CartInterceptor();}
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(basicAuthInterceptor());
+        registry.addInterceptor(cartInterceptor());
     }
 }
