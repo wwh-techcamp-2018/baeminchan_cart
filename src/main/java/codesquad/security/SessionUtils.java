@@ -6,6 +6,7 @@ import javax.servlet.http.HttpSession;
 
 public class SessionUtils {
     public static final String USER_SESSION_KEY = "loginedUser";
+    public static final String CART_SESSION_KEY = "cartUser";
 
     public static void setUserInSession(HttpSession session, User loginUser) {
         session.setAttribute(USER_SESSION_KEY, loginUser);

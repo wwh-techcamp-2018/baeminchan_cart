@@ -1,5 +1,6 @@
 package codesquad.web;
 
+import codesquad.domain.CartRepository;
 import codesquad.security.SessionUtils;
 import codesquad.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,9 @@ public class BaeminchanController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private CartRepository cartRepository;
+
     @GetMapping("/products")
     public String products(Model model) {
         model.addAttribute("products", productService.findAll());
@@ -29,6 +33,7 @@ public class BaeminchanController {
 
     @GetMapping("/cart")
     public String cart(Model model) {
+        model.addAttribute("items", cartRepository.findAll());
         return "cart";
     }
 

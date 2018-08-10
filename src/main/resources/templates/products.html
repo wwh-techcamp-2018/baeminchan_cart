@@ -55,6 +55,7 @@
                         <li>
                             <div class="imgthumb">
 	                              <img src="{{imgUrl}}" alt="">
+                                    <button type="hidden">{{imgUrl}}</button>
 
                                 <a href="/product/{{id}}" ga_id="17435" ga_name="{{description}}">
                                   <div class="thumb_badge"><span class="num">20</span><span class="unit">%</span></div>
@@ -63,11 +64,12 @@
                             <dl class="prds_lst_info">
                                 <dt class="prd_tlt">
                                     <a href="/product/{{id}}" ga_id="17435" ga_name="{{description}}">
-                                        <span>{{description}}</span>
+                                        <span id="description-item">{{description}}</span>
                                     </a>
                                 </dt>
+                                <span type="hidden" id="title-item">{{title}}</span>
                                 <dd class="prd_thumb_price">
-                                    <p class="selling-price">4,640<span class="won">원</span></p>
+                                    <p class="selling-price">4,640원</p>
                                     <p class="origin-price"><del>{{price}}원</del></p>
                                 </dd>
                                 <dd class="prd_to_basket">
@@ -108,4 +110,6 @@
             </div>
         </div>
     </div>
+<script src="/js/utils.js"></script>
+<script src="/js/products.js"></script>
 {{/block}}
