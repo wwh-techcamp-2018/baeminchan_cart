@@ -3,9 +3,11 @@ package codesquad.service;
 import codesquad.domain.*;
 import codesquad.dto.CartItemDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 
+@Service
 public class CartItemService {
 
     @Autowired
