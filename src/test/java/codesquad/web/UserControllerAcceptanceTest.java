@@ -1,10 +1,10 @@
 package codesquad.web;
 
 import codesquad.domain.User;
-import codesquad.exception.ValidationError;
-import codesquad.exception.ValidationErrorResponse;
 import codesquad.dto.LoginDTO;
 import codesquad.dto.UserDTO;
+import codesquad.exception.ValidationError;
+import codesquad.exception.ValidationErrorResponse;
 import codesquad.support.test.AcceptanceTest;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -61,16 +61,14 @@ public class UserControllerAcceptanceTest extends AcceptanceTest {
     public void duplicateSignup() {
 
         user = new UserDTO("intae@tech.com", "12345678", "12345678", "intae", "010-1234-5678");
-        requestFailProcess(SIGNUP_URL, user, Arrays.asList(
-                User.FIELD_NAME_EMAIL
-        ));
+        requestSuccessProcess(SIGNUP_URL, user);
     }
 
     @Test
     public void login() {
         LoginDTO loginDTO = new LoginDTO();
-        loginDTO.setEmail("intae@tech.com");
-        loginDTO.setPassword("12345678");
+        loginDTO.setEmail("javajigi@woowahan.com");
+        loginDTO.setPassword("password");
 
         requestSuccessProcess(LOGIN_URL, loginDTO);
     }
@@ -89,7 +87,7 @@ public class UserControllerAcceptanceTest extends AcceptanceTest {
     @Test
     public void loginValidationPassword() {
         LoginDTO loginDTO = new LoginDTO();
-        loginDTO.setEmail("intae@tech.com");
+        loginDTO.setEmail("javajigi@woowahan.com");
         loginDTO.setPassword("somethingwrong");
         requestFailProcess(LOGIN_URL, loginDTO, Arrays.asList(
                 User.FIELD_NAME_PASSWORD

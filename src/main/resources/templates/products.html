@@ -3,6 +3,10 @@
 {{#block "header"}}
 <link rel="stylesheet" type="text/css" href="https://cdn.bmf.kr/web/css/swiper/3.2.7/swiper.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.bmf.kr/static/css/app.v-bdf170c3.css">
+<link rel="stylesheet" href="/common.css">
+<script src="/js/main.js"></script>
+<script src="/js/cart.js"></script>
+<script src="/js/products.js"></script>
 {{/block}}
 
 {{#block "contents"}}
@@ -63,7 +67,7 @@
                             <dl class="prds_lst_info">
                                 <dt class="prd_tlt">
                                     <a href="/product/{{id}}" ga_id="17435" ga_name="{{description}}">
-                                        <span>{{description}}</span>
+                                        <span>{{title}}</span>
                                     </a>
                                 </dt>
                                 <dd class="prd_thumb_price">
@@ -78,7 +82,8 @@
                                             <a href="#" title="수량 빼기" class="down">수량 빼기</a>
                                         </span>
                                     </div>
-                                    <button class="btn btn_gray prd_thumb_btn cart" data-role="add-to-cart-button" data-hash="H62C9" data-price="4640">
+                                    <button class="btn btn_gray prd_thumb_btn cart" data-role="add-to-cart-button"
+                                            data-id="{{id}}" data-hash="H62C9" data-price="4640">
                                       <span>담기</span>
                                     </button>
                                 </dd>
@@ -99,7 +104,7 @@
                         </p>
                         <a href="/cart" id="go_to_cart" class="go_to_basket">장바구니 이동 <span>&gt;</span></a>
                     </div>
-                    <div id="basket-toaster" class="tooltip" style="display: none;">
+                    <div id="basket-toaster" class="tooltip">
                         <i class="tooltip_arr"></i>
                         <span class="prd_name">상품</span>
                         담기완료
