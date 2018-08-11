@@ -1,9 +1,12 @@
 package codesquad.web;
 
+import codesquad.domain.CartHistory;
 import codesquad.domain.Product;
+import codesquad.domain.User;
 import codesquad.dto.BasketDTO;
 import codesquad.dto.BasketProductDTO;
 import codesquad.security.SessionUtils;
+import codesquad.service.CartHistoryService;
 import codesquad.service.ProductService;
 import java.util.List;
 
@@ -17,7 +20,7 @@ import javax.servlet.http.HttpSession;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/product")
+@RequestMapping("/api/products")
 public class ApiProductController {
 
     @Autowired
@@ -35,6 +38,4 @@ public class ApiProductController {
                 getBasketProduct((List<BasketDTO>) session.getAttribute(SessionUtils.BASKET_SESSION));
         return new ResponseEntity<>(basketProductDtoList,HttpStatus.OK);
     }
-
-
 }
