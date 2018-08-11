@@ -67,6 +67,7 @@ class Product {
     }
 
     handleSaveCart(cart) {
+        this.node.querySelector(".buy_cnt").value = 1;
         const stickyBox = $(".put_in_basket.sticky_box");
         stickyBox.querySelector("#cart_display_none").style.display = "none";
         stickyBox.querySelector("#cart_display_exist").style.display = "";

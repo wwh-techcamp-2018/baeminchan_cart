@@ -44,7 +44,8 @@ public class Cart {
     }
 
     public Long getShipmentPrice() {
-        return (long)(getTotalSalesPrice() >= FREE_SHIPMENT_BOUND_PRICE ? 0 : SHIPMENT_PRICE);
+        return (long)(getTotalSalesPrice() >= FREE_SHIPMENT_BOUND_PRICE ? 0
+                : getSelectedItemCount() == 0 ? 0 : SHIPMENT_PRICE);
     }
 
     public Long getTotalPrice() {
