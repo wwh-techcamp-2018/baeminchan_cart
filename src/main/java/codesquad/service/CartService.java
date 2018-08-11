@@ -4,29 +4,19 @@ import codesquad.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class CartService {
 
     @Autowired
     private CartRepository cartRepository;
 
-
-    public Cart findById(Long id) { return cartRepository.findById(id).get(); }
+    public Optional<Cart> findById(Long id) { return cartRepository.findById(id); }
 
     public Cart save() {
         return cartRepository.save(Cart.of());
     }
 
-    public Cart save(Long cartId, CartItem cartItem) {
-        Cart cart = findById(cartId);
-
-        if(!cart.contains(cartItem)) {
-            cart.add(cartItem);
-        }
-
-        CartItem item = cart.get(cartItem.getId());
-        item = cartItem;
-
-        return cartRepository.save(cart);
-    }
+    // TODO : Cart 삭제 안 하면 데이터가 쌓이기만 할텐데..
 }

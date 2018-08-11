@@ -1,6 +1,6 @@
 package codesquad.web;
 
-import codesquad.domain.*;
+import codesquad.domain.Cart;
 import codesquad.dto.CartItemDto;
 import codesquad.security.SessionUtils;
 import codesquad.service.CartItemService;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
-import java.net.URI;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/cart")
@@ -24,31 +24,43 @@ public class ApiCartController {
 
     @GetMapping
     public ResponseEntity<Cart> cart(HttpSession httpSession) {
-        Cart cart = get(httpSession);
+        Cart cart = getCart(httpSession);
         return ResponseEntity.ok(cart);
     }
 
     @PostMapping("/item")
     public ResponseEntity<Void> add(@RequestBody CartItemDto cartItemDto, HttpSession httpSession) {
-        Cart cart = get(httpSession);
-        CartItem item = cartItemService.save(cart, cartItemDto);
-        cartService.save(cart.getId(), item);
+        Cart cart = getCart(httpSession);
+        cartItemService.save(cart, cartItemDto);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/item/{id}")
-    public ResponseEntity<CartItem> item(@PathVariable Long id) {
-        CartItem item = cartItemService.findById(id);
-        return ResponseEntity.ok(item);
+    @GetMapping("/item/count")
+    public ResponseEntity<Integer> itemCount(HttpSession httpSession) {
+        Cart cart = getCart(httpSession);
+        return ResponseEntity.ok(cart.itemCount());
     }
 
-    private Cart get(HttpSession httpSession) {
-        if(!SessionUtils.hasCart(httpSession)) {
-            Cart cart = cartService.save();
-            SessionUtils.setCartInSession(httpSession, cart.getId());
-            return cart;
-        }
+    private Cart getCart(HttpSession httpSession) {
+        // case : session.cart not exists.
+        if (!SessionUtils.hasCart(httpSession))
+            return createCart(httpSession);
+
+        // case : session.cart exists but db.cart not exists.
         Long cartId = SessionUtils.getCartInSession(httpSession);
-        return cartService.findById(cartId);
+        Optional<Cart> maybeCart = cartService.findById(cartId);
+
+        if(!maybeCart.isPresent()) {
+            return createCart(httpSession);
+        }
+
+        // case : session.cart, db.cart exists.
+        return maybeCart.get();
+    }
+
+    private Cart createCart(HttpSession httpSession) {
+        Cart cart = cartService.save();
+        SessionUtils.setCartInSession(httpSession, cart.getId());
+        return cart;
     }
 }

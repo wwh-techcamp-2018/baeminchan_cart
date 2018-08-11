@@ -20,7 +20,7 @@ public class SessionUtils {
         session.removeAttribute(USER_SESSION_KEY);
     }
 
-    public static boolean hasCart(HttpSession session) { return getCartInSession(session) != null; }
+    public static boolean hasCart(HttpSession session) { return session.getAttribute(CART_SESSION_KEY) != null; }
 
     public static void setCartInSession(HttpSession session, Long cartId) {
         session.setAttribute(CART_SESSION_KEY, cartId);

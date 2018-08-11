@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 public class Cart {
@@ -33,25 +34,19 @@ public class Cart {
         return id;
     }
 
-    public List<CartItem> getItems() {
-        return items;
-    }
-
-    public void add(CartItem item) {
-        items.add(item);
-    }
-
-    public boolean contains(CartItem item) {
-        return items.contains(item);
-    }
-
     public int itemCount() { return items.size(); }
 
-    public CartItem get(Long itemId) {
-        return items.stream()
-                .filter(item -> item.getId() == itemId)
-                .findFirst()
-                .orElseThrow(EntityNotFoundException::new);
+    public CartItem getCartItem(Product product, Integer quantity) {
+        Optional<CartItem> maybeCartItem = items.stream()
+                .filter(item -> (item.getProduct().getId() == product.getId()))
+                .findFirst();
+
+        if (!maybeCartItem.isPresent())
+            return new CartItem(product, quantity, this);
+
+        CartItem cartItem = maybeCartItem.get();
+        cartItem.setCount(quantity);
+        return cartItem;
     }
 
     public static Cart of() {
