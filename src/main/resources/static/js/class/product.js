@@ -1,6 +1,15 @@
+document.addEventListener("DOMContentLoaded", function (evt) {
+    $_all("#products").forEach((v) => {
+        const liNodes = v.getElementsByTagName("li");
+        for (const liNode of liNodes) {
+            new Product(liNode);
+        }
+    });
+});
+
+
 class Product {
-    constructor(products,product) {
-        this.products = products;
+    constructor(product) {
         this.node = product;
         this.init();
     }
@@ -29,14 +38,12 @@ class Product {
         this.node.querySelector(".btn.btn_gray.prd_thumb_btn.cart").addEventListener("click", (evt) => {
             const productId = this.getProductId();
             const buyCount = this.node.querySelector(".buy_cnt").value;
-            const stickyBox = $(".put_in_basket.sticky_box");
-            const url = stickyBox.getAttribute("id") ? `/carts/${stickyBox.getAttribute("id")}`: "/carts";
             const body = {
                 "productId" : productId,
                 "count" : buyCount
             }
             myFetchManager({
-                url : url,
+                url : "/carts",
                 method : "POST",
                 body : JSON.stringify(body),
                 onSuccess : this.requestSucess.bind(this),
@@ -61,14 +68,16 @@ class Product {
 
     handleSaveCart(cart) {
         const stickyBox = $(".put_in_basket.sticky_box");
-        stickyBox.setAttribute("id",cart.id);
-        stickyBox.querySelector("#go_to_cart").setAttribute("href", `/cart/${cart.id}`);
+        stickyBox.querySelector("#cart_display_none").style.display = "none";
+        stickyBox.querySelector("#cart_display_exist").style.display = "";
+        stickyBox.querySelector("#basket-toaster").style.display = "";
 
-        const cartDisplayNone = stickyBox.querySelector("#cart_display_none");
-        cartDisplayNone.style.display = "none";
-        const cartDisplayExist = stickyBox.querySelector("#cart_display_exist");
-        cartDisplayExist.style.display = "";
-        cartDisplayExist.querySelector("#basket-counter").innerHTML = cart.selectedItems.length;
+        setTimeout(()=>{
+            stickyBox.querySelector("#basket-toaster").style.display = "none";
+        },3000);
+
+        stickyBox.querySelector("#cart_display_exist")
+            .querySelector("#basket-counter").innerHTML = cart.selectedItems.length;
     }
 
 }

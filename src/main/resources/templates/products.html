@@ -94,8 +94,14 @@
                     </h3>
                     <div class="empty">
                         <p class="top_box_number">
+                            {{^cart}}
                             <span class="txt" style="display:;" id="cart_display_none">담은상품이<br>없습니다.</span>
-                            <strong class="number" id="cart_display_exist" style="display:none"><span id="basket-counter" class="number_txt">0</span><span class="unit">개</span></strong>
+                            <strong class="number" style="display:none;" id="cart_display_exist"><span id="basket-counter" class="number_txt">{{selectedItemCount}}</span><span class="unit">개</span></strong>
+                            {{/cart}}
+                            {{#cart}}
+                            <span class="txt" style="display:none;" id="cart_display_none">담은상품이<br>없습니다.</span>
+                            <strong class="number" style="display:;" id="cart_display_exist"><span id="basket-counter" class="number_txt">{{selectedItemCount}}</span><span class="unit">개</span></strong>
+                            {{/cart}}
                         </p>
                         <a href="/cart" id="go_to_cart" class="go_to_basket">장바구니 이동 <span>&gt;</span></a>
                     </div>
@@ -111,7 +117,6 @@
 {{/block}}
 
 {{#block "footer"}}
-<script src="/js/products.js"></script>
 <script src="/js/class/product.js"></script>
 <script src="/js/main.js"></script>
 {{/block}}

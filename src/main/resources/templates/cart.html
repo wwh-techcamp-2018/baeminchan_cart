@@ -52,7 +52,7 @@
                         </thead>
                         <tbody>
                             {{#selectedItems}}
-                            <tr class="cart_prd_list" cart_no="12585780" data-hash="I9D6D" data-subscription-flag="0" data-delivery-limit-periods-flag="1"
+                            <tr id ="selectedItem-{{id}}" class="cart_prd_list" cart_no="12585780" data-hash="I9D6D" data-subscription-flag="0" data-delivery-limit-periods-flag="1"
                                 data-delivery-limit="2018-07-19~2018-08-15">
                                 <td>
                                     <label class="custom_checkbox on">
@@ -170,4 +170,10 @@
         </div>
         {{/cart}}
     </div>
+{{/block}}
+
+{{#block "footer"}}
+<script src="/js/class/selectedItem.js"></script>
+<script src="/js/class/buyersGuide.js"></script>
+<script src="/js/main.js"></script>
 {{/block}}

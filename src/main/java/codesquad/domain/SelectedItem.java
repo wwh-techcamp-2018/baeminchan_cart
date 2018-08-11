@@ -1,30 +1,26 @@
 package codesquad.domain;
 
 
-import javax.persistence.*;
-import java.io.Serializable;
-
-@Entity
 public class SelectedItem{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    private final Long ABLE_DISCOUNT_BOUNDARY = 10L;
+    private final Double DISCOUNT_RATE = 0.95;
+
     private Long id;
 
-    @OneToOne
     Product product;
 
     private Long count;
 
-    private Long totalPrice;
-
     public SelectedItem() {
+        count = 0L;
     }
 
     public SelectedItem(Product product, Long count) {
+        this();
         this.product = product;
         this.count = count;
-        totalPrice = calculateTotalPrice();
     }
 
     private Long calculateTotalPrice() {
@@ -32,10 +28,14 @@ public class SelectedItem{
         if(product != null && count != null)
             if(product.getPrice() != null)
              totalPrice = product.getPrice() * count;
-        if(count >= 10) {
-            return (long)(totalPrice * 0.95);
+        if(count >= ABLE_DISCOUNT_BOUNDARY) {
+            return (long)(totalPrice * DISCOUNT_RATE);
         }
         return  totalPrice;
+    }
+
+    public boolean isSameId(Long id){
+        return this.id.equals(id);
     }
 
     public Product getProduct() {
@@ -68,25 +68,12 @@ public class SelectedItem{
     }
 
 
-    public void addCount(Long count) {
-        this.count += count;
+    public void addCount(SelectedItem selectedItem) {
+        this.count += selectedItem.count;
     }
 
     public Long getTotalPrice() {
-        return totalPrice;
+        return calculateTotalPrice();
     }
 
-    public void setTotalPrice(Long totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    @Override
-    public String toString() {
-        return "SelectedItem{" +
-                "id=" + id +
-                ", product=" + product +
-                ", count=" + count +
-                ", totalPrice=" + totalPrice +
-                '}';
-    }
 }

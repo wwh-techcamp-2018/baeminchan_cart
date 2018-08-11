@@ -1,5 +1,7 @@
 package codesquad.web;
 
+import codesquad.domain.Cart;
+import codesquad.domain.MemorizationCart;
 import codesquad.security.SessionUtils;
 import codesquad.service.CartService;
 import codesquad.service.ProductService;
@@ -24,8 +26,9 @@ public class BaeminchanController {
     private CartService cartService;
 
     @GetMapping("/products")
-    public String products(Model model) {
+    public String products(Model model, @MemorizationCart Cart cart) {
         model.addAttribute("products", productService.findAll());
+        model.addAttribute("cart", cart.getSelectedItemCount() == 0 ? null : cart);
         return "products";
     }
 
@@ -35,10 +38,9 @@ public class BaeminchanController {
         return "product";
     }
 
-    @GetMapping("/cart/{id}")
-    public String cart(@PathVariable Long id, Model model) {
-        model.addAttribute("cart", cartService.findById(id));
-        log.debug("current : {}" , cartService.findById(id));
+    @GetMapping("/cart")
+    public String cart(Model model, @MemorizationCart Cart cart) {
+        model.addAttribute("cart", cart);
         return "cart";
     }
 
