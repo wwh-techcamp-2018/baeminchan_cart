@@ -17,15 +17,16 @@ import java.util.stream.Collectors;
 
 
 @Data
-
+@EqualsAndHashCode(exclude = "cartProducts")
 @Entity
 public class Cart extends AbstractEntity {
     public static final Cart EMPTY_CART = new EmptyCart();
+
     @JsonIgnore
     @OneToMany(mappedBy = "cart")
     @Cascade(CascadeType.ALL)
     //hint - 중복 허용 X, insertion 순서대로 유지
-    private Set<CartProduct> cartProducts = new LinkedHashSet<>();
+    private List<CartProduct> cartProducts = new ArrayList<>();
     //hint user가 null인 경우가 많다면(비회원주문) 일대일 조인 테이블로 따로 빼도 좋을듯함
 
     @JsonIgnore
@@ -49,6 +50,10 @@ public class Cart extends AbstractEntity {
     }
     public void addCartProduct(CartProduct cartProduct){
         cartProduct.setCart(this);
+        if(cartProducts.contains(cartProduct)) {
+            cartProducts.set(cartProducts.indexOf(cartProduct), cartProduct);
+            return;
+        }
         this.cartProducts.add(cartProduct);
         cartProductCnt++;
     }
@@ -57,7 +62,7 @@ public class Cart extends AbstractEntity {
     public String toString() {
         return "Cart{" +
                 "cartProducts=" +
-                Arrays.asList(CartProduct.builder().count(1).build()).stream().map(x-> x.getId()).collect(Collectors.toList()) +
+                cartProducts.stream().map(x-> x.getId()).collect(Collectors.toList()) +
                 ", user=" + user +
                 ", cartProductCnt=" + cartProductCnt +
                 '}';

@@ -5,7 +5,8 @@ import codesquad.domain.User;
 import codesquad.dto.AddCartProductDTO;
 import codesquad.dto.CartProductDTO;
 import codesquad.security.SessionUtils;
-import codesquad.service.CartService;
+import codesquad.service.CartProductService;
+import codesquad.service.ProductService;
 import codesquad.support.ApiSuccessResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +22,17 @@ import javax.servlet.http.HttpSession;
 public class ApiCartController {
 
     @Autowired
-    private CartService cartService;
+    private CartProductService cartService;
 
+    @Autowired
+    private ProductService productService;
     @PostMapping("/{productId}/1")
     public ResponseEntity<ApiSuccessResponse> addToCart(@PathVariable Long productId, @RequestBody CartProductDTO cartProductDTO, HttpSession session){
         log.debug("session check {} ", session);
         log.debug("carDTO {}", cartProductDTO);
         Cart cart = SessionUtils.getCartFromSession(session);
         User user = SessionUtils.getUserFromSession(session);
+        //cartProductDTO = productService.fillProduct(cartProductDTO);
         Cart addedCart = cartService.addToCart(cartProductDTO, cart, user);
         return ResponseEntity.ok(new ApiSuccessResponse(HttpStatus.OK, addedCart, null));
     }

@@ -67,15 +67,14 @@ public class CartProduct extends AbstractEntity{
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         CartProduct that = (CartProduct) o;
-        return count == that.count &&
+        return
                 Objects.equals(cart, that.cart) &&
-                Objects.equals(product, that.product) &&
-                Objects.equals(totalPrice, that.totalPrice);
+                Objects.equals(product, that.product) ;
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(super.hashCode(), cart, product, count, totalPrice);
+        return Objects.hash(super.hashCode(), cart, product);
     }
 }

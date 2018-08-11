@@ -4,6 +4,7 @@ buildscript {
     }
     repositories {
         mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -33,5 +34,6 @@ dependencies {
     runtime('net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1')
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.assertj:assertj-core:3.10.0')
-    compile group: 'org.projectlombok', name: 'lombok', version: '1.18.0'
+    compileOnly 'org.projectlombok:lombok:1.18.2'
+    compile group: 'org.projectlombok', name: 'lombok', version: '1.16.20'
 }

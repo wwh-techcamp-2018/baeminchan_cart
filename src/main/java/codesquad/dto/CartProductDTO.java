@@ -17,7 +17,8 @@ import javax.validation.constraints.NotNull;
 @Data
 
 //todo builder 삭제
-@Builder @AllArgsConstructor
+@Builder
+@AllArgsConstructor
 public class CartProductDTO {
     private Product product;
     private Cart cart;
@@ -27,11 +28,21 @@ public class CartProductDTO {
     @NotNull
     private Long productId;
     private Long totalPrice;
+
     public CartProduct toEntity() {
         return new CartProduct(this);
     }
 
-    public void fill(@NotNull Cart cart, @NotNull Product product, PriceCalcultor priceCalcultor){
+    /*
+        public void fillCart(@NotNull Cart cart){
+            this.cart = cart;
+        }
+        public void fillProduct(@NotNull Product product, PriceCalcultor priceCalcultor){
+            this.product = product;
+            this.totalPrice = product.calculatePrice(priceCalcultor, this.count);
+        }
+        */
+    public void fill(@NotNull Cart cart, @NotNull Product product, PriceCalcultor priceCalcultor) {
         this.cart = cart;
         this.product = product;
         this.totalPrice = product.calculatePrice(priceCalcultor, this.count);
