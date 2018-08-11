@@ -35,7 +35,7 @@ public class ValidationAdvice {
         }
         return response;
     }
-
+//todo 다른 에러에도 적용해보기!
     private String getErrorMessage(FieldError fieldError) {
         Optional<String> code = getFirstCode(fieldError);
         if(!code.isPresent())
@@ -57,4 +57,9 @@ public class ValidationAdvice {
         return new ValidationErrorResponse().addError(exception.getError());
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiErrorResponse handleResourceNotFoundException(ResourceNotFoundException exception){
+        return new ApiErrorResponse().error(new ApiError(exception.getMessage(), exception.getLocalizedMessage()));
+    }
 }

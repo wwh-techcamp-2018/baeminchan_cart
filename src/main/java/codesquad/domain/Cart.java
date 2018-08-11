@@ -3,20 +3,20 @@ package codesquad.domain;
 import codesquad.support.AbstractEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.antlr.v4.runtime.misc.OrderedHashSet;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 
 @Entity
 public class Cart extends AbstractEntity {
@@ -24,7 +24,8 @@ public class Cart extends AbstractEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "cart")
     @Cascade(CascadeType.ALL)
-    private List<CartProduct> cartProducts;
+    //hint - 중복 허용 X, insertion 순서대로 유지
+    private Set<CartProduct> cartProducts = new LinkedHashSet<>();
     //hint user가 null인 경우가 많다면(비회원주문) 일대일 조인 테이블로 따로 빼도 좋을듯함
 
     @JsonIgnore
@@ -47,8 +48,18 @@ public class Cart extends AbstractEntity {
         }
     }
     public void addCartProduct(CartProduct cartProduct){
-        this.cartProducts.add(cartProduct);
         cartProduct.setCart(this);
+        this.cartProducts.add(cartProduct);
         cartProductCnt++;
+    }
+
+    @Override
+    public String toString() {
+        return "Cart{" +
+                "cartProducts=" +
+                Arrays.asList(CartProduct.builder().count(1).build()).stream().map(x-> x.getId()).collect(Collectors.toList()) +
+                ", user=" + user +
+                ", cartProductCnt=" + cartProductCnt +
+                '}';
     }
 }

@@ -2,6 +2,7 @@ package codesquad;
 
 import codesquad.security.BasicAuthInterceptor;
 import codesquad.security.FixedPasswordEncoder;
+import codesquad.support.PriceCalcultor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

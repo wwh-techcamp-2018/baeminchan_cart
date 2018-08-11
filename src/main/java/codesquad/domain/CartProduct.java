@@ -1,23 +1,26 @@
 package codesquad.domain;
 
+import codesquad.dto.CartProductDTO;
 import codesquad.support.AbstractEntity;
 import codesquad.support.PriceCalcultor;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import javax.annotation.sql.DataSourceDefinition;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import javax.validation.constraints.DecimalMin;
+import java.util.Objects;
 
-@Getter
-@Setter
+@Data
+//todo @DATA 공부
+@NoArgsConstructor
 
+//todo builder 삭제
+@Builder @AllArgsConstructor
 @Entity
-public class CartProduct extends AbstractEntity {
+public class CartProduct extends AbstractEntity{
     @ManyToOne(optional = false)
     private Cart cart;
     @ManyToOne(optional = false)
@@ -30,18 +33,23 @@ public class CartProduct extends AbstractEntity {
     @DecimalMin(value = "0")
     Long totalPrice;
 
-    public CartProduct(){
-    }
+
     public CartProduct(PriceCalcultor calcultor){
         //todo DiscountPriceCalcultor에게 위임
         this.totalPrice = count * product.getPrice();
     }
-
+    public CartProduct(CartProductDTO dto){
+        this.cart = dto.getCart();
+        this.product = dto.getProduct();
+        this.count = dto.getCount();
+        this.totalPrice = dto.getTotalPrice();
+    }
     public CartProduct(Cart cart, Product product, int count) {
-        this();
+
         this.cart = cart;
         this.product = product;
         this.count = count;
+//hint product === null?
         this.totalPrice = product.getPrice() * count;
     }
 //hint priceCalculator
@@ -50,5 +58,24 @@ public class CartProduct extends AbstractEntity {
         this.cart = cart;
         this.product = product;
         this.count = count;
+    }
+
+    //hint Product, Cart 가 같은 경우, 같은 CartProduct - 식별키
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        CartProduct that = (CartProduct) o;
+        return count == that.count &&
+                Objects.equals(cart, that.cart) &&
+                Objects.equals(product, that.product) &&
+                Objects.equals(totalPrice, that.totalPrice);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(super.hashCode(), cart, product, count, totalPrice);
     }
 }

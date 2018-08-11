@@ -1,16 +1,16 @@
 package codesquad.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import codesquad.support.PriceCalcultor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Size;
 
 @Entity
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@Data
+//todo Builder 삭제
+@Builder @AllArgsConstructor
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,4 +38,9 @@ public class Product {
 
     @Column(nullable = false)
     private boolean isDeliverable = false;
+
+    //todo priceCalculator 구현
+    public Long calculatePrice(PriceCalcultor priceCalcultor, int count) {
+        return priceCalcultor.calculatePrice(price, discountRate, count);
+    }
 }
