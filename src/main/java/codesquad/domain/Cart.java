@@ -3,15 +3,11 @@ package codesquad.domain;
 import java.util.*;
 
 public class Cart {
-    private User user;
+
     private Map<Long, Integer> products;
 
     public Cart() {
         products = new LinkedHashMap<>();
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public void addProduct(Long productId) {
