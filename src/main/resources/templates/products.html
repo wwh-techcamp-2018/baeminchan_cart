@@ -67,7 +67,7 @@
                                     </a>
                                 </dt>
                                 <dd class="prd_thumb_price">
-                                    <p class="selling-price">4,640<span class="won">원</span></p>
+                                    <p class="selling-price">{{price}}<span class="won">원</span></p>
                                     <p class="origin-price"><del>{{price}}원</del></p>
                                 </dd>
                                 <dd class="prd_to_basket">
@@ -108,5 +108,11 @@
             </div>
         </div>
     </div>
-    <script src="/js/cart.js"></script>
+{{/block}}
+
+{{#block "footer"}}
+<script src="/js/main.js"></script>
+<script src="/js/Cart.js"></script>
+<script src="/js/ProductCounter.js"></script>
+<script src="/js/products.js"></script>
 {{/block}}

@@ -1,89 +1,50 @@
-function $(selector) {
-    return document.querySelector(selector);
-}
+class Cart {
 
-function getCartList() {
-    fetch('/api/cart', { credentials: "same-origin" })
-        .then(response => response.json())
-        .then(renderCartList)
-}
-
-function handleProductClicked({ target }) {
-    const cartButton = target.closest('.btn.cart');
-    const countUpButton = target.closest('.prd_account .up');
-    const countDownButton = target.closest('.prd_account .down');
-
-    cartButton && addCart({ target });
-    countUpButton && updateProductCount({ target }, 1);
-    countDownButton && updateProductCount({ target }, -1);
-}
-
-function addCart({ target }) {
-    if (!target.classList.contains('btn') || !target.classList.contains('cart')) {
-        return;
+    constructor() {
+        this.renderCartProducts = this.renderCartProducts.bind(this);
     }
 
-    const productRef = target.closest('li').querySelector('.imgthumb > a');
-    const productId = productRef.href.split('/').pop();
-    const productCount = target.closest('li').querySelector('input.buy_cnt').value;
-
-    fetch(`/api/cart/products/${productId}${productCount && '?count=' + productCount}`,
-    { method: 'post', credentials: "same-origin" })
-        .then(response => response.json())
-        .then(renderCartList)
-        .then(animateBasketToaster)
-}
-
-function updateProductCount({ target }, count) {
-    const countInput = target.closest('.prd_account').querySelector('.buy_cnt');
-    countInput.value = parseInt(countInput.value) + count;
-    validateProductCount({ target: countInput });
-}
-
-function validateProductCount({ target }) {
-    if (!target.classList.contains('buy_cnt')) {
-        return;
+    getProducts() {
+        fetch('/api/cart', { credentials: "same-origin" })
+            .then(this.validateResponse)
+            .then(this.renderCartProducts)
     }
-    if (isNaN(target.value) || parseInt(target.value) < 1) {
-        target.value = 1;
+
+    addProduct(id, count) {
+        fetch(`/api/cart/products/${id}${count && '?count=' + count}`,
+        { method: 'post', credentials: "same-origin" })
+            .then(this.validateResponse)
+            .then(this.renderCartProducts)
+            .then(this.animateBasketToaster)
     }
-}
 
-function countProductByArrowKey({ target, key }) {
-    switch (key) {
-        case "ArrowUp":
-            updateProductCount({ target }, 1);
-            break;
-        case "ArrowDown":
-            updateProductCount({ target }, -1);
-            break;
+    validateResponse(response) {
+        if (!response.ok) {
+            throw new Error('Error occured!');
+        }
+        return response.json();
+    }    
+
+    renderCartProducts({ data }) {
+        const totalCount = Object.values(data).reduce((sum, count) => sum += count, 0);
+        totalCount ? this.displayExist(totalCount) : this.displayNotExist();
     }
-}
+    
+    displayExist(length) {
+        $('#basket-counter').innerText = length;
+        $('#cart_display_none').style.display = 'none';
+        $('#cart_display_exist').style.display = 'block';
+    }
+    
+    displayNotExist() {
+        $('#cart_display_exist').style.display = 'none';
+        $('#cart_display_none').style.display = 'block';
+    }
+    
+    animateBasketToaster() {
+        const toaster = $('#basket-toaster');
+        toaster.classList.add('active');
+        setTimeout(() => toaster.classList.remove('active'), 1000);
+    }
 
-function renderCartList({ data }) {
-    const totalCount = Object.values(data).reduce((sum, count) => sum += count, 0);
-    totalCount ? displayExist(totalCount) : displayNotExist();
 }
-
-function displayExist(length) {
-    $('#basket-counter').innerText = length;
-    $('#cart_display_none').style.display = 'none';
-    $('#cart_display_exist').style.display = 'block';
-}
-
-function displayNotExist() {
-    $('#cart_display_exist').style.display = 'none';
-    $('#cart_display_none').style.display = 'block';
-}
-
-function animateBasketToaster() {
-    const toaster = $('#basket-toaster');
-    toaster.classList.add('active');
-    setTimeout(() => toaster.classList.remove('active'), 1000);
-}
-
-document.addEventListener('DOMContentLoaded', getCartList);
-$('#products').addEventListener('click', handleProductClicked);
-$('#products').addEventListener('input', validateProductCount);
-$('#products').addEventListener('change', validateProductCount);
-$('#products').addEventListener('keyup', countProductByArrowKey);
