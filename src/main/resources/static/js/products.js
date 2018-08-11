@@ -1,7 +1,17 @@
 
 function onDOMContentLoaded() {
+    getCartItemCount();
+
     const addToCartButtons = document.querySelectorAll("#products .btn.cart");
     addToCartButtons.forEach((button) => { button.addEventListener("click", addToCart) });
+}
+
+function getCartItemCount() {
+    fetchManager({
+        url: "/api/cart/item/count",
+        method: "GET",
+        callback: onCartItemCount
+    });
 }
 
 function addToCart({ target }) {
@@ -26,11 +36,7 @@ function addToCart({ target }) {
 }
 
 function onAddToCart() {
-    fetchManager({
-        url: "/api/cart/item/count",
-        method: "GET",
-        callback: onCartItemCount
-    });
+    getCartItemCount();
 }
 
 function onCartItemCount(result) {
@@ -52,7 +58,7 @@ function showCartItemCount(count) {
 
 const MIN_CART_ITEM_COUNT = 0;
 function hideCartItemCount() {
-    $_value("#basket-counter").innerHTML = MIN_CART_ITEM_COUNT;
+    $("#basket-counter").innerHTML = MIN_CART_ITEM_COUNT;
     $("#cart_display_exist").style.display = "none";
     $("#cart_display_none").style.display = "block";
 }
