@@ -1,10 +1,10 @@
 package codesquad.web;
 
 import codesquad.domain.User;
-import codesquad.exception.ValidationError;
-import codesquad.exception.ValidationErrorResponse;
 import codesquad.dto.LoginDTO;
 import codesquad.dto.UserDTO;
+import codesquad.exception.ValidationError;
+import codesquad.exception.ValidationErrorResponse;
 import codesquad.support.test.AcceptanceTest;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -69,8 +69,8 @@ public class UserControllerAcceptanceTest extends AcceptanceTest {
     @Test
     public void login() {
         LoginDTO loginDTO = new LoginDTO();
-        loginDTO.setEmail("intae@tech.com");
-        loginDTO.setPassword("12345678");
+        loginDTO.setEmail("javajigi@woowahan.com");
+        loginDTO.setPassword("password");
 
         requestSuccessProcess(LOGIN_URL, loginDTO);
     }

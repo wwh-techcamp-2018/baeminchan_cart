@@ -25,6 +25,17 @@ public class Product {
     @DecimalMin(value = "0")
     private Long price;
 
+    public Product() {
+    }
+
+    public Product(Long id, String title, String description, String imgUrl, Long price) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.imgUrl = imgUrl;
+        this.price = price;
+    }
+
     public Long getId() {
         return id;
     }

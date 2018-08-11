@@ -6,7 +6,7 @@ function $_value(selector) {
     return $(selector).value;
 }
 
-function fetchManager({url, method, body, headers, callback}) {
+function fetchManager({url, method, body = {}, headers = { 'content-type: application/json'}, callback}) {
     fetch(url, {method, body, headers, credentials: "same-origin"})
         .then((response) => {
             const value = response;
