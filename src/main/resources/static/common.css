@@ -1594,3 +1594,6 @@ div.btn_area {
     -moz-transition: all .2s;
     transition: all .2s
 }
+.hidden{
+    display:none !important;
+}

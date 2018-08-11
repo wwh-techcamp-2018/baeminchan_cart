@@ -4,6 +4,7 @@ import codesquad.domain.*;
 import codesquad.dto.AddCartProductDTO;
 import codesquad.dto.CartProductDTO;
 import codesquad.exception.ResourceNotFoundException;
+import codesquad.security.SessionUtils;
 import codesquad.support.PriceCalcultor;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,31 +18,19 @@ public class CartProductService {
     @Autowired
     private ProductRepository productRepository;
 
-
-    @Transactional
-    public Cart addToCart(AddCartProductDTO cartProductDTO, Cart cart, User user) {
-
-        CartProduct cartProduct = new CartProduct();
-        cartProduct.setCount(cartProductDTO.getCount());
-
-        if(cart.isEmptyCart()) {
-            //hint user 비회원 확인
-
-            if(!user.isGuestUser()){
-                cart.setUser(user);
-            }
-        }
-        cart.addCartProduct(cartProduct);
-        return cart;
-    }
+    //todo 아래 메소드를 나누고 싶은데, 단위테스트때문에 어떻게 나눠야할지 감이 안잡힌다...단위 테스트 잘못짠것같다. 더 작게 짰어야했나
     public Cart initCartProduct(CartProductDTO cartProductDTO, Cart cart, User user){
+        if(cart.isEmptyCart())
+            cart = new Cart();
+        if(!user.isGuestUser())
+            cart.setUser(user);
 
         cartProductDTO.fill(cart, findProductByDTO(cartProductDTO), new PriceCalcultor());
         CartProduct cartProduct = cartProductDTO.toEntity();
-        cart.addCartProduct(cartProduct);
-
+        //cart.addCartProduct(cartProduct);
         return cart;
     }
+
     @Transactional
     public Cart addToCart(CartProductDTO cartProductDTO, Cart cart, User user){
         //hint productService 안에서 DTO받아서 처리?
@@ -55,16 +44,6 @@ public class CartProductService {
         return productRepository.findById(cartProductDTO.getProductId()).orElseThrow(ResourceNotFoundException::new);
     }
 
-    private CartProductDTO fillDTO(CartProductDTO cartProductDTO, Cart cart, User user) {
-        if(cart.isEmptyCart()) {
-            //hint user 비회원 확인
-            if(!user.isGuestUser()){
-                cart.setUser(user);
-            }
-            cartProductDTO.setCart(cart);
-        }
-        return cartProductDTO;
-    }
 
     public void saveUser(User loginUser, Cart cartFromSession) {
         cartFromSession.setUser(loginUser);

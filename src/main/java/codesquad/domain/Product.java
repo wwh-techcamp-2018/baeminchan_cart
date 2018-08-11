@@ -11,6 +11,8 @@ import javax.validation.constraints.Size;
 @Data
 //todo Builder 삭제
 @Builder @AllArgsConstructor
+//todo 왜 NoArgsConstructor 따로..?
+@NoArgsConstructor
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

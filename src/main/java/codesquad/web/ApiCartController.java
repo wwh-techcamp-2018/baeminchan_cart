@@ -26,17 +26,19 @@ public class ApiCartController {
 
     @Autowired
     private ProductService productService;
-    @PostMapping("/{productId}/1")
+    @PostMapping("/{productId}")
     public ResponseEntity<ApiSuccessResponse> addToCart(@PathVariable Long productId, @RequestBody CartProductDTO cartProductDTO, HttpSession session){
         log.debug("session check {} ", session);
-        log.debug("carDTO {}", cartProductDTO);
         Cart cart = SessionUtils.getCartFromSession(session);
         User user = SessionUtils.getUserFromSession(session);
+        log.debug("cart in session {} {}", cart, cart.hashCode());
+        log.debug("user in session {}", user);
         //cartProductDTO = productService.fillProduct(cartProductDTO);
         Cart addedCart = cartService.addToCart(cartProductDTO, cart, user);
+        SessionUtils.setCartInSession(session, addedCart);
         return ResponseEntity.ok(new ApiSuccessResponse(HttpStatus.OK, addedCart, null));
     }
-
+/*
     @PostMapping("/{productId}")
     public ResponseEntity<ApiSuccessResponse> addToCart(@PathVariable Long productId, @RequestBody AddCartProductDTO cartProductDTO, HttpSession session) {
         Cart cart = SessionUtils.getCartFromSession(session);
@@ -46,5 +48,5 @@ public class ApiCartController {
         Cart addedCart = cartService.addToCart(cartProductDTO, cart, user);
         return ResponseEntity.ok(new ApiSuccessResponse(HttpStatus.OK, addedCart, null));
     }
-
+*/
 }

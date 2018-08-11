@@ -49,16 +49,23 @@ public class CartProductTest {
 
         SoftAssertions softly = new SoftAssertions();
         softly.assertThat(calculation.get("totalPrice")).isGreaterThanOrEqualTo(PriceCalcultor.DELIVERY_FEE_FREE_THRESHOLD).as("40000원 이상 구매 확이");
-        //softly.assertThat(calculation).containsValues(getDiscountPrice(), getTotalDiscountPrice()).as("10 개 이상 주문, 20 미만 할인율, 40000원 이상 구매 배송비 무료 - 할인 적용");
-        //softly.assertThat(calculation).containsValue(getDiscountPrice()).as("10 개 이상 주문, 20 미만 할인율, 40000원 이상 구매 배송비 무료 - 할인 적용");
-        log.debug("1 {}",getDiscountPrice());
-        softly.assertThat(calculation.get("totalPrice")).isEqualTo(getDiscountPrice());
-        softly.assertThat(calculation.get("deliveryTotalPrice")).isEqualTo(getTotalDiscountPrice());
+        softly.assertThat(calculation).containsValues(getDiscountPrice(), getTotalDiscountPrice()).as("10 개 이상 주문, 20 미만 할인율, 40000원 이상 구매 배송비 무료 - 할인 적용");
+
+//        softly.assertThat(calculation.get("totalPrice")).isEqualTo(getDiscountPrice());
+//        softly.assertThat(calculation.get("deliveryTotalPrice")).isEqualTo(getTotalDiscountPrice());
 
         softly.assertAll();
     }
 
 
+    @Test
+    public void testCartProductEquals(){
+        CartProduct cartProduct1 = CartProduct.builder().cart(cart).product(product).build();
+        CartProduct cartProduct2 = CartProduct.builder().cart(cart).product(product).build();
+
+        assertThat(cartProduct1).isEqualTo(cartProduct2);
+
+    }
                 /*
                  같은 반찬을 10개이상 주문하면 기존 할인율에서 5% 추가 할인한다.
 할인율이 20% 이상인 반찬은 10개 이상 주문하더라도 5% 추가 할인하지 않는다.

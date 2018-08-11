@@ -21,7 +21,7 @@ public class BaeminchanController {
         return "products";
     }
 
-    @GetMapping("/product/{id}")
+    @GetMapping("/products/{id}")
     public String product(@PathVariable long id, Model model) {
         model.addAttribute("product", productService.findById(id));
         return "product";

@@ -6,15 +6,13 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.misc.OrderedHashSet;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,6 +20,7 @@ import java.util.stream.Collectors;
 @Data
 @EqualsAndHashCode(exclude = "cartProducts")
 @Entity
+@Slf4j
 public class Cart extends AbstractEntity {
     public static final Cart EMPTY_CART = new EmptyCart();
 
@@ -30,6 +29,7 @@ public class Cart extends AbstractEntity {
     @Cascade(CascadeType.ALL)
     //hint - 중복 허용 X, insertion 순서대로 유지
     private List<CartProduct> cartProducts = new ArrayList<>();
+    //private Map<Long, CartProduct> cartProductsMap = new LinkedHashMap<>();
     //hint user가 null인 경우가 많다면(비회원주문) 일대일 조인 테이블로 따로 빼도 좋을듯함
 
     @JsonIgnore
@@ -44,6 +44,11 @@ public class Cart extends AbstractEntity {
     @JsonIgnore
     public boolean isEmptyCart() {
         return false;
+    }
+
+    @PostLoad
+    public void initCartProductCnt() {
+        this.cartProductCnt = cartProducts.size();
     }
 
     @JsonAnyGetter
@@ -64,9 +69,23 @@ public class Cart extends AbstractEntity {
         }
     }
     public void addCartProduct(CartProduct cartProduct){
-        cartProduct.setCart(this);
+        log.debug("cartProduct {} {}", cartProduct, cartProduct.hashCode());
+
+        //fixme cart, product가 동일하지 않은가? equals를 오버라이딩했지만 원하는대로 작동하지않는다ㅜㅜ
+/*
         if(cartProducts.contains(cartProduct)) {
             cartProducts.set(cartProducts.indexOf(cartProduct), cartProduct);
+            return;
+        }
+*/
+//todo 리팩토링 - 코드 정리 또는 List > Map 으로 바꾸기
+        Optional<CartProduct> duplicate = cartProducts.stream()
+                .filter(x -> x.getProduct().getId().equals(cartProduct.getProduct().getId())).findFirst();
+        if (duplicate.isPresent()){
+            log.debug(" indexOf {}", cartProducts.indexOf(duplicate.get()));
+            cartProducts.get(cartProducts.indexOf(duplicate.get())).setCount(cartProduct.getCount());
+            // fixme 자주하는 실수 ㅠㅠ 반드시 복습
+            // cartProducts.set(cartProducts.indexOf(duplicate.get()), cartProduct);
             return;
         }
         this.cartProducts.add(cartProduct);

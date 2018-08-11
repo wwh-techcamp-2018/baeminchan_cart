@@ -14,7 +14,8 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
-@Data
+//@Data
+@Getter @Setter
 //todo @DATA 공부
 @NoArgsConstructor
 
@@ -23,8 +24,11 @@ import java.util.Objects;
 @Entity
 public class CartProduct extends AbstractEntity{
     @ManyToOne(optional = false)
+    @NotNull
     private Cart cart;
+
     @ManyToOne(optional = false)
+    @NotNull
     private Product product;
 
     @Column(nullable = false)
@@ -39,10 +43,15 @@ public class CartProduct extends AbstractEntity{
 
     }
     public CartProduct(CartProductDTO dto){
-        this.cart = dto.getCart();
         this.product = dto.getProduct();
         this.count = dto.getCount();
         this.totalPrice = dto.getTotalPrice();
+        this.setCart(dto.getCart());
+
+    }
+    public void setCart(@NotNull Cart cart){
+        this.cart = cart;
+        this.cart.addCartProduct(this);
     }
 //hint priceCalculator
     public CartProduct(@NotNull Cart cart, @NotNull Product product, int count, PriceCalcultor priceCalcultor) {
@@ -57,7 +66,8 @@ public class CartProduct extends AbstractEntity{
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+        //todo 질문하기 - contains & equals를 쓰지 않는다?
+        //if (!super.equals(o)) return false;
         CartProduct that = (CartProduct) o;
         return
                 Objects.equals(cart, that.cart) &&
@@ -66,7 +76,6 @@ public class CartProduct extends AbstractEntity{
 
     @Override
     public int hashCode() {
-
         return Objects.hash(super.hashCode(), cart, product);
     }
 }
