@@ -35,8 +35,15 @@ function addToCart({ target }) {
     });
 }
 
-function onAddToCart() {
+function onAddToCart(result) {
     getCartItemCount();
+    animationBasketToaster();
+}
+
+function animationBasketToaster() {
+    const toaster = $('#basket-toaster');
+    toaster.classList.add('active');
+    setTimeout(() => toaster.classList.remove('active'), 1000);
 }
 
 function onCartItemCount(result) {
@@ -47,7 +54,6 @@ function onCartItemCount(result) {
             hideCartItemCount();
         }
     });
-    // TODO : animation
 }
 
 function showCartItemCount(count) {

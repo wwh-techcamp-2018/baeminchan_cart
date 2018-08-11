@@ -1512,3 +1512,12 @@ a:focus {
   width: 250px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
+
+#basket-toaster {
+    opacity: 0;
+    transition: 0.5s;
+}
+
+#basket-toaster.active {
+    opacity: 1;
+}
