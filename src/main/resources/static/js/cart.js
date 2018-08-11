@@ -34,11 +34,13 @@ class Cart {
         $('#basket-counter').innerText = length;
         $('#cart_display_none').style.display = 'none';
         $('#cart_display_exist').style.display = 'block';
+        $('#go_to_cart').closest('div').classList.remove('empty');
     }
     
     displayNotExist() {
         $('#cart_display_exist').style.display = 'none';
         $('#cart_display_none').style.display = 'block';
+        $('#go_to_cart').closest('div').classList.add('empty');
     }
     
     animateBasketToaster() {
