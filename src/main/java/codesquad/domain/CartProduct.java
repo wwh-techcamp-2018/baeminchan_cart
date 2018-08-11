@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Data
@@ -35,8 +36,7 @@ public class CartProduct extends AbstractEntity{
 
 
     public CartProduct(PriceCalcultor calcultor){
-        //todo DiscountPriceCalcultor에게 위임
-        this.totalPrice = count * product.getPrice();
+
     }
     public CartProduct(CartProductDTO dto){
         this.cart = dto.getCart();
@@ -44,20 +44,12 @@ public class CartProduct extends AbstractEntity{
         this.count = dto.getCount();
         this.totalPrice = dto.getTotalPrice();
     }
-    public CartProduct(Cart cart, Product product, int count) {
-
-        this.cart = cart;
-        this.product = product;
-        this.count = count;
-//hint product === null?
-        this.totalPrice = product.getPrice() * count;
-    }
 //hint priceCalculator
-    public CartProduct(Cart cart, Product product, int count, PriceCalcultor priceCalcultor) {
-        this(priceCalcultor);
+    public CartProduct(@NotNull Cart cart, @NotNull Product product, int count, PriceCalcultor priceCalcultor) {
         this.cart = cart;
         this.product = product;
         this.count = count;
+        this.totalPrice = product.calculatePrice(priceCalcultor, this.count);
     }
 
     //hint Product, Cart 가 같은 경우, 같은 CartProduct - 식별키

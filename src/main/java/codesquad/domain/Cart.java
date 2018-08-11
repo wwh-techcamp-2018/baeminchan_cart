@@ -1,6 +1,9 @@
 package codesquad.domain;
 
 import codesquad.support.AbstractEntity;
+import codesquad.support.PriceCalcultor;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.antlr.v4.runtime.misc.OrderedHashSet;
@@ -42,6 +45,18 @@ public class Cart extends AbstractEntity {
     public boolean isEmptyCart() {
         return false;
     }
+
+    @JsonAnyGetter
+    public Map getPrice(PriceCalcultor priceCalcultor) {
+        Map<String, Long> calculation = new HashMap();
+        Long totalPrice = cartProducts.stream().mapToLong(CartProduct::getTotalPrice).sum();//.reduce( (x, y) -> x+y );
+        Long deliveryTotalPrice = priceCalcultor.calculateTotalPrice(totalPrice);
+        calculation.put("totalPrice",totalPrice);
+        calculation.put("deliveryTotalPrice", deliveryTotalPrice);
+
+        return calculation;
+    }
+
     private static class EmptyCart extends Cart {
         @Override
         public boolean isEmptyCart() {
