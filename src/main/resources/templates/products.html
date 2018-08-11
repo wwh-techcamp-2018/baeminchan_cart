@@ -88,23 +88,9 @@
                         {{/products}}
                     </ul>
                 </div>
-                <div class="put_in_basket sticky_box">
-                    <h3>
-                        <span class="">장바구니</span>
-                    </h3>
-                    <div class="empty">
-                        <p class="top_box_number">
-                            <span class="txt" style="display:;" id="cart_display_none">담은상품이<br>없습니다.</span>
-                            <strong class="number" id="cart_display_exist" style="display:none"><span id="basket-counter" class="number_txt">0</span><span class="unit">개</span></strong>
-                        </p>
-                        <a href="/cart" id="go_to_cart" class="go_to_basket">장바구니 이동 <span>&gt;</span></a>
-                    </div>
-                    <div id="basket-toaster" class="tooltip">
-                        <i class="tooltip_arr"></i>
-                        <span class="prd_name">상품</span>
-                        담기완료
-                    </div>
-                </div>
+
+                {{> sticky_cart}}
+
             </div>
         </div>
     </div>
