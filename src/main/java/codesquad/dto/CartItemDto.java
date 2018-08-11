@@ -9,13 +9,13 @@ public class CartItemDto {
     private Long productId;
 
     @NotNull
-    @DecimalMin(value = 0)
+    @DecimalMin(value = "0")
     private Integer count;
 
     public CartItemDto() {
     }
 
-    public CartItemDto(@NotNull Long productId, @NotNull @DecimalMin(value = 0) Integer count) {
+    public CartItemDto(@NotNull Long productId, @NotNull @DecimalMin(value = "0") Integer count) {
         this.productId = productId;
         this.count = count;
     }
