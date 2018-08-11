@@ -51,7 +51,7 @@ public class CartControllerAcceptanceTest extends AcceptanceTest {
     @Test
     public void getProductListInCart() {
         ResponseEntity<List<CartItem>> responseEntity =
-                template().exchange(
+                basicAuthTemplate().exchange(
                         "/carts",
                         HttpMethod.GET,
                         null,

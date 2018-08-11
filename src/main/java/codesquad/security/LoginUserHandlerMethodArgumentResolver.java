@@ -19,7 +19,7 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
         User user = SessionUtils.getUserFromSession(webRequest);
 
         LoginUser loginUser = parameter.getParameterAnnotation(LoginUser.class);
-        if (loginUser.required()) {
+        if (user == null || !loginUser.required()) {
             throw new UnAuthorizedException("You're required Login!");
         }
 

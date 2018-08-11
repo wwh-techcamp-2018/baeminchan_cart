@@ -17,14 +17,14 @@ public class CartService {
     @Autowired
     private CartRepository cartRepository;
 
-    public void save(CartProductDto dto, User loginUser) {
+    public Cart save(CartProductDto dto, User loginUser) {
         Optional<Cart> maybeCart = cartRepository.findByUser(loginUser);
 
         if (!maybeCart.isPresent()) {
-            cartRepository.save(Cart.createOf(loginUser, dto.toEntity()));
+            return cartRepository.save(Cart.createOf(loginUser, dto.toEntity()));
         }
 
-        cartRepository.save(maybeCart.get().add(dto.toEntity()));
+        return cartRepository.save(maybeCart.get().add(dto.toEntity()));
     }
 
     public List<CartItem> getProductList(User user) {
