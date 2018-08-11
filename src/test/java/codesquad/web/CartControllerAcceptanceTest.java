@@ -13,7 +13,5 @@ public class CartControllerAcceptanceTest extends AcceptanceTest {
     public void cart() {
         ResponseEntity<String> responseEntity = template().getForEntity("/cart", String.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        // TODO : fix NPE
-        //assertThat(responseEntity.getHeaders().getLocation().getPath()).contains("cart");
     }
 }

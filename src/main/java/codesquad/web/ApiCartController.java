@@ -33,7 +33,7 @@ public class ApiCartController {
         Cart cart = get(httpSession);
         CartItem item = cartItemService.save(cart, cartItemDto);
         cartService.save(cart.getId(), item);
-        return ResponseEntity.created(URI.create("/api/cart/item/" + item.getId())).build();
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/item/{id}")
