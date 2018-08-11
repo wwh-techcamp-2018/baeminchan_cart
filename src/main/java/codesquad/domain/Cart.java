@@ -18,13 +18,16 @@ public class Cart {
     private List<CartItem> items = new ArrayList<>();
 
     @DecimalMin(value = "0")
-    private Long totalItemPrice;
+    private Long totalItemPrice = 0L;
 
     @DecimalMin(value = "0")
-    private Long shippingCharge;
+    private Long shippingCharge = 0L;
 
     @DecimalMin(value = "0")
-    private Long totalPrice;
+    private Long totalPrice = 0L;
+
+    public Cart() {
+    }
 
     public Long getId() {
         return id;
@@ -41,6 +44,8 @@ public class Cart {
     public boolean contains(CartItem item) {
         return items.contains(item);
     }
+
+    public int itemCount() { return items.size(); }
 
     public CartItem get(Long itemId) {
         return items.stream()
