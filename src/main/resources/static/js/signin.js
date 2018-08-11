@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function(evt) {
 });
 
 function displayErrors(result) {
-    if(!result) {
+    if(result && result.status == 200) {
         window.location.href = "/";
     }
     let appendText = "";
