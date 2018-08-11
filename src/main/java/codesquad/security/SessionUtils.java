@@ -1,7 +1,7 @@
 package codesquad.security;
 
 import codesquad.domain.User;
-import codesquad.dto.BasketDto;
+import codesquad.dto.BasketDTO;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpSession;
@@ -18,24 +18,26 @@ public class SessionUtils {
         session.setAttribute(USER_SESSION_KEY, loginUser);
     }
 
-    public static void setBasketInSession(HttpSession session, BasketDto basketDto) {
-        List<BasketDto> maybebasketDtoList = (List<BasketDto>) session.getAttribute(BASKET_SESSION);
-        if (maybebasketDtoList == null) {
-            maybebasketDtoList = new ArrayList<>();
-            maybebasketDtoList.add(basketDto);
-            session.setAttribute(BASKET_SESSION, maybebasketDtoList);
-            return;
-        }
-        basketDto.updateBasket(maybebasketDtoList);
-        session.setAttribute(BASKET_SESSION, maybebasketDtoList);
-    }
-
     public static boolean isLoginUser(HttpSession session) {
         return session.getAttribute(USER_SESSION_KEY) != null;
     }
 
     public static void removeUserInSession(HttpSession session){
         session.removeAttribute(USER_SESSION_KEY);
+    }
+
+
+    public static void setBasketInSession(HttpSession session, BasketDTO basketDto) {
+        List<BasketDTO> maybebasketDtoList = (List<BasketDTO>) session.getAttribute(BASKET_SESSION);
+
+        if (maybebasketDtoList == null) {
+            maybebasketDtoList = new ArrayList<>();
+            maybebasketDtoList.add(basketDto);
+            session.setAttribute(BASKET_SESSION, maybebasketDtoList);
+            return;
+        }
+
+        session.setAttribute(BASKET_SESSION, basketDto.updateBasket(maybebasketDtoList));
     }
 
 }

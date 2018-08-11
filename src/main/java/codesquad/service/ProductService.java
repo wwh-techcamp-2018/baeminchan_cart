@@ -2,13 +2,12 @@ package codesquad.service;
 
 import codesquad.domain.Product;
 import codesquad.domain.ProductRepository;
-import codesquad.dto.BasketDto;
-import codesquad.dto.BasketProductDto;
+import codesquad.dto.BasketDTO;
+import codesquad.dto.BasketProductDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,16 +25,11 @@ public class ProductService {
         return productRepository.findById(id).orElseThrow(RuntimeException::new);
     }
 
-    public List<BasketProductDto> getBasketProduct(List<BasketDto> basketDtoList) {
-        List<BasketProductDto> basketProductDtos = new ArrayList<>();
-        if(basketDtoList == null){
-            throw new RuntimeException();
-        }
+    public List<BasketProductDTO> getBasketProduct(List<BasketDTO> basketDtoList) {
+        List<BasketProductDTO> basketProductDtos = new ArrayList<>();
 
-        for (BasketDto basketDto: basketDtoList) {
-             basketProductDtos.add(BasketProductDto.createBasketProductDto(productRepository.
-                     findById(basketDto.getId()).get(),basketDto.getEa()));
-        }
+        basketDtoList.forEach(basketDTO -> basketProductDtos.add(BasketProductDTO.createBasketProductDto(productRepository.
+                findById(basketDTO.getId()).get(),basketDTO.getEa())));
         return basketProductDtos;
     }
 }

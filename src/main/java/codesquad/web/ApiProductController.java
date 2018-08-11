@@ -1,8 +1,8 @@
 package codesquad.web;
 
 import codesquad.domain.Product;
-import codesquad.dto.BasketDto;
-import codesquad.dto.BasketProductDto;
+import codesquad.dto.BasketDTO;
+import codesquad.dto.BasketProductDTO;
 import codesquad.security.SessionUtils;
 import codesquad.service.ProductService;
 import java.util.List;
@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -25,15 +24,15 @@ public class ApiProductController {
     ProductService productService;
 
     @PutMapping("/basket")
-    public ResponseEntity<Product> updateBasketEa(HttpSession session, @RequestBody BasketDto basketDto){
+    public ResponseEntity<Product> updateBasketEa(HttpSession session, @RequestBody BasketDTO basketDto){
         SessionUtils.setBasketInSession(session,basketDto);
         return new ResponseEntity<Product>(productService.findById(basketDto.getId()),HttpStatus.OK);
     }
 
     @GetMapping("/basket")
-    public ResponseEntity<List<BasketProductDto>> getBasketProductDtoList(HttpSession session){
-        List<BasketProductDto> basketProductDtoList = productService.
-                getBasketProduct((List<BasketDto>) session.getAttribute(SessionUtils.BASKET_SESSION));
+    public ResponseEntity<List<BasketProductDTO>> getBasketProductDtoList(HttpSession session){
+        List<BasketProductDTO> basketProductDtoList = productService.
+                getBasketProduct((List<BasketDTO>) session.getAttribute(SessionUtils.BASKET_SESSION));
         return new ResponseEntity<>(basketProductDtoList,HttpStatus.OK);
     }
 

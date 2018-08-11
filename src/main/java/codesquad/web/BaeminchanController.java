@@ -1,7 +1,7 @@
 package codesquad.web;
 
-import codesquad.dto.BasketDto;
-import codesquad.dto.BasketProductDto;
+import codesquad.dto.BasketDTO;
+import codesquad.dto.BasketProductDTO;
 import codesquad.security.SessionUtils;
 import codesquad.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class BaeminchanController {
 
     @GetMapping("/cart")
     public String cart(Model model,HttpSession session) {
-        List<BasketProductDto> basketProductDtoList = productService.getBasketProduct((List<BasketDto>) session.getAttribute(SessionUtils.BASKET_SESSION));
+        List<BasketProductDTO> basketProductDtoList = productService.getBasketProduct((List<BasketDTO>) session.getAttribute(SessionUtils.BASKET_SESSION));
         model.addAttribute("basketList",basketProductDtoList);
         return "cart";
     }

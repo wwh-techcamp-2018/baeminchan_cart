@@ -1,6 +1,8 @@
 package codesquad.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -8,7 +10,9 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Size;
 
 @Entity
+@Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,26 +30,8 @@ public class Product {
     @DecimalMin(value = "0")
     private Long price;
 
+    @Column(columnDefinition = "BIGINT default 0")
+    private Long sale;
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getImgUrl() {
-        return imgUrl;
-    }
-
-    public Long getPrice() {
-        return price;
-    }
 
 }
