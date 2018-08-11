@@ -2,7 +2,6 @@ package codesquad.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Entity
@@ -16,19 +15,22 @@ public class CartItem {
     private Product product;
 
     @DecimalMin(value = "0")
-    private Integer count;
-
-    @Size(min = 0)
-    private Long salesRate;
+    private Integer count = 0;
 
     @DecimalMin(value = "0")
-    private Long price;
+    private Long discountRate = 0L;
+
+    @DecimalMin(value = "0")
+    private Long price = 0L;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_cartitem_cart"))
     private Cart cart;
 
     private boolean deleted = false;
+
+    public CartItem() {
+    }
 
     public CartItem(Product product, @DecimalMin(value = "0") Integer count, Cart cart) {
         this.product = product;
@@ -48,8 +50,8 @@ public class CartItem {
         return count;
     }
 
-    public Long getSalesRate() {
-        return salesRate;
+    public Long getDiscountRate() {
+        return discountRate;
     }
 
     public Long getPrice() {
@@ -69,8 +71,8 @@ public class CartItem {
         setPrice(product.getPrice() * this.count);
     }
 
-    public void setSalesRate(Long salesRate) {
-        this.salesRate = salesRate;
+    public void setDiscountRate(Long discountRate) {
+        this.discountRate = discountRate;
     }
 
     public void setPrice(Long price) {
@@ -91,6 +93,6 @@ public class CartItem {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getProduct(), getCount(), getSalesRate(), getPrice(), getCart(), isDeleted());
+        return Objects.hash(getId(), getProduct(), getCount(), getDiscountRate(), getPrice(), getCart(), isDeleted());
     }
 }
