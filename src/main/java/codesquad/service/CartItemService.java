@@ -26,9 +26,9 @@ public class CartItemService {
         CartItem cartItem = cart.getItems().stream()
                 .filter(item -> (item.getProduct().getId() == product.getId()))
                 .findFirst()
-                .orElse(new CartItem(product, cartItemDto.getCount(), cart));
+                .orElse(new CartItem(product, cartItemDto.getQuantity(), cart));
 
-        cartItem.setCount(cartItemDto.getCount());
+        cartItem.setCount(cartItemDto.getQuantity());
 
         return cartItemRepository.save(cartItem);
     }

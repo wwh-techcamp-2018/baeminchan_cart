@@ -10,14 +10,14 @@ public class CartItemDto {
 
     @NotNull
     @DecimalMin(value = "0")
-    private Integer count;
+    private Integer quantity;
 
     public CartItemDto() {
     }
 
-    public CartItemDto(@NotNull Long productId, @NotNull @DecimalMin(value = "0") Integer count) {
+    public CartItemDto(@NotNull Long productId, @NotNull @DecimalMin(value = "0") Integer quantity) {
         this.productId = productId;
-        this.count = count;
+        this.quantity = quantity;
     }
 
     public Long getProductId() {
@@ -28,11 +28,11 @@ public class CartItemDto {
         this.productId = productId;
     }
 
-    public Integer getCount() {
-        return count;
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public void setCount(Integer count) {
-        this.count = count;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 }
