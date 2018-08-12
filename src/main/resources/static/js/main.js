@@ -25,28 +25,3 @@ function fetchManager({url, method, body, headers, callback}) {
     });
 }
 
-function initProductAdd() {
-    $('#products').addEventListener('click', (e) => {
-        if (e.target.tagName === 'BUTTON') {
-            let productId = e.target.getAttribute('data-id');
-            fetchManager({
-                url :"/api/cart/1",
-                method: 'POST',
-                headers: {'content-type': 'application/json'},
-                body: JSON.stringify({
-                    "productId" : productId,
-                }),
-                callback: ({json}) => {
-                    console.log(json);
-                }
-            })
-
-        }
-    })
-
-
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    initProductAdd();
-});
