@@ -45,6 +45,7 @@ public class BaeminchanController {
         Cart cart = SessionUtils.getCartFromSession(session);
         log.debug("cart {} ", cart);
         model.addAttribute("cartItems", cart.getCartProducts());
+        model.addAttribute("cart", cart);
         return "cart";
     }
 

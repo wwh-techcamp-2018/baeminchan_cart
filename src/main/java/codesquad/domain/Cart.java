@@ -78,42 +78,37 @@ public class Cart extends AbstractEntity {
         log.debug("preUpdate {}", cartProductCnt);
         initCartProductCnt();
     }
-       @JsonInclude
+//       @JsonInclude
+//    //@JsonAnyGetter
+//    @JsonGetter("calculation")
+//    @Autowired
+//    public Map getCalculation(PriceCalcultor priceCalcultor, MoneyFormatter moneyFormatter) {
+//        Map<String, Object> calculation = new HashMap();
+//        Long totalPrice = cartProducts.stream().mapToLong(CartProduct::getTotalPrice).sum();//.reduce( (x, y) -> x+y );
+//        Long deliveryTotalPrice = priceCalcultor.calculateTotalPrice(totalPrice);
+//        calculation.put("totalPrice",totalPrice);
+//        calculation.put("deliveryTotalPrice", deliveryTotalPrice);
+//        calculation.put("formattedTotalPrice", moneyFormatter.longToMoney(totalPrice));
+//        calculation.put("formattedDeliveryTotalPrice", moneyFormatter.longToMoney(deliveryTotalPrice));
+//
+//        return calculation;
+//    }
+    //todo 어떻게 하나
     //@JsonAnyGetter
     @JsonGetter("calculation")
-    @Autowired
-    public Map getPrice(PriceCalcultor priceCalcultor, MoneyFormatter moneyFormatter) {
+    @JsonSetter("calculation")
+    public Map getCalculation() {
         Map<String, Object> calculation = new HashMap();
         Long totalPrice = cartProducts.stream().mapToLong(CartProduct::getTotalPrice).sum();//.reduce( (x, y) -> x+y );
-        Long deliveryTotalPrice = priceCalcultor.calculateTotalPrice(totalPrice);
+        Long deliveryFee = new PriceCalcultor().calculateDeliveryFee(totalPrice);
+        Long deliveryTotalPrice = totalPrice + deliveryFee;
         calculation.put("totalPrice",totalPrice);
-        calculation.put("deliveryTotalPrice", deliveryTotalPrice);
-        calculation.put("formattedTotalPrice", moneyFormatter.longToMoney(totalPrice));
-        calculation.put("formattedDeliveryTotalPrice", moneyFormatter.longToMoney(deliveryTotalPrice));
-
-        return calculation;
-    }
-    //todo 어떻게 하나
-    @JsonAnyGetter
-    //@JsonGetter("calculation")
-    public Map getPrice() {
-        Map<String, Object> calculation = new HashMap();
-        Long totalPrice = cartProducts.stream().mapToLong(CartProduct::getTotalPrice).sum();//.reduce( (x, y) -> x+y );
-        Long deliveryTotalPrice = new PriceCalcultor().calculateTotalPrice(totalPrice);
-        calculation.put("totalPrice",totalPrice);
-        calculation.put("deliveryTotalPrice", deliveryTotalPrice);
-        calculation.put("formattedTotalPrice", new MoneyFormatter().longToMoney(totalPrice));
-        calculation.put("formattedDeliveryTotalPrice", new MoneyFormatter().longToMoney(deliveryTotalPrice));
-
+        calculation.put("deliveryFee", deliveryFee);
+        calculation.put("deliveryFeeThreashold", PriceCalcultor.DELIVERY_FEE_FREE_THRESHOLD);
+        calculation.put("deliveryTotalPrice",deliveryTotalPrice);
         return calculation;
     }
 
-    private static class EmptyCart extends Cart {
-        @Override
-        public boolean isEmptyCart() {
-            return true;
-        }
-    }
     public void addCartProduct(CartProduct cartProduct){
         log.debug("cartProduct {} {}", cartProduct, cartProduct.hashCode());
         //todo 리팩토링 - 코드 정리 또는 List > Map 으로 바꾸기
@@ -135,7 +130,24 @@ public class Cart extends AbstractEntity {
                 cartProducts.stream().map(x-> x.getId()).collect(Collectors.toList()) +
                 ", user=" + user +
                 ", cartProductCnt=" + cartProductCnt +
-                ", calculation "+ getPrice(new PriceCalcultor(), new MoneyFormatter()) +
+                //", calculation "+ getPrice(new PriceCalcultor(), new MoneyFormatter()) +
                 '}';
+    }
+    private static class EmptyCart extends Cart {
+        @Override
+        public boolean isEmptyCart() {
+            return true;
+        }
+
+        @Override
+        public Map getCalculation() {
+            Map<String, Object> calculation = new HashMap();
+            calculation.put("totalPrice",0);
+            calculation.put("deliveryFee", 0);
+            calculation.put("deliveryFeeThreashold", PriceCalcultor.DELIVERY_FEE_FREE_THRESHOLD);
+            calculation.put("deliveryTotalPrice",0);
+            return calculation;
+
+        }
     }
 }

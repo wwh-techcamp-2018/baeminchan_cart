@@ -8,12 +8,12 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Getter @Setter @NoArgsConstructor
-public class AddCartProductDTO {
+public class SetCartProductDTO {
 
     @NotNull
     @Min(1)
     private int count;
 
     @NotNull
-    private Long productId;
+    private Long cartId;
 }

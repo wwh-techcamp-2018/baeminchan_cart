@@ -18,22 +18,21 @@ const fetchManager = async ({url, method, body, headers, callback}) => {
     callback(response.status, data);
 };
 const fetchJsonPost = async ({url, method, body, headers}) => {
-    return fetch(url, {
-        method :'post',
-        body: JSON.stringify(body),
-        headers : {'content-type': 'application/json'},
-        credentials: "same-origin"
-    }).then( (response) => response.json());
+    return  fetchJsonRequest({url, body, method: 'post'});
 }
-const fetchJsonGet = async ({url, body}) => {
-    return fetch(url, {
-        method:'get',
-        body: JSON.stringify(body),
-        headers : {'content-type': 'application/json'},
-        credentials: "same-origin"
-    }).then( (response) => data.json());
+const fetchJsonGet = async (url) => {
+    return fetchJsonRequest({url, method: 'get'});
+
 };
 
+const fetchJsonRequest = ({url, method, body }) => {
+    return fetch(url, {
+        method,
+        body : JSON.stringify(body),
+        headers : {'content-type': 'application/json'},
+        credentials: "same-origin"
+    }).then(response => response.json());
+}
 const redirect = (url) => {
     return document.location = url;
 };

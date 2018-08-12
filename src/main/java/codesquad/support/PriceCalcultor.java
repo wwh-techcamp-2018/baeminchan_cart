@@ -13,9 +13,10 @@ public class PriceCalcultor {
         return price *  (100L - discountRate) /100L * count;
     }
 
-    public Long calculateTotalPrice(long originalTotalPrice){
-        if(DELIVERY_FEE_FREE_THRESHOLD > originalTotalPrice)
-            originalTotalPrice += DELIVERY_FEE;
-        return originalTotalPrice;
+    public Long calculateDeliveryFee(long originalTotalPrice){
+        if(DELIVERY_FEE_FREE_THRESHOLD <= originalTotalPrice || originalTotalPrice == 0)
+            return 0L;
+        return DELIVERY_FEE;
     }
+
 }

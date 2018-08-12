@@ -47,23 +47,22 @@ public class Product {
     private Long discountRate = 0L;
 
     @Column(nullable = false)
-    private boolean isDeliverable = false;
+    private boolean deliverable = false;
 
     //todo priceCalculator 구현
     public Long calculatePrice(PriceCalcultor priceCalcultor, int count) {
         return priceCalcultor.calculatePrice(price, discountRate, count);
     }
-    //todo 해결방법 찾기
+//    //todo 해결방법 찾기
+//    @JsonGetter("formattedPrice")
+//    @Autowired
+//    public String getFormattedPrice(MoneyFormatter moneyFormatter){
+//        log.debug("getFormattedPrice called 1");
+//        return moneyFormatter.longToMoney(this.price);
+//    }
     @JsonGetter("formattedPrice")
-    @Autowired
-    public String getFormattedPrice(MoneyFormatter moneyFormatter){
-        log.debug("getFormattedPrice called");
-        return moneyFormatter.longToMoney(this.price);
-    }
-    @JsonGetter("formattedPrice")
-    @Autowired
     public String getFormattedPrice(){
-        log.debug("getFormattedPrice called");
+        log.debug("getFormattedPrice called 2 ");
         return String.valueOf(this.price);
     }
 }

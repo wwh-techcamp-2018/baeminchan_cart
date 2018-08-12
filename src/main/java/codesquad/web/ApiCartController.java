@@ -2,8 +2,8 @@ package codesquad.web;
 
 import codesquad.domain.Cart;
 import codesquad.domain.User;
-import codesquad.dto.AddCartProductDTO;
 import codesquad.dto.CartProductDTO;
+import codesquad.dto.SetCartProductDTO;
 import codesquad.security.SessionUtils;
 import codesquad.service.CartProductService;
 import codesquad.service.ProductService;
@@ -27,8 +27,8 @@ public class ApiCartController {
     @Autowired
     private ProductService productService;
 
-    @PostMapping("/{productId}")
-    public ResponseEntity<ApiSuccessResponse> addToCart(@PathVariable Long productId, @RequestBody CartProductDTO cartProductDTO, HttpSession session){
+    @PostMapping("")
+    public ResponseEntity<ApiSuccessResponse> addToCart(@RequestBody CartProductDTO cartProductDTO, HttpSession session){
         Cart cart = SessionUtils.getCartFromSession(session);
         User user = SessionUtils.getUserFromSession(session);
         log.debug("cart in session {} {}", cart, cart.hashCode());
@@ -39,9 +39,16 @@ public class ApiCartController {
         log.debug("after addToCart cart in session {} {}", addedCart, cart.hashCode());
         return ResponseEntity.ok(new ApiSuccessResponse(HttpStatus.OK, addedCart, null));
     }
+    @PutMapping("")
+    public ResponseEntity<ApiSuccessResponse> changeAmount(@RequestBody SetCartProductDTO setCartProductDTO, HttpSession session){
+        Cart cart = SessionUtils.getCartFromSession(session);
+        User user = SessionUtils.getUserFromSession(session);
+        Cart addedCart = cartService.changeCartItem(setCartProductDTO, cart, user);
+        return ResponseEntity.ok(new ApiSuccessResponse(HttpStatus.OK, addedCart, null));
+    }
 /*
     @PostMapping("/{productId}")
-    public ResponseEntity<ApiSuccessResponse> addToCart(@PathVariable Long productId, @RequestBody AddCartProductDTO cartProductDTO, HttpSession session) {
+    public ResponseEntity<ApiSuccessResponse> addToCart(@PathVariable Long productId, @RequestBody SetCartProductDTO cartProductDTO, HttpSession session) {
         Cart cart = SessionUtils.getCartFromSession(session);
         User user = SessionUtils.getUserFromSession(session);
         if(cart.isEmptyCart())

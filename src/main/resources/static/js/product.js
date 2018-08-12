@@ -7,7 +7,8 @@ class Product {
 
     }
     initCartTooltip(cart) {
-        this.cartTooltip = new CartTooltip(cart);
+        this.cartTooltip = new CartTooltip();
+        this.cartTooltip.renderCartTooltip(cart);
     }
     registerEvent() {
         $('#amount_manager').addEventListener('click', (event) => {

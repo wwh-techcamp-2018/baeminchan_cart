@@ -28,7 +28,7 @@ public class CartProductTest {
         return priceCalcultor.calculatePrice(product.getPrice(), product.getDiscountRate(), cartProduct.getCount());
     }
     private Long getTotalDiscountPrice(){
-        return priceCalcultor.calculateTotalPrice(getDiscountPrice());
+        return priceCalcultor.calculateDeliveryFee(getDiscountPrice()) + getDiscountPrice();
     }
 
     @Test
@@ -44,7 +44,7 @@ public class CartProductTest {
         log.debug("cartProduct totalPrice {} ", cartProduct.getTotalPrice());
 
         cart.addCartProduct(cartProduct);
-        Map<String, Long> calculation = cart.getPrice(priceCalcultor, moneyFormatter);
+        Map<String, Long> calculation = cart.getCalculation();//priceCalcultor, moneyFormatter);
 
 
         SoftAssertions softly = new SoftAssertions();

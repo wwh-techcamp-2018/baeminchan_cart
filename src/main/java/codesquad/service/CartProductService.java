@@ -1,13 +1,12 @@
 package codesquad.service;
 
 import codesquad.domain.*;
-import codesquad.dto.AddCartProductDTO;
 import codesquad.dto.CartProductDTO;
+import codesquad.dto.SetCartProductDTO;
+import codesquad.exception.NotAuthorizedException;
 import codesquad.exception.ResourceNotFoundException;
-import codesquad.security.SessionUtils;
 import codesquad.support.PriceCalcultor;
 import lombok.extern.slf4j.Slf4j;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +18,7 @@ public class CartProductService {
     private CartRepository cartRepository;
     @Autowired
     private ProductRepository productRepository;
+
 
     //todo 아래 메소드를 나누고 싶은데, 단위테스트때문에 어떻게 나눠야할지 감이 안잡힌다...단위 테스트 잘못짠것같다. 더 작게 짰어야했나
     public Cart initCartProduct(CartProductDTO cartProductDTO, Cart cart, User user){
@@ -52,5 +52,18 @@ public class CartProductService {
         }
 
         log.debug("user added {}", cart);
+    }
+
+    public Cart changeCartItem(SetCartProductDTO setCartProductDTO, Cart cart, User user) {
+        //todo refactor
+        if(!user.isGuestUser() && !cart.getUser().equals(user)){
+            throw new NotAuthorizedException();
+        }
+        CartProduct cartProduct = cart.getCartProducts().stream().filter(x -> x.getId() == setCartProductDTO.getCartId()).findFirst().orElseThrow(ResourceNotFoundException::new);
+        cartProduct.setCount(setCartProductDTO.getCount());
+
+        cartRepository.save(cartProduct.getCart());
+        log.debug("changedCart {}", cart);
+        return cart;
     }
 }

@@ -3,7 +3,8 @@ import {CartTooltip} from '/js/cart.js';
 class ProductList {
 
     initCartTooltip(cart) {
-        this.cartTooltip = new CartTooltip(cart);
+        this.cartTooltip = new CartTooltip();
+        this.cartTooltip.renderCartTooltip(cart);
     }
 
     registerEvent() {
