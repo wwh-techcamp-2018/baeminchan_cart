@@ -67,10 +67,11 @@
                                     </a>
                                 </dt>
                                 <dd class="prd_thumb_price">
-                                    <p class="selling-price">4,640<span class="won">원</span></p>
+                                    <p class="selling-price">{{sellingPrice}}<span class="won">원</span></p>
                                     <p class="origin-price"><del>{{price}}원</del></p>
                                 </dd>
                                 <dd class="prd_to_basket">
+                                    <input type="hidden" id="productId" value="{{id}}">
                                     <div class="prd_account clearfix">
                                         <label><input class="buy_cnt" type="text" name="amount" value="1" data-name="{{title}}" data-no="17435" data-price="" data-hash="H62C9" data-min="1" data-max="-1"></label>
                                         <span>
@@ -108,4 +109,6 @@
             </div>
         </div>
     </div>
+
+<script type="module" src="/js/product.js"></script>
 {{/block}}
