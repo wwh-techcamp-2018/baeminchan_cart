@@ -17,7 +17,7 @@ class CartTooltip{
 
     }
     renderFullToEmptyCart(elem){
-        if(!elem) return;
+        if(!elem) return;impo
         removeClass('full', elem);
         addClass('empty', elem);
         removeClass('hidden', $('#cart_display_none'));
@@ -30,7 +30,9 @@ class CartTooltip{
         addClass('hidden', $('#cart_display_none'));
         removeClass('hidden', $('#cart_display_exist'));
     }
-
+    setToasterHtml(prd_name){
+        $('#basket-toaster > .prd_name').innerHTML = prd_name;
+    }
     showToaster(){
         addClass('visible', $('#basket-toaster'));
         setTimeout( ()=> removeClass('visible', $('#basket-toaster')), 1000);

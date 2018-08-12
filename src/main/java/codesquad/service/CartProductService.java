@@ -33,6 +33,8 @@ public class CartProductService {
     @Transactional
     public Cart addToCart(CartProductDTO cartProductDTO, Cart cart, User user){
         cart = initCartProduct(cartProductDTO, cart, user);
+        
+        cartRepository.save(cart);
         return cart;
     }
     public Product findProductByDTO(CartProductDTO cartProductDTO){

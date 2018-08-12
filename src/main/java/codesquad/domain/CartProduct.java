@@ -78,4 +78,8 @@ public class CartProduct extends AbstractEntity{
     public int hashCode() {
         return Objects.hash(super.hashCode(), cart, product);
     }
+
+    public void changeCountBy(CartProduct cartProduct) {
+        this.count += cartProduct.count;
+    }
 }

@@ -13,18 +13,17 @@ class Product {
     registerEvent() {
         $('#amount_manager').addEventListener('click', (event) => {
             const elem = event.target;
+
             if (elem.tagName === 'A') {
                 event.preventDefault();
                 const nextAmount = this.getNextAmount(elem, Number(this.$amountInput.value));
-                if (nextAmount == 0) return;
-                this.updateAmount(nextAmount);
+                this.updateAmount.call(this.$amountInput, nextAmount);
                 this.updatePrice(this.productPrice, nextAmount);
             }
         });
         $('#addToCartBtn').addEventListener('click', (event) => {
-            this.ajaxSetAmount(this.productId, Number(this.$amountInput.value)).then((data) => this.renderIfCartExists(data));
+            this.ajaxSetAmount(this.productId, Number(this.$amountInput.value)).then((data) => this.renderAfterAddCart(data));
         });
-
     }
 
     getNextAmount(elem, originalAmt) {
@@ -38,14 +37,15 @@ class Product {
     }
 
     updateAmount(amount) {
-        this.$amountInput.value = amount;
+        if (amount == 0) return;
+        this.value = amount;
     }
 
     updatePrice(price, amount) {
         $('#detail_total_price').innerText = formatMoney(price * amount);
     }
 
-    renderIfCartExists({data = {cartProductCnt: 0}}) {
+    renderAfterAddCart({data = {cartProductCnt: 0}}) {
         this.cartTooltip.renderCartTooltip(data);
         this.cartTooltip.showToaster();
     }

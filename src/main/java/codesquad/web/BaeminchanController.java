@@ -21,15 +21,15 @@ public class BaeminchanController {
         return "products";
     }
 
-    @GetMapping("/products/{categoryId}")
+    @GetMapping("/products/category/{categoryId}")
     public String categorizedProducts(@PathVariable Long categoryId, Model model, HttpSession session) {
         model.addAttribute("products", productService.findByCategoryId(categoryId));
         return "products";
 
     }
 
-    @GetMapping("/products/{categoryId}/{id}")
-    public String product( @PathVariable Long categoryId, @PathVariable long id, Model model, HttpSession session) {
+    @GetMapping("/products/{id}")
+    public String product( @PathVariable Long id, Model model, HttpSession session) {
         model.addAttribute("product", productService.findById(id));
         return "product";
 

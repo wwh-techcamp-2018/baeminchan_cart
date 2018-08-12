@@ -27,10 +27,9 @@ public class Cart extends AbstractEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "cart")//, fetch=FetchType.EAGER)
     @Cascade(CascadeType.ALL)
-    //hint - 중복 허용 X, insertion 순서대로 유지
+    @OrderBy("created_at")
     private List<CartProduct> cartProducts = new ArrayList<>();
     //private Map<Long, CartProduct> cartProductsMap = new LinkedHashMap<>();
-    //hint user가 null인 경우가 많다면(비회원주문) 일대일 조인 테이블로 따로 빼도 좋을듯함
 
     @JsonIgnore
     @OneToOne
@@ -98,22 +97,11 @@ public class Cart extends AbstractEntity {
     }
     public void addCartProduct(CartProduct cartProduct){
         log.debug("cartProduct {} {}", cartProduct, cartProduct.hashCode());
-
-        //fixme cart, product가 동일하지 않은가? equals를 오버라이딩했지만 원하는대로 작동하지않는다ㅜㅜ
-/*
-        if(cartProducts.contains(cartProduct)) {
-            cartProducts.set(cartProducts.indexOf(cartProduct), cartProduct);
-            return;
-        }
-*/
-//todo 리팩토링 - 코드 정리 또는 List > Map 으로 바꾸기
+        //todo 리팩토링 - 코드 정리 또는 List > Map 으로 바꾸기
         Optional<CartProduct> duplicate = cartProducts.stream()
                 .filter(x -> x.getProduct().getId().equals(cartProduct.getProduct().getId())).findFirst();
         if (duplicate.isPresent()){
-            log.debug(" indexOf {}", cartProducts.indexOf(duplicate.get()));
-            cartProducts.get(cartProducts.indexOf(duplicate.get())).setCount(cartProduct.getCount());
-            // fixme 자주하는 실수 ㅠㅠ 반드시 복습
-            // cartProducts.set(cartProducts.indexOf(duplicate.get()), cartProduct);
+            duplicate.get().changeCountBy(cartProduct);
             return;
         }
         this.cartProducts.add(cartProduct);

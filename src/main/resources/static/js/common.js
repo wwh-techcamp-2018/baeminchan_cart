@@ -1,5 +1,6 @@
-const $ = (selector)=> {
-    return document.querySelector(selector);
+const $ = (selector, context = document)=> {
+    //context = context || document;
+    return context.querySelector(selector);
 }
 
 const $All = (selector => {
