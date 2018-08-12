@@ -1,9 +1,40 @@
 
+const MIN_PRODUCT_QUANTITY = 1;
+const MIN_CART_ITEM_COUNT = 0;
+
 function onDOMContentLoaded() {
     getCartItemCount();
 
     const addToCartButtons = document.querySelectorAll("#products .btn.cart");
     addToCartButtons.forEach((button) => { button.addEventListener("click", addToCart) });
+
+    const quantityUps = document.querySelectorAll("#products > li .prd_to_basket .up");
+    quantityUps.forEach((up) => { up.addEventListener("click", setQuantity) });
+
+    const quantityDowns = document.querySelectorAll("#products > li .prd_to_basket .down");
+    quantityDowns.forEach((down) => { down.addEventListener("click", setQuantity) });
+}
+
+function getUpQuantity(quantity) {
+    return quantity + 1;
+}
+
+function getDownQuantity(quantity) {
+    if (quantity <= MIN_PRODUCT_QUANTITY)
+        return MIN_PRODUCT_QUANTITY;
+    return quantity - 1;
+}
+
+function setQuantity({ target }) {
+    const productLi = target.closest("li");
+    const input = productLi.querySelector("input.buy_cnt");
+
+    const quantity = parseInt(input.value);
+
+    if (target.className === "up")
+        input.value = getUpQuantity(quantity);
+    if (target.className === "down")
+        input.value = getDownQuantity(quantity);
 }
 
 function getCartItemCount() {
@@ -62,7 +93,6 @@ function showCartItemCount(count) {
     $("#cart_display_none").style.display = "none";
 }
 
-const MIN_CART_ITEM_COUNT = 0;
 function hideCartItemCount() {
     $("#basket-counter").innerHTML = MIN_CART_ITEM_COUNT;
     $("#cart_display_exist").style.display = "none";
