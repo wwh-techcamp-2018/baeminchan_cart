@@ -13,13 +13,12 @@ import java.util.List;
 public class CartService {
     @Autowired
     private ProductRepository productRepository;
-    private List<Cart> carts = new ArrayList<>();
 
-    public Cart addCart(Long productId, int count) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
-        Cart cart = new Cart(product, count);
-        carts.add(cart);
-        return cart;
-    }
+//    public Cart addCart(Long productId, int count) {
+//        Product product = productRepository.findById(productId)
+//                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
+//        Cart cart = new Cart(product, count);
+//        carts.add(cart);
+//        return cart;
+//    }
 }

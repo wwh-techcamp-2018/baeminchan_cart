@@ -1,68 +1,24 @@
 package codesquad.domain;
 
+import lombok.Getter;
+import lombok.ToString;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+@Getter
+@ToString
 public class Cart {
-    private Product product;
-    private int count;
-    private Long totalPrice;
-    private boolean isDeleted;
+    private List<CartProduct> cartProducts = new ArrayList<>();
 
-    public Cart() {
-        this.isDeleted = false;
-    }
+    public void addCartProduct(CartProduct cartProduct) {
+        Optional<CartProduct> addedProduct = cartProducts.stream()
+                .filter(product -> product.getProduct().equals(cartProduct.getProduct())).findFirst();
 
-    public Cart(Product product, int count) {
-        this.product = product;
-        this.count = count;
-        this.totalPrice = product.getTotalPrice(count);
-        this.isDeleted = false;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void updateCount(int count) {
-        this.count = count;
-    }
-
-    public Long getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(Long totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void delete() {
-        isDeleted = true;
-    }
-
-    @Override
-    public String toString() {
-        return "Cart{" +
-                "product=" + product +
-                ", count=" + count +
-                ", totalPrice=" + totalPrice +
-                ", isDeleted=" + isDeleted +
-                '}';
+        if(addedProduct.isPresent()) {
+            cartProducts.remove(addedProduct);
+        }
+        cartProducts.add(cartProduct);
     }
 }
-
-
-/***
- * 1. Cart 단위 테스트 구현
- * 2. Cart API Controller 구현
- *
- */

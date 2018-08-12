@@ -1,29 +1,60 @@
-function renderCart(result) {
-    console.log(result.product);
+let cartProductCount = {};
+let TotalProduct = 0;
 
-}
+class Cart {
+    constructor() {
+        this.initEvent();
+    }
 
-document.addEventListener("DOMContentLoaded", function(evt) {
+    initEvent() {
         const addButton = $("#products")
+        addButton.addEventListener("click", this.productsListener.bind(this));
+    }
 
-        addButton.addEventListener("click", function(evt) {
-        evt.preventDefault();
-        const productInfo = evt.target.closest('li');
-        const productHref = productInfo.querySelector(".prd_tlt a").getAttribute('href');
-        const productId = productHref.split("/").pop(-1);
-        const productCount = productInfo.querySelector(".clearfix .buy_cnt").value;
+    productsListener(evt) {
+        if(evt.target.classList.contains('cart') || evt.target.parentElement.classList.contains('cart')) {
+            this.fetchCart(evt.target.closest('li'));
+        }
+    }
 
+    fetchCart(target) {
+        const productId = target.getAttribute('data-id');
+        this.countTotalProduct(productId);
         const postObject = {
-            "count": productCount
+            "productId" : productId,
+            "count" : target.querySelector(".buy_cnt").value
         };
-
         fetchManager({
-            url: "/api/cart/" + productId,
+            url: "/api/carts",
             method: "POST",
             headers: {"content-type": "application/json"},
-            body: JSON.stringify(productCount),
-            callback: renderCart
+            body: JSON.stringify(postObject),
+            callback: this.renderCart
         });
-    });
-});
 
+    }
+
+    renderCart(result) {
+        const full = $(".sticky_box .full");
+        if(full === null) {
+            const cart_area = $(".sticky_box .empty");
+            cart_area.classList.remove('empty');
+            cart_area.classList.add('full');
+            $("#cart_display_none").style.display = 'none';
+            $("#cart_display_exist").style.display = '';
+        }
+        $("#basket-counter").innerText = TotalProduct;
+    }
+
+    countTotalProduct(productId) {
+        console.log(cartProductCount[productId]);
+        if(!cartProductCount[productId]) {
+            cartProductCount[productId] = productId;
+            TotalProduct += 1;
+        }
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    new Cart();
+});
