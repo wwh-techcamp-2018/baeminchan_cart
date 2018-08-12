@@ -1512,3 +1512,16 @@ a:focus {
   width: 250px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
+
+.hidden{
+  display:none !important;
+}
+#basket-toaster.transparent{
+  opacity:0;
+  transition: opacity ease-in-out 0.5s;
+}
+#basket-toaster.visible {
+  opacity: 1 !important;
+  transition: opacity ease-in-out 0.5s;
+
+}

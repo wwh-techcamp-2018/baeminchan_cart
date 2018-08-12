@@ -29,16 +29,15 @@ public class CartProductService {
         CartProduct cartProduct = cartProductDTO.toEntity();
         return cart;
     }
-
+    //todo @Transactional?
     @Transactional
     public Cart addToCart(CartProductDTO cartProductDTO, Cart cart, User user){
         cart = initCartProduct(cartProductDTO, cart, user);
-        return cartRepository.save(cart);
+        return cart;
     }
     public Product findProductByDTO(CartProductDTO cartProductDTO){
         return productRepository.findById(cartProductDTO.getProductId()).orElseThrow(ResourceNotFoundException::new);
     }
-
 
     public void saveUser(User loginUser, Cart cartFromSession) {
         cartFromSession.setUser(loginUser);

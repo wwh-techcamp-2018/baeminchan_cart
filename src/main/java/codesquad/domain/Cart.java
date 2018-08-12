@@ -25,7 +25,7 @@ public class Cart extends AbstractEntity {
     public static final Cart EMPTY_CART = new EmptyCart();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "cart")
+    @OneToMany(mappedBy = "cart")//, fetch=FetchType.EAGER)
     @Cascade(CascadeType.ALL)
     //hint - 중복 허용 X, insertion 순서대로 유지
     private List<CartProduct> cartProducts = new ArrayList<>();
@@ -46,9 +46,37 @@ public class Cart extends AbstractEntity {
         return false;
     }
 
-    @PostLoad
+
     public void initCartProductCnt() {
-        this.cartProductCnt = cartProducts.size();
+        this.cartProductCnt = getCartProducts().size();//cartProducts.size();
+        log.debug("initCartProductCnt {}", cartProductCnt);
+    }
+
+    @PostPersist
+    public void postPersist(){
+        log.debug("postPersist {}", cartProducts.size());
+        initCartProductCnt();
+    }
+    @PostLoad
+    public void postLoad(){
+        log.debug("PostLoad {}", cartProducts.size());
+        initCartProductCnt();
+    }
+    @PostUpdate
+    public void postUpdate(){
+        log.debug("postUpdate {}", cartProductCnt);
+        initCartProductCnt();
+    }
+
+    @PrePersist
+    public void PrePersist(){
+        log.debug("PrePersist {}", cartProductCnt);
+        initCartProductCnt();
+    }
+    @PreUpdate
+    public void preUpdate(){
+        log.debug("preUpdate {}", cartProductCnt);
+        initCartProductCnt();
     }
 
     @JsonAnyGetter

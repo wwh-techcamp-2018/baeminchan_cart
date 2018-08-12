@@ -5,28 +5,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.bmf.kr/static/css/app.v-bdf170c3.css">
 {{/block}}
 <style>
-    .hidden{
-        display:none;
-    }
 
-   .visible {
-       opacity: 1;
-       transition: opacity ease-in-out 0.5s;
-
-   }
-    @keyframes animation{
-
-        0% { opacity: 0; }
-
-        100% {opacity: 1;}
-    }
-
-    .someClass {
-        animation-name: animation;
-        animation-duration: 0.1s;
-        animation-iteration-count: 1;
-        animation-timing-function: ease-in;
-    }
 </style>
 {{#block "contents"}}
         <!--  skip navi -->
@@ -146,7 +125,7 @@
                             <p class="top_box_number">
                                 <span class="txt" id="cart_display_none">담은상품이
                                     <br>없습니다.</span>
-                                <strong class="number" id="cart_display_exist">
+                                <strong class="number hidden" id="cart_display_exist">
                                     <span id="basket-counter" class="number_txt">0</span>
                                     <span class="unit">개</span>
                                 </strong>
@@ -157,7 +136,7 @@
                         </div>
 
 
-                        <div id="basket-toaster" class="tooltip">
+                        <div id="basket-toaster" class="tooltip transparent">
                             <i class="tooltip_arr"></i>
                             <span class="prd_name">{{product.title}}</span>
                             담기완료

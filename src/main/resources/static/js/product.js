@@ -47,6 +47,7 @@ class Product {
 
     renderIfCartExists({data = {cartProductCnt: 0}}) {
         this.cartTooltip.renderCartTooltip(data);
+        this.cartTooltip.showToaster();
     }
 
 
