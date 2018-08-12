@@ -130,10 +130,11 @@
         }
         const productList = new ProductList();
         //todo refactor -- product 안에 넣어?
-        const cartTooltip = new CartTooltip(_cart);
-        cartTooltip.renderCartTooltip(_cart);
-        productList.initCart(cartTooltip);
-        productList.registerEvent();
+        // const cartTooltip = new CartTooltip();
+        // cartTooltip.renderCartTooltip(_cart);
+        // productList.initCart(cartTooltip);
+            productList.initCartTooltip(_cart);
+            productList.registerEvent();
     });
 </script>
 {{/block}}

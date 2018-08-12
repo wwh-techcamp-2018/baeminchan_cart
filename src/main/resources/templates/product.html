@@ -182,10 +182,10 @@
             cartProductCnt: {{#if  cartSession}} {{cartSession.cartProductCnt}} {{else}} 0 {{/if}}
         }
         const product = new Product(_product.id, _product.price);
-            //todo refactor -- product 안에 넣어?
-                const cartTooltip = new CartTooltip(_cart);
-        cartTooltip.renderCartTooltip(_cart);
-        product.initCart(cartTooltip);
+                //const cartTooltip = new CartTooltip();
+            // cartTooltip.renderCartTooltip(_cart);
+        //product.initCart(cartTooltip);
+            product.initCartTooltip(_cart);
         product.registerEvent();
 
     });

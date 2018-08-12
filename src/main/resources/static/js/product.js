@@ -6,9 +6,8 @@ class Product {
         this.$amountInput = $('input[name=amount]');
 
     }
-    //todo 이게 맞는 방법인지.. 모르곘다?
-    initCart(cartTooltip){
-        this.cartTooltip = cartTooltip;
+    initCartTooltip(cart) {
+        this.cartTooltip = new CartTooltip(cart);
     }
     registerEvent() {
         $('#amount_manager').addEventListener('click', (event) => {
@@ -16,14 +15,23 @@ class Product {
 
             if (elem.tagName === 'A') {
                 event.preventDefault();
-                const nextAmount = this.getNextAmount(elem, Number(this.$amountInput.value));
-                this.updateAmount.call(this.$amountInput, nextAmount);
-                this.updatePrice(this.productPrice, nextAmount);
-            }
+                this.clickAmtLink(elem);
+               }
         });
         $('#addToCartBtn').addEventListener('click', (event) => {
-            this.ajaxSetAmount(this.productId, Number(this.$amountInput.value)).then((data) => this.renderAfterAddCart(data));
+
         });
+    }
+    clickAmtLink(elem){
+        const nextAmount = this.getNextAmount(elem, Number(this.$amountInput.value));
+        this.cartTooltip.updateAmount.call(this.$amountInput, nextAmount);
+        this.updatePrice(this.productPrice, nextAmount);
+
+    }
+    clickAddToCartBtn(){
+        this.cartTooltip.ajaxSetAmount(this.productId, Number(this.$amountInput.value))
+            .then((data) => this.cartTooltip.renderAfterAddCart(data));
+
     }
 
     getNextAmount(elem, originalAmt) {
@@ -31,24 +39,10 @@ class Product {
             return originalAmt - 1;
         return originalAmt + 1;
     }
-
-    ajaxSetAmount(productId, amount) {
-        return fetchJsonPost({url: '/api/cart/' + productId, body: {count: amount, productId: productId}});
-    }
-
-    updateAmount(amount) {
-        if (amount == 0) return;
-        this.value = amount;
-    }
-
     updatePrice(price, amount) {
         $('#detail_total_price').innerText = formatMoney(price * amount);
     }
 
-    renderAfterAddCart({data = {cartProductCnt: 0}}) {
-        this.cartTooltip.renderCartTooltip(data);
-        this.cartTooltip.showToaster();
-    }
 
 
 }

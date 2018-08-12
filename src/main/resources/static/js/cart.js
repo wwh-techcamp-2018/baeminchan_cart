@@ -1,41 +1,56 @@
 class CartTooltip{
-    //todo cart 지우기?
     constructor(cart){
-        this.cart = cart;
+        this.$cartDisplayNone =  $('#cart_display_none');
+        this.$cartDisplayExist = $('#cart_display_exist');
+        this.$basketToaster = $('#basket-toaster');
+        this.$cartTooltip =  $('.put_in_basket');
+        this.renderCartTooltip(cart);
     }
 
-    renderCartTooltip({cartProductCnt}){
-        $('#basket-counter').innerText = cartProductCnt;
+    renderCartTooltip( cart = { cartProductCnt : 0}){
+        const cartProductCnt = cart.cartProductCnt;
+        $('#basket-counter', this.$cartTooltip).innerText = cartProductCnt;
 
         if (cartProductCnt === 0) {
-            this.renderFullToEmptyCart($('.put_in_basket > .full'));
+            this.renderFullToEmptyCart($('.full'), this.$cartTooltip);
             return;
         }
-        this.renderEmptyToFullCart($('.put_in_basket > .empty'));
-
-
-
+        this.renderEmptyToFullCart($('.empty', this.$cartTooltip));
     }
+
+    ajaxSetAmount(productId, amount) {
+        return fetchJsonPost({url: '/api/cart/' + productId, body: {count: amount, productId: productId}});
+    }
+    updateAmount(amount, minAmount = 1) {
+        if (amount < minAmount) return;
+        this.value = amount;
+    }
+
+    renderAfterAddCart({data = {cartProductCnt: 0}}) {
+        this.renderCartTooltip(data);
+        this.showToaster();
+    }
+
     renderFullToEmptyCart(elem){
-        if(!elem) return;impo
+        if(!elem) return;
         removeClass('full', elem);
         addClass('empty', elem);
-        removeClass('hidden', $('#cart_display_none'));
-        addClass('hidden', $('#cart_display_exist'));
+        removeClass('hidden', this.$cartDisplayNone);
+        addClass('hidden', this.$cartDisplayExist);
     }
     renderEmptyToFullCart(elem){
         if(!elem) return;
         removeClass('empty', elem);
         addClass('full', elem);
-        addClass('hidden', $('#cart_display_none'));
-        removeClass('hidden', $('#cart_display_exist'));
+        addClass('hidden', this.$cartDisplayNone);
+        removeClass('hidden', this.$cartDisplayExist);
     }
     setToasterHtml(prd_name){
-        $('#basket-toaster > .prd_name').innerHTML = prd_name;
+        $('.prd_name', this.$basketToaster).innerHTML = prd_name;
     }
     showToaster(){
-        addClass('visible', $('#basket-toaster'));
-        setTimeout( ()=> removeClass('visible', $('#basket-toaster')), 1000);
+        addClass('visible',this.$basketToaster);
+        setTimeout( ()=> removeClass('visible', this.$basketToaster), 1000);
     }
 }
 class Cart{
