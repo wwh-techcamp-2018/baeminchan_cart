@@ -3,13 +3,16 @@ package codesquad.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class Cart {
     @Id
@@ -19,8 +22,8 @@ public class Cart {
     @OneToOne
     private User user;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    private List<Product> productList;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Product> productList = new ArrayList<>();
 
     @DecimalMin(value = "0")
     private Long deliveryCharge;

@@ -1,41 +1,33 @@
 package codesquad.web;
 
-import codesquad.domain.Cart;
-import codesquad.domain.CartRepository;
-import codesquad.domain.Product;
-import codesquad.domain.ProductRepository;
-import codesquad.exception.ResourceNotFoundException;
+import codesquad.domain.ResponseModel;
+import codesquad.domain.User;
+import codesquad.dto.CartAddDto;
+import codesquad.security.SessionUtils;
 import codesquad.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.NativeWebRequest;
 
-import java.util.List;
+import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/cart")
 public class ApiCartController {
     @Autowired
-    private CartRepository cartRepository;
+    private CartService cartService;
 
-    @Autowired
-    private ProductRepository productRepository;
-
-    @GetMapping("/{id}")
-    public Cart showProducts(@PathVariable Long id) {
-        Cart cart = cartRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("장바구니가 존재하지 않습니다."));
-        return cart;
-    }
-
-    @PostMapping("/{id}")
-    @Transactional
-    public Integer addProduct(@PathVariable Long id, @RequestBody Long productId) {
-        Product product = productRepository.findById(1L).orElseThrow(() -> new ResourceNotFoundException("반찬이 존재하지 않습니다."));
-        Cart cart = cartRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("장바구나가 존재하지 않습니다."));
-        cart.addProduct(product);
-        return cart.getProductList().size();
+    @PostMapping("")
+    public ResponseModel<String> addProduct(@RequestBody CartAddDto dto, HttpSession session, NativeWebRequest webRequest) {
+        if (!SessionUtils.isLoginUser(session)) {
+            return ResponseModel.ofSuccess("");
+        }
+        User user = SessionUtils.getUserFromSession(webRequest);
+        Long id = Long.parseLong(dto.getProductId());
+        cartService.add(id, user);
+        return ResponseModel.ofSuccess("Success");
     }
 }
