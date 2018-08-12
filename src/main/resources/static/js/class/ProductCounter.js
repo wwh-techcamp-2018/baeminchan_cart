@@ -12,16 +12,14 @@ class ProductCounter {
         element.addEventListener('input', this.validateCounter);
     }
 
-    handleCounterEvents({ target, type, key }) {
-        if (type === 'keyup' && (key !== "ArrowUp" || key !== "ArrowDown")) {
-            return;
+    handleCounterEvents(e) {
+        if (e.target.classList.contains('up') || e.key === "ArrowUp") {
+            e.preventDefault();
+            return this.updateCounter(e.target, 1);
         }
-
-        if (target.classList.contains('up')) {
-            return this.updateCounter(target, 1);
-        }
-        if (target.classList.contains('down')) {
-            return this.updateCounter(target, -1);
+        if (e.target.classList.contains('down') || e.key === "ArrowDown") {
+            e.preventDefault();
+            return this.updateCounter(e.target, -1);
         }
     }
 
