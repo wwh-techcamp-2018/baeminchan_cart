@@ -25,6 +25,9 @@ public class Product {
     @DecimalMin(value = "0")
     private Long price;
 
+    @DecimalMin(value = "0")
+    private Long discountRate;
+
     public Long getId() {
         return id;
     }
@@ -43,5 +46,9 @@ public class Product {
 
     public Long getPrice() {
         return price;
+    }
+
+    public Long getDiscountRate() {
+        return discountRate;
     }
 }

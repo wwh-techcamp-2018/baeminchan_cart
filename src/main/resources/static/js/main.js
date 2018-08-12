@@ -11,11 +11,10 @@ function fetchManager({url, method, body, headers, callback}) {
         .then((response) => {
             const value = response;
             if(value.status == 200) {
-                return;
+                return value;
             } else {
                 return value.json();
             }
-
         }).then((result) => {
             callback(result);
     });
