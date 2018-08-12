@@ -34,13 +34,31 @@ class Cart {
     addProductInCart() {
         $('#products').addEventListener('click', (e) => {
             let target = e.target;
+            let productId = target.getAttribute('data-id');
             if (target.tagName === 'BUTTON') {
-                let productId = e.target.getAttribute('data-id');
                 this.addProductNumber(productId);
                 this.changeCartNumber();
                 this.showSelectedProduct(target);
             }
+            this.cartFetchManager({
+                                url :'/api/cart',
+                                method: 'POST',
+                                body: JSON.stringify({
+                                    'productId' : productId
+                                }),
+                                headers: {'content-type': 'application/json'},
+                                callback: ({json}) => {
+                                    console.log(json.data);
+                                }
+                            })
         })
+    }
+
+    cartFetchManager({url, method, body, headers, callback}) {
+        fetch(url, {method, body, headers, credentials: "same-origin"})
+            .then((response) => {
+                response.json().then(json => callback({json}))
+            });
     }
 
     registerEvent() {
