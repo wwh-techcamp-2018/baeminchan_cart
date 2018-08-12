@@ -10,7 +10,17 @@ function getCartItemCount() {
     fetchManager({
         url: "/api/cart/item/count",
         method: "GET",
-        callback: onCartItemCount
+        callback: onGetCartItemCount
+    });
+}
+
+function onGetCartItemCount(result) {
+    result.json().then(count => {
+        if (count > 0) {
+            showCartItemCount(count);
+        } else {
+            hideCartItemCount();
+        }
     });
 }
 
@@ -44,16 +54,6 @@ function animationBasketToaster() {
     const toaster = $('#basket-toaster');
     toaster.classList.add('active');
     setTimeout(() => toaster.classList.remove('active'), 1000);
-}
-
-function onCartItemCount(result) {
-    result.json().then(count => {
-        if (count > 0) {
-            showCartItemCount(count);
-        } else {
-            hideCartItemCount();
-        }
-    });
 }
 
 function showCartItemCount(count) {
