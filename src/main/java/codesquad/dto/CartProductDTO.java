@@ -1,41 +1,26 @@
 package codesquad.dto;
 
+import codesquad.domain.CartProduct;
+import codesquad.domain.Product;
+import codesquad.domain.User;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.Data;
 
+import java.math.BigInteger;
 import java.util.Objects;
 
-
-@Getter
-@ToString
+@Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class CartProductDTO {
-    private Long id;
-    private String title;
-    private Long count;
-    private Long price;
+    private Product product;
+    private BigInteger count;
 
-    public CartProductDTO setId(Long id) {
-        this.id = id;
-        return this;
+    public CartProductDTO(Product product) {
+        this.product = product;
     }
 
-    public CartProductDTO setTitle(String title) {
-        this.title = title;
-        return this;
-    }
-
-    public CartProductDTO setCount(Long count) {
-        this.count = count;
-        return this;
-    }
-
-    public CartProductDTO setPrice(Long price) {
-        this.price = price;
-        return this;
+    public CartProduct toCartItem(User loginUser) {
+        return new CartProduct(loginUser, this.product, this.count);
     }
 
     @Override
@@ -43,14 +28,11 @@ public class CartProductDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CartProductDTO that = (CartProductDTO) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(count, that.count);
+        return Objects.equals(product, that.product);
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(id, count);
+        return Objects.hash(product);
     }
 }
-

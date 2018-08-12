@@ -1,4 +1,4 @@
-package codesquad.security;
+package codesquad.utils;
 
 import codesquad.domain.User;
 
@@ -9,6 +9,10 @@ public class SessionUtils {
 
     public static void setUserInSession(HttpSession session, User loginUser) {
         session.setAttribute(USER_SESSION_KEY, loginUser);
+    }
+
+    public static User getUserFromSession(HttpSession session) {
+        return (User) session.getAttribute(SessionUtils.USER_SESSION_KEY);
     }
 
     public static boolean isLoginUser(HttpSession session) {

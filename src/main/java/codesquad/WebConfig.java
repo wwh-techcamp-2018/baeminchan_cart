@@ -5,7 +5,6 @@ import codesquad.security.FixedPasswordEncoder;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,13 +32,13 @@ public class WebConfig implements WebMvcConfigurer {
         return new MessageSourceAccessor(messageSource());
     }
 
-//    @Bean
-//    public BasicAuthInterceptor basicAuthInterceptor() {
-//        return new BasicAuthInterceptor();
-//    }
+    @Bean
+    public BasicAuthInterceptor basicAuthInterceptor() {
+        return new BasicAuthInterceptor();
+    }
 
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(basicAuthInterceptor());
-//    }
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(basicAuthInterceptor());
+    }
 }

@@ -1,7 +1,7 @@
 package codesquad.domain;
 
-import codesquad.dto.CartProductDTO;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,9 +9,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 @Entity
 @NoArgsConstructor
+@ToString
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,18 +31,17 @@ public class Product {
     @DecimalMin(value = "0")
     private Long price;
 
+    @DecimalMin(value = "0.0")
+    private Double discountRate;
 
-    public Product(String title, Long price) {
+    public Product(String title, Long price, Double discountRate) {
         this.title = title;
         this.price = price;
+        this.discountRate = discountRate;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public Product(@DecimalMin(value = "0") Long price) {
-        this.price = price;
     }
 
     public String getTitle() {
@@ -59,20 +60,30 @@ public class Product {
         return price;
     }
 
-    public CartProductDTO toProductDTO(long count) {
-        return new CartProductDTO(this.id, this.title, count, price);
+    public Double getDiscountRate() {
+        return discountRate;
     }
 
-    public Double calculateSalePrice(long count, double discountRate) {
-        if (count >= 10 && discountRate < 0.2) {
-            discountRate += 0.05;
-        }
+    public long getSellingPrice() {
+        return this.price - (long)(this.price * this.discountRate);
+    }
 
-        double salesPrice = (this.price * count) - ((this.price * count) * discountRate);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Objects.equals(id, product.id) &&
+                Objects.equals(title, product.title) &&
+                Objects.equals(description, product.description) &&
+                Objects.equals(imgUrl, product.imgUrl) &&
+                Objects.equals(price, product.price) &&
+                Objects.equals(discountRate, product.discountRate);
+    }
 
-        if (salesPrice < 40000) {
-            salesPrice += 2500;
-        }
-        return salesPrice;
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, title, description, imgUrl, price, discountRate);
     }
 }
