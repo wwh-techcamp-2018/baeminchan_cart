@@ -2,7 +2,8 @@ const productCounter = new ProductCounter();
 productCounter.delegateFrom($('#products'));
 
 const cart = new Cart();
-cart.getProducts();
+cart.getProducts()
+    .then(cart.renderCartProducts);
 
 $('#products').addEventListener('click', addProductToCart);
 
@@ -15,5 +16,7 @@ function addProductToCart({ target }) {
     const productId = productTitle.querySelector('a').href.split('/').pop();
     const productCount = target.closest('li').querySelector('input.buy_cnt').value;
 
-    cart.addProduct(productId, productCount);
+    cart.addProduct(productId, productCount)
+        .then(cart.renderCartProducts)
+        .then(cart.animateBasketToaster)
 }

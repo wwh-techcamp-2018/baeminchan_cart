@@ -5,17 +5,26 @@ class Cart {
     }
 
     getProducts() {
-        fetch('/api/cart', { credentials: "same-origin" })
-            .then(this.validateResponse)
-            .then(this.renderCartProducts)
+        return fetch('/api/cart', { credentials: "same-origin" })
+                .then(this.validateResponse)
     }
 
     addProduct(id, count) {
-        fetch(`/api/cart/products/${id}${count && '?count=' + count}`,
-        { method: 'post', credentials: "same-origin" })
-            .then(this.validateResponse)
-            .then(this.renderCartProducts)
-            .then(this.animateBasketToaster)
+        return fetch(`/api/cart/products/${id}${count ? '?count=' + count : ''}`,
+                { method: 'post', credentials: "same-origin" })
+                    .then(this.validateResponse)
+    }
+
+    updateProduct(id, count) {
+        return fetch(`/api/cart/products/${id}?count=${count}`,
+                { method: 'put', credentials: "same-origin" })
+                    .then(this.validateResponse)
+    }
+
+    deleteProduct(id, count) {
+        return fetch(`/api/cart/products/${id}${count ? '?count=' + count : ''}`,
+                { method: 'delete', credentials: "same-origin" })
+                    .then(this.validateResponse)
     }
 
     validateResponse(response) {
