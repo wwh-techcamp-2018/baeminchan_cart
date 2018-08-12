@@ -25,10 +25,14 @@ public class APiCartController {
         return ResponseEntity.ok().body(RestResponse.of(cartItemList.getCartItemCount()));
     }
 
-//    @GetMapping("")
-//    public ResponseEntity<RestResponse> getProduct(HttpSession httpSession) {
-//
-//    }
+    @GetMapping("")
+    public ResponseEntity<RestResponse> getProduct(HttpSession httpSession) {
+        CartItemList cartItemList = Optional
+                .ofNullable((CartItemList)httpSession.getAttribute("cartItemList"))
+                .orElse(new CartItemList());
+
+        return ResponseEntity.ok().body(RestResponse.of(cartItemList));
+    }
 
     @DeleteMapping("")
     public ResponseEntity<Void> deleteProduct(@RequestBody CartItem cartItem, HttpSession httpSession) {

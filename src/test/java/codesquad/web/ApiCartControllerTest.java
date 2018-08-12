@@ -33,10 +33,4 @@ public class ApiCartControllerTest extends AcceptanceTest {
         log.debug("response.headers : {}", response.getHeaders());
     }
 
-//    @Test
-//    public void removeItemFromCart() {
-//        Long targetId = 1L;
-//        ResponseEntity<Void> response = template().exchange("/cart/" + targetId, HttpMethod.DELETE, createHttpEntity(), Void.class);
-//        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-//    }
 }
