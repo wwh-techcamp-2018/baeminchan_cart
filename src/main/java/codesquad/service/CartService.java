@@ -5,23 +5,29 @@ import codesquad.security.SessionUtils;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
-import java.util.Map;
+import java.util.LinkedHashMap;
 
 @Service
 public class CartService {
 
-    public void addProduct(HttpSession session, Long productId, int count) {
+    public LinkedHashMap<Long, Integer> getProducts(HttpSession session) {
+        Cart cart = SessionUtils.getCartInSession(session);
+        return cart.getProducts();
+    }
+
+    public void addProduct(HttpSession session, Long productId, Integer count) {
         Cart cart = SessionUtils.getCartInSession(session);
         cart.addProduct(productId, count);
         SessionUtils.setCartInSession(session, cart);
     }
 
-    public Map<Long, Integer> getProducts(HttpSession session) {
+    public void updateProduct(HttpSession session, Long productId, Integer count) {
         Cart cart = SessionUtils.getCartInSession(session);
-        return cart.getProducts();
+        cart.updateProduct(productId, count);
+        SessionUtils.setCartInSession(session, cart);
     }
 
-    public void deleteProduct(HttpSession session, Long productId, int count) {
+    public void deleteProduct(HttpSession session, Long productId, Integer count) {
         Cart cart = SessionUtils.getCartInSession(session);
         cart.deleteProduct(productId, count);
         SessionUtils.setCartInSession(session, cart);

@@ -27,11 +27,19 @@ public class ApiCartController {
         return getCart(session);
     }
 
+    @PutMapping("/api/cart/products/{id}")
+    public ResponseEntity<RestResponse> updateProduct(@PathVariable Long id,
+                                                      @RequestParam(value = "count") Integer count,
+                                                      HttpSession session) {
+        cartService.updateProduct(session, id, count);
+        return getCart(session);
+    }
+
     @DeleteMapping("/api/cart/products/{id}")
     public ResponseEntity<RestResponse> deleteProduct(@PathVariable Long id,
                                                       @RequestParam(value = "count", required = false) Integer count,
                                                       HttpSession session) {
-        cartService.deleteProduct(session, id, Optional.ofNullable(count).orElse(1));
+        cartService.deleteProduct(session, id, count);
         return getCart(session);
     }
 
