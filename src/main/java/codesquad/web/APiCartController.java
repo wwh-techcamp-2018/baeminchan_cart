@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/cart")
 public class APiCartController {
 
-    @PostMapping("/update")
+    @PostMapping("")
     public ResponseEntity<RestResponse> updateProduct(@RequestBody CartItem cartItem, HttpSession httpSession) {
         CartItemList cartItemList = Optional
                 .ofNullable((CartItemList)httpSession.getAttribute("cartItemList"))
@@ -22,8 +22,25 @@ public class APiCartController {
         cartItemList.update(cartItem);
         httpSession.setAttribute("cartItemList", cartItemList);
 
-        log.debug("cartItemList : {}", cartItemList);
-        log.debug("cartItemList2 : {}", RestResponse.of(cartItemList.getCartItemCount()));
         return ResponseEntity.ok().body(RestResponse.of(cartItemList.getCartItemCount()));
     }
+
+//    @GetMapping("")
+//    public ResponseEntity<RestResponse> getProduct(HttpSession httpSession) {
+//
+//    }
+
+    @DeleteMapping("")
+    public ResponseEntity<Void> deleteProduct(@RequestBody CartItem cartItem, HttpSession httpSession) {
+        CartItemList cartItemList = Optional
+                .ofNullable((CartItemList)httpSession.getAttribute("cartItemList"))
+                .orElse(new CartItemList());
+
+        cartItemList.delete(cartItem);
+        httpSession.setAttribute("cartItemList", cartItemList);
+
+        return ResponseEntity.ok().build();
+    }
+
+
 }

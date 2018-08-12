@@ -18,11 +18,16 @@ public class ApiCartControllerTest extends AcceptanceTest {
 
         CartItem cartItem = CartItem
                 .builder()
-                .id(Long.valueOf(5))
+                .id(Long.valueOf(100))
+                .description("맛좋은 라면")
+                .imgUrl("/img.png")
+                .price(Long.valueOf(10000))
+                .salesRate(Long.valueOf(20))
+                .title("좋은라면")
                 .amount(Long.valueOf(10))
                 .build();
 
-        ResponseEntity<Void> response = template().postForEntity("/cart/update", cartItem, Void.class);
+        ResponseEntity<Void> response = template().postForEntity("/cart", cartItem, Void.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         log.debug("response.headers : {}", response.getHeaders());

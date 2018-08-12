@@ -7,7 +7,7 @@ import java.util.HashMap;
 @Data
 @AllArgsConstructor
 public class CartItemList {
-    private HashMap<Long, Long> cartItems;
+    private HashMap<Long, CartItem> cartItems;
 
     public CartItemList() {
         cartItems = new HashMap<>();
@@ -17,7 +17,7 @@ public class CartItemList {
         if (item.getAmount() == 0) {
             delete(item);
         }
-        cartItems.put(item.getId(), item.getAmount());
+        cartItems.put(item.getId(), item);
     }
 
     public void delete(CartItem item) {

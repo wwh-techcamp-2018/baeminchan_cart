@@ -38,14 +38,25 @@ function decreaseItemCount() {
 
 function updateItemToCart() {
     const id = targetList.querySelector('div > a').href.split('/').pop();
+    const imgUrl = targetList.querySelector('.imgthumb img').src;
+    const description = inputField.dataset.name;
+    const title = targetList.querySelector('div > a').getAttribute('ga_name');
+    const price = targetList.querySelector('.origin-price > del').innerText.replace('원','');
+    const salesRate = targetList.querySelector('.num').innerText;
     const amount = inputField.value;
 
-    fetch('cart/update', {
+    fetch('cart', {
         method: 'post',
         headers: {'content-type': 'application/json'},
         credentials: 'same-origin',
         body: JSON.stringify({
-            id, amount
+            id,
+            imgUrl,
+            description,
+            title,
+            price,
+            salesRate,
+            amount
         })
     }).then(response => {
         if (!response.ok) return;
