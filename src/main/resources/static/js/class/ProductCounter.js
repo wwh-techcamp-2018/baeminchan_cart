@@ -34,21 +34,9 @@ class ProductCounter {
             return;
         }
 
-        if (isNaN(target.value) || parseInt(target.value) < 1) {
+        if (target.value === '' || isNaN(target.value) || parseInt(target.value) < 1) {
             target.value = 1;
         }
-        this.updateTotalPrice();
-    }
-
-    updateTotalPrice() {
-        const totalPrice = $('#detail_total_price');
-        if (!totalPrice) {
-            return;
-        }
-
-        const salePrice = parseInt($('.desc_price .sale-price').innerText.replace(/\D/g, ''));
-        const quantity = parseInt($('.prd_account .buy_cnt').value);
-        totalPrice.innerText = (salePrice * quantity).toLocaleString();
     }
 
 }
