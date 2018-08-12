@@ -1,5 +1,6 @@
 package codesquad.web;
 
+import codesquad.dto.CartDTO;
 import codesquad.service.CartService;
 import codesquad.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.servlet.http.HttpSession;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Controller
 public class BaeminchanController {
@@ -34,9 +33,8 @@ public class BaeminchanController {
 
     @GetMapping("/cart")
     public String cart(Model model, HttpSession session) {
-        Map<Long, Integer> cart = cartService.getProducts(session);
-        model.addAttribute("cart", cart);
-        model.addAttribute("products", cart.keySet().stream().map(productId -> productService.findById(productId)).collect(Collectors.toList()));
+        CartDTO cartDTO = new CartDTO(cartService.getProducts(session), productService);
+        model.addAttribute("products", cartDTO.getProducts());
         return "cart";
     }
 

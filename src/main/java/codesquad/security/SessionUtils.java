@@ -1,7 +1,6 @@
 package codesquad.security;
 
 import codesquad.domain.Cart;
-import codesquad.domain.Product;
 import codesquad.domain.User;
 
 import javax.servlet.http.HttpSession;
