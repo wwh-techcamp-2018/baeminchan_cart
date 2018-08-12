@@ -39,12 +39,42 @@ public class CartServiceTest {
     public void addProductSuccess() {
         cartService.addProduct(session, 1L, 1);
         assertThat(cartService.getProducts(session)).containsKey(1L).containsValue(1);
+        cartService.addProduct(session, 1L, 2);
+        assertThat(cartService.getProducts(session)).containsKey(1L).containsValue(3);
+    }
+
+    @Test
+    public void updateProductSuccess() {
+        cartService.addProduct(session, 1L, 1);
+        assertThat(cartService.getProducts(session)).containsKey(1L).containsValue(1);
+        cartService.updateProduct(session, 1L, 100);
+        assertThat(cartService.getProducts(session)).containsKey(1L).containsValue(100);
+    }
+
+    @Test
+    public void updateProductNotInCart() {
+        cartService.updateProduct(session, 1L, 1);
+        assertThat(cartService.getProducts(session)).containsKey(1L).containsValue(1);
     }
 
     @Test
     public void deleteProductSuccess() {
         cartService.addProduct(session, 1L, 1);
         cartService.deleteProduct(session, product.getId(), 1);
+        assertThat(cartService.getProducts(session)).doesNotContainKey(1L);
+    }
+
+    @Test
+    public void deleteProductWithoutCount() {
+        cartService.addProduct(session, 1L, 10);
+        cartService.deleteProduct(session, product.getId(), null);
+        assertThat(cartService.getProducts(session)).doesNotContainKey(1L);
+    }
+
+    @Test
+    public void deleteOverflowProductCount() {
+        cartService.addProduct(session, 1L, 1);
+        cartService.deleteProduct(session, product.getId(), 100);
         assertThat(cartService.getProducts(session)).doesNotContainKey(1L);
     }
 }
