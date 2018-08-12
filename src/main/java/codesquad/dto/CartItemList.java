@@ -27,6 +27,6 @@ public class CartItemList {
     }
 
     public int getCartItemCount() {
-        return cartItems.keySet().size();
+        return cartItems.size();
     }
 }

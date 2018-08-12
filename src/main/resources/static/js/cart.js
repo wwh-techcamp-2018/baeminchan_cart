@@ -1,7 +1,7 @@
 
 function initEvents() {
-    cartBox = $('.put_in_basket.sticky_box');
     $('#products').addEventListener('click', handleItemEvent);
+    $('#basket-counter').addEventListener('click', handleGoToBasket);
 }
 
 function handleItemEvent(e) {
@@ -13,6 +13,7 @@ function handleItemEvent(e) {
     upButton = targetList.querySelector('.up');
     downButton = targetList.querySelector('.down');
     updateButton = targetList.querySelector('.btn.btn_gray.prd_thumb_btn.cart');
+
 
     switch (e.target) {
         case upButton:
@@ -55,15 +56,17 @@ function updateItemToCart() {
 }
 
 function handleCartView({data}) {
-    console.log('data : '+ data);
-
-    const divison = cartBox.querySelector('div');
+    const divison = $('.put_in_basket.sticky_box').querySelector('div');
     divison.classList.remove('empty');
     divison.classList.add('full');
 
     divison.querySelector('.txt').style.display="none";
     divison.querySelector('.number').style.display="";
     divison.querySelector('#basket-counter').innerText = data;
+}
+
+function handleGoToBasket() {
+    location.href = '/cart.html';
 }
 
 function handleError() {

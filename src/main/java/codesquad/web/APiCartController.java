@@ -26,13 +26,4 @@ public class APiCartController {
         log.debug("cartItemList2 : {}", RestResponse.of(cartItemList.getCartItemCount()));
         return ResponseEntity.ok().body(RestResponse.of(cartItemList.getCartItemCount()));
     }
-//
-//    @DeleteMapping("/{productId}")
-//    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId, HttpSession httpSession) {
-//        ArrayList<CartItem> cartItems = (ArrayList<CartItem>)httpSession.getAttribute("cartItems");
-//        cartItems.removeIf(cartItem -> cartItem.getProductId().equals(productId));
-//        httpSession.setAttribute("cartItems", cartItems);
-//
-//        return ResponseEntity.ok().build();
-//    }
 }
