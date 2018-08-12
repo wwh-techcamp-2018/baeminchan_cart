@@ -34,4 +34,11 @@ public class Cart {
                     products.put(productId, productCount - count);
                 });
     }
+
+    @Override
+    public String toString() {
+        return "Cart{" +
+                "products=" + products +
+                '}';
+    }
 }

@@ -2,6 +2,9 @@ package codesquad.security;
 
 import codesquad.domain.Cart;
 import codesquad.domain.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
@@ -22,8 +25,8 @@ public class SessionUtils {
         session.removeAttribute(USER_SESSION_KEY);
     }
 
-    public static Cart getCartInSession(HttpSession session) {
-        return Optional.ofNullable((Cart) session.getAttribute(SESSION_CART)).orElse(new Cart());
+    public static Cart getCartInSession(NativeWebRequest webRequest) {
+        return Optional.ofNullable((Cart) webRequest.getAttribute(SESSION_CART, WebRequest.SCOPE_SESSION)).orElse(new Cart());
     }
 
     public static void setCartInSession(HttpSession session, Cart cart) {

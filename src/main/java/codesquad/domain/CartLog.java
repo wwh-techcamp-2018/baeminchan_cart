@@ -22,6 +22,9 @@ public class CartLog {
     private Integer count;
 
     @Column(nullable = false, updatable = false)
+    private String clientIp;
+
+    @Column(nullable = false, updatable = false)
     @CreatedDate
     private LocalDateTime createdAt;
 
@@ -29,10 +32,11 @@ public class CartLog {
 
     }
 
-    public CartLog(String methodName, Long productId, Integer count, LocalDateTime createdAt) {
+    public CartLog(String methodName, Long productId, Integer count, String clientIp, LocalDateTime createdAt) {
         this.methodName = methodName;
         this.productId = productId;
         this.count = count;
+        this.clientIp = clientIp;
         this.createdAt = createdAt;
     }
 
