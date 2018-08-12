@@ -1,38 +1,69 @@
-const totalAmount = $("#basket-counter");
 
 function initEvents() {
-    totalAmount.value = 0;
-    $('.btn.btn_gray.prd_thumb_btn.cart').addEventListener('click', holdItem);
-
+    cartBox = $('.put_in_basket.sticky_box');
+    $('#products').addEventListener('click', handleItemEvent);
 }
 
-function holdItem(e) {
-    const listElement = e.target.closest("li");
-    const productId = listElement.querySelector("div > a").href.split('/').pop();
-    const amount = listElement.querySelector(".buy_cnt").value; //$(".buy_cnt").value;
+function handleItemEvent(e) {
+    e.preventDefault();
 
-    fetch('/cart/hold', {
+    targetList = e.target.closest('li');
+
+    inputField = targetList.querySelector('.buy_cnt');
+    upButton = targetList.querySelector('.up');
+    downButton = targetList.querySelector('.down');
+    updateButton = targetList.querySelector('.btn.btn_gray.prd_thumb_btn.cart');
+
+    switch (e.target) {
+        case upButton:
+            increaseItemCount();
+            break;
+        case downButton:
+            decreaseItemCount();
+            break;
+        case updateButton:
+            updateItemToCart();
+    }
+}
+
+function increaseItemCount() {
+    inputField.value++;
+}
+
+function decreaseItemCount() {
+    if (inputField.value <= 1) return;
+    inputField.value--;
+}
+
+function updateItemToCart() {
+    const id = targetList.querySelector('div > a').href.split('/').pop();
+    const amount = inputField.value;
+
+    fetch('cart/update', {
         method: 'post',
         headers: {'content-type': 'application/json'},
         credentials: 'same-origin',
         body: JSON.stringify({
-            productId,
-            amount
-            })
+            id, amount
         })
-        .then(response => {
-            if (!response.ok) {
-                return;
-            }
-            alert("장바구니에 물건이 담겼습니다.");
-            return updateCart(response.json());
-        })
-        .catch(handleError);
+    }).then(response => {
+        if (!response.ok) return;
 
+        return response.json();
+    }).then(handleCartView)
+    .catch(handleError);
 }
 
-function updateCart(data) {
-     totalAmount.value = data.count;
+function handleCartView({data}) {
+    console.log('data : '+ data);
+
+    const divison = cartBox.querySelector('div');
+    divison.classList.remove('empty');
+    divison.classList.add('full');
+
+    divison.querySelector('.txt').style.display="none";
+    divison.querySelector('.number').style.display="";
+    divison.querySelector('#basket-counter').innerText = data;
 }
 
 function handleError() {

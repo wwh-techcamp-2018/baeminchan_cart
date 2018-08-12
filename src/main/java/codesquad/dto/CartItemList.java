@@ -26,5 +26,7 @@ public class CartItemList {
         cartItems.remove(item.getId());
     }
 
-
+    public int getCartItemCount() {
+        return cartItems.keySet().size();
+    }
 }
