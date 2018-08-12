@@ -10,6 +10,9 @@ function initCartPrices() {
 }
 
 function updateSumPrice({ target }, update = true) {
+    if (!target.classList.contains('cart_prd_list') && !target.closest('.prd_account')) {
+        return;
+    }
     const productRow = target.closest('tr');
     const productId = productRow.id.split('_').pop();
     const price = parseInt(productRow.querySelector('#productPrice').innerText);
@@ -42,21 +45,20 @@ function deleteClickedProduct({ target }) {
     const productId = productRow.id.split('_').pop();
     const count = parseInt(productRow.querySelector('.prd_account .buy_cnt').value);
     cart.deleteProduct(productId, count)
-        .then(() => productRow.remove());
+        .then(() => productRow.remove())
+        .then(updateTotalPrice);
 }
 
 function deleteSelectedProducts() {
-    const deleteList = [...document.querySelectorAll('tbody .custom_checkbox.on')]
-                        .map(checkbox => {
-                            const productId = checkbox.closest('tr').id.split('_').pop();
-                            return cart.deleteProduct(productId);
-                        });
-    Promise.all(deleteList)
-        .then(() => location.reload());
+    const deleteProductIdList = [...document.querySelectorAll('tbody .custom_checkbox.on')]
+                        .map(checkbox => checkbox.closest('tr').id.split('_').pop());
+    Promise.all(deleteProductIdList.map(cart.deleteProduct))
+        .then(() => deleteProductIdList.forEach(productId => $(`#cart_prd_${productId}`).remove()))
+        .then(updateTotalPrice);
 }
 
 function toggleSelect(e) {
-    if (!e.target.name === 'cart_select') {
+    if (e.target.name !== 'cart_select' && e.target.id !== 'check_all_cart_item') {
         return;
     }
     const checkLabel = e.target.closest('label.custom_checkbox');

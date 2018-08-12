@@ -18,7 +18,7 @@ public class CartLog {
     @Column(nullable = false, updatable = false)
     private Long productId;
 
-    @Column(nullable = false, updatable = false)
+    @Column(updatable = false)
     private Integer count;
 
     @Column(nullable = false, updatable = false)

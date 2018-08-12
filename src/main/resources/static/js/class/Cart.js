@@ -2,6 +2,7 @@ class Cart {
 
     constructor() {
         this.renderCartProducts = this.renderCartProducts.bind(this);
+        this.deleteProduct = this.deleteProduct.bind(this);
     }
 
     getProducts() {

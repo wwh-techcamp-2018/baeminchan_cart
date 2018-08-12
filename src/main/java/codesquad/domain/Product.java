@@ -63,8 +63,12 @@ public class Product {
         return price;
     }
 
-    public Double getDiscountRate() {
-        return discountRate;
+    public Long getDiscountRate() {
+        return Double.valueOf(discountRate).longValue();
+    }
+
+    public Long getSalesPrice() {
+        return price - Double.valueOf((price * discountRate) / 100).longValue();
     }
 
     public static ProductBuilder builder() {
