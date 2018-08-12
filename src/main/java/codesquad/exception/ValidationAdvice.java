@@ -1,6 +1,7 @@
 package codesquad.exception;
 
 
+import codesquad.web.ApiErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,6 @@ public class ValidationAdvice {
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiErrorResponse handleResourceNotFoundException(ResourceNotFoundException exception){
-        return new ApiErrorResponse().error(new ApiError(exception.getMessage(), exception.getLocalizedMessage()));
+        return ApiErrorResponse.builder("error").error(new ApiError(exception.getMessage(), exception.getLocalizedMessage()));
     }
 }

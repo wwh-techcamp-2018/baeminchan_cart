@@ -7,14 +7,16 @@ import codesquad.security.SessionUtils;
 import codesquad.service.CartProductService;
 import codesquad.service.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.net.URI;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class ApiUserController {
 
     @Resource(name = "userService")
@@ -30,10 +32,10 @@ public class ApiUserController {
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public void login(HttpSession session, @RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<ApiSuccessResponse> login(HttpSession session, @RequestBody LoginDTO loginDTO) {
         User loginUser = userService.login(loginDTO);
         SessionUtils.setUserInSession(session, loginUser);
-        //todo 세션에 카테고리ID가 있는경우, 카테고리 테이블 업데이트
         cartService.saveUser(loginUser, SessionUtils.getCartFromSession(session));
+        return ResponseEntity.created(URI.create("/")).body(ApiSuccessResponse.builder("success"));
     }
 }

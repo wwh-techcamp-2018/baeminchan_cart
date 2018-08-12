@@ -1,4 +1,5 @@
 INSERT INTO USER (email, password, name, phone_number, permissions ) VALUES ('javajigi@woowahan.com', 'password',  'javajigi', '010-1234-5678', 1);
+INSERT INTO USER (email, password, name, phone_number, permissions ) VALUES ('t', 't',  'test', '010-1234-5678', 1);
 
 
 INSERT INTO CATEGORY (id, title) VALUES (0, 'ROOT');

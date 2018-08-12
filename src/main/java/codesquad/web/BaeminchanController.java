@@ -1,7 +1,10 @@
 package codesquad.web;
 
+import codesquad.domain.Cart;
 import codesquad.security.SessionUtils;
 import codesquad.service.ProductService;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import javax.servlet.http.HttpSession;
 
 @Controller
+@Slf4j
 public class BaeminchanController {
     @Autowired
     private ProductService productService;
@@ -37,7 +41,10 @@ public class BaeminchanController {
 
 
     @GetMapping("/cart")
-    public String cart(Model model) {
+    public String cart(Model model, HttpSession session) {
+        Cart cart = SessionUtils.getCartFromSession(session);
+        log.debug("cart {} ", cart);
+        model.addAttribute("cartItems", cart.getCartProducts());
         return "cart";
     }
 

@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function(evt) {
         };
 
         fetchManager({
-            url: "/users/login",
+            url: "/api/users/login",
             method: "POST",
             headers: {"content-type": "application/json"},
             body: JSON.stringify(postObject),
@@ -19,13 +19,13 @@ document.addEventListener("DOMContentLoaded", function(evt) {
 
 });
 
-function displayErrors(result) {
-    if(!result) {
+function displayErrors(result, body) {
+    if(result == '201') {
         window.location.href = "/";
     }
     let appendText = "";
     $(".error-message-holder").innerHTML = ""
-    for(message of result.errors) {
+    for(message of body.errors) {
         appendText += message.errorMessage + "<br />";
 
     }
@@ -34,9 +34,9 @@ function displayErrors(result) {
 }
 
 function getUserEmail() {
-    return $_value("#member_id");
+    return $_value($("#member_id"));
 }
 
 function getUserPassword() {
-    return $_value("#pwd");
+    return $_value($("#pwd"));
 }

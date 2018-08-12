@@ -69,3 +69,4 @@ const getIndex = (elem) => (
 
 const formatMoney = (number) => ( Number(number).toLocaleString() );
 
+const $_value = (elem) =>  elem.value || elem.innerHTML;

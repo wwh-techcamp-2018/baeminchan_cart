@@ -2,6 +2,7 @@ package codesquad;
 
 import codesquad.security.BasicAuthInterceptor;
 import codesquad.security.FixedPasswordEncoder;
+import codesquad.support.MoneyFormatter;
 import codesquad.support.PriceCalcultor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +21,10 @@ public class WebConfig implements WebMvcConfigurer {
     public PasswordEncoder passwordEncoder() {
         return new FixedPasswordEncoder();
     }
-
+    @Bean
+    public MoneyFormatter moneyFormatter(){ return new MoneyFormatter();}
+    @Bean
+    public PriceCalcultor priceCalcultor(){ return new PriceCalcultor(); }
     @Bean
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();

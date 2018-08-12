@@ -10,7 +10,7 @@ public class PriceCalcultor {
     public Long calculatePrice(Long price, Long discountRate, int count) {
         if(discountRate < NO_DISCOUNT_THRESHOLD && count >= DISCOUNT_AMT_THRESHOLD)
             discountRate += ADDITIONAL_DISCOUNT_RATE;
-        return price *  (100L - discountRate) * count;
+        return price *  (100L - discountRate) /100L * count;
     }
 
     public Long calculateTotalPrice(long originalTotalPrice){

@@ -6,12 +6,14 @@ import codesquad.dto.CartProductDTO;
 import codesquad.exception.ResourceNotFoundException;
 import codesquad.security.SessionUtils;
 import codesquad.support.PriceCalcultor;
+import lombok.extern.slf4j.Slf4j;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 public class CartProductService {
     @Autowired
     private CartRepository cartRepository;
@@ -33,7 +35,7 @@ public class CartProductService {
     @Transactional
     public Cart addToCart(CartProductDTO cartProductDTO, Cart cart, User user){
         cart = initCartProduct(cartProductDTO, cart, user);
-        
+
         cartRepository.save(cart);
         return cart;
     }
@@ -42,9 +44,13 @@ public class CartProductService {
     }
 
     public void saveUser(User loginUser, Cart cartFromSession) {
+        log.debug("Cart {}", cartFromSession);
         cartFromSession.setUser(loginUser);
+        Cart cart = null;
         if(!cartFromSession.isEmptyCart()) {
-            cartRepository.save(cartFromSession);
+            cart = cartRepository.save(cartFromSession);
         }
+
+        log.debug("user added {}", cart);
     }
 }

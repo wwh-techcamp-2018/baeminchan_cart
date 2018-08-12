@@ -4,6 +4,7 @@ import antlr.LexerSharedInputState;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.ToString;
+import org.apache.commons.lang3.builder.ToStringExclude;
 import sun.util.resources.cldr.teo.CalendarData_teo_KE;
 
 import javax.persistence.*;
@@ -21,11 +22,12 @@ public class Category{
     @NotBlank
     private String title;
 
-    @JsonIgnore
+    @JsonIgnore @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Category parent;
 
     @OneToMany(mappedBy = "parent")
+    @ToString.Exclude
     private List<Category> children;
 
 }

@@ -31,11 +31,11 @@ public class User {
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
     private UserPermissions permissions;
-
+/*
     //hint 삭제?
     @OneToOne (mappedBy = "user")
     private Cart cart;
-
+*/
     public User() {
         permissions = UserPermissions.NORMAL;
     }

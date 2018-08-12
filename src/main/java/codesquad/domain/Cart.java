@@ -1,17 +1,18 @@
 package codesquad.domain;
 
 import codesquad.support.AbstractEntity;
+import codesquad.support.MoneyFormatter;
 import codesquad.support.PriceCalcultor;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.misc.OrderedHashSet;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import javax.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -77,14 +78,32 @@ public class Cart extends AbstractEntity {
         log.debug("preUpdate {}", cartProductCnt);
         initCartProductCnt();
     }
-
-    @JsonAnyGetter
-    public Map getPrice(PriceCalcultor priceCalcultor) {
-        Map<String, Long> calculation = new HashMap();
+       @JsonInclude
+    //@JsonAnyGetter
+    @JsonGetter("calculation")
+    @Autowired
+    public Map getPrice(PriceCalcultor priceCalcultor, MoneyFormatter moneyFormatter) {
+        Map<String, Object> calculation = new HashMap();
         Long totalPrice = cartProducts.stream().mapToLong(CartProduct::getTotalPrice).sum();//.reduce( (x, y) -> x+y );
         Long deliveryTotalPrice = priceCalcultor.calculateTotalPrice(totalPrice);
         calculation.put("totalPrice",totalPrice);
         calculation.put("deliveryTotalPrice", deliveryTotalPrice);
+        calculation.put("formattedTotalPrice", moneyFormatter.longToMoney(totalPrice));
+        calculation.put("formattedDeliveryTotalPrice", moneyFormatter.longToMoney(deliveryTotalPrice));
+
+        return calculation;
+    }
+    //todo 어떻게 하나
+    @JsonAnyGetter
+    //@JsonGetter("calculation")
+    public Map getPrice() {
+        Map<String, Object> calculation = new HashMap();
+        Long totalPrice = cartProducts.stream().mapToLong(CartProduct::getTotalPrice).sum();//.reduce( (x, y) -> x+y );
+        Long deliveryTotalPrice = new PriceCalcultor().calculateTotalPrice(totalPrice);
+        calculation.put("totalPrice",totalPrice);
+        calculation.put("deliveryTotalPrice", deliveryTotalPrice);
+        calculation.put("formattedTotalPrice", new MoneyFormatter().longToMoney(totalPrice));
+        calculation.put("formattedDeliveryTotalPrice", new MoneyFormatter().longToMoney(deliveryTotalPrice));
 
         return calculation;
     }
@@ -98,6 +117,7 @@ public class Cart extends AbstractEntity {
     public void addCartProduct(CartProduct cartProduct){
         log.debug("cartProduct {} {}", cartProduct, cartProduct.hashCode());
         //todo 리팩토링 - 코드 정리 또는 List > Map 으로 바꾸기
+        //hint 가정 : id가 이미 있는, Repository에 저장된 Product여야한다...
         Optional<CartProduct> duplicate = cartProducts.stream()
                 .filter(x -> x.getProduct().getId().equals(cartProduct.getProduct().getId())).findFirst();
         if (duplicate.isPresent()){
@@ -115,6 +135,7 @@ public class Cart extends AbstractEntity {
                 cartProducts.stream().map(x-> x.getId()).collect(Collectors.toList()) +
                 ", user=" + user +
                 ", cartProductCnt=" + cartProductCnt +
+                ", calculation "+ getPrice(new PriceCalcultor(), new MoneyFormatter()) +
                 '}';
     }
 }
