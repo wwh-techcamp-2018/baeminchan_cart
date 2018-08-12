@@ -28,8 +28,10 @@ function updateTotalPrice() {
 
     const shippingFee = $('#shippingFee');
     shippingFee.innerText = FREE_SHIP_THRESHOLD <= salePrice ? 0 : DEFAULT_SHIP_FEE;
+
+    const totalPrice = salePrice + toPrice(shippingFee);
     $('#salePrice').innerText = salePrice.toLocaleString();
-    $('#totalPrice').innerText = (salePrice + toPrice(shippingFee)).toLocaleString();
+    $('#totalPrice').innerText = (salePrice ? totalPrice : 0).toLocaleString();
 }
 
 function deleteClickedProduct({ target }) {
