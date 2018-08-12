@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpSession;
 
@@ -27,10 +28,10 @@ public class BaeminchanController {
         return "product";
     }
 
-    @GetMapping("/cart")
-    public String cart(Model model) {
-        return "cart";
-    }
+//    @GetMapping("/cart")
+//    public String cart(Model model) {
+//        return "cart";
+//    }
 
     @GetMapping("/order")
     public String order(Model model) {
@@ -41,4 +42,5 @@ public class BaeminchanController {
     public String home() {
         return "/index";
     }
+
 }
