@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ApiCartControllerTest extends AcceptanceTest {
+
     @Test
     public void holdItemToCart() {
 
