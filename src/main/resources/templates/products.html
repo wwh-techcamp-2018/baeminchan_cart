@@ -52,7 +52,7 @@
 </ul>                    <h2 class="tlt_cate_h2">밑반찬</h2>
                     <ul id="products" class="prds_lst col4">
                         {{#products}}
-                        <li>
+                        <li data-id="{{id}}">
                             <div class="imgthumb">
 	                              <img src="{{imgUrl}}" alt="">
 
@@ -109,3 +109,5 @@
         </div>
     </div>
 {{/block}}
+<script src="/js/cart.js"></script>
+<script src="/js/main.js"></script>
