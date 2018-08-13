@@ -4,7 +4,9 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.bmf.kr/web/css/swiper/3.2.7/swiper.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.bmf.kr/static/css/app.v-bdf170c3.css">
 {{/block}}
+<style>
 
+</style>
 {{#block "contents"}}
         <!--  skip navi -->
         <a href="#container" id="skip_navigation">본문 바로가기</a>
@@ -94,7 +96,7 @@
                                                             <label>
                                                                 <input type="text" name="amount" value="1" class="buy_cnt">
                                                             </label>
-                                                            <span>
+                                                            <span id="amount_manager">
                                                                 <a href="#" title="수량 더하기" class="up">수량 더하기</a>
                                                                 <a href="#" title="수량 빼기" class="down">수량 빼기</a>
                                                             </span>
@@ -107,7 +109,7 @@
                                                 <strong id="detail_total_price" class="price_number">5,400</strong>
                                                 <span class="unit">원</span>
                                             </p>
-                                            <button type="button" class="btn btn_mint btn_into_basket purchageable">담기</button>
+                                            <button type="button" id="addToCartBtn" class="btn btn_mint btn_into_basket purchageable">담기</button>
                                         </fieldset>
                                     </form>
                                 </div>
@@ -121,9 +123,9 @@
                         </h3>
                         <div class="empty">
                             <p class="top_box_number">
-                                <span class="txt" style="display:;" id="cart_display_none">담은상품이
+                                <span class="txt" id="cart_display_none">담은상품이
                                     <br>없습니다.</span>
-                                <strong class="number" id="cart_display_exist" style="display:none">
+                                <strong class="number hidden" id="cart_display_exist">
                                     <span id="basket-counter" class="number_txt">0</span>
                                     <span class="unit">개</span>
                                 </strong>
@@ -132,9 +134,11 @@
                                 <span>&gt;</span>
                             </a>
                         </div>
-                        <div id="basket-toaster" class="tooltip" style="display: none;">
+
+
+                        <div id="basket-toaster" class="tooltip transparent">
                             <i class="tooltip_arr"></i>
-                            <span class="prd_name">상품</span>
+                            <span class="prd_name">{{product.title}}</span>
                             담기완료
                         </div>
                     </div>
@@ -163,4 +167,28 @@
                 </div>
             </div>
         </div>
+
+<script type="module">
+    import Product from "/js/product.js"
+    import {CartTooltip} from "/js/cart.js"
+
+    document.addEventListener('DOMContentLoaded', () =>{
+        const _product = {
+            id : {{product.id}},
+        price : {{product.price}},
+        title : '{{product.title}}',
+         }
+        const _cart = {
+            cartProductCnt: {{#if  cartSession}} {{cartSession.cartProductCnt}} {{else}} 0 {{/if}}
+        }
+        const product = new Product(_product.id, _product.price);
+                //const cartTooltip = new CartTooltip();
+            // cartTooltip.renderCartTooltip(_cart);
+        //product.initCart(cartTooltip);
+            product.initCartTooltip(_cart);
+        product.registerEvent();
+
+    });
+</script>
+
 {{/block}}

@@ -37,26 +37,26 @@ function displayErrors(result) {
 }
 
 function getEmail() {
-    const emailUser = $_value("#email_id");
-    const emailDomain = $_value("#email_domain");
+    const emailUser = $_value($("#email_id"));
+    const emailDomain = $_value($("#email_domain"));
     return emailUser + "@" + emailDomain;
 }
 
 function getPassword() {
-    const password = $_value("#pw1");
+    const password = $_value($("#pw1"));
     return password
 }
 
 function getPasswordConfirm() {
-    const confirm = $_value("#pw2");
+    const confirm = $_value($("#pw2"));
     return confirm;
 }
 
 function getName() {
-    const name = $_value("#name");
+    const name = $_value($("#name"));
     return name;
 }
 
 function getPhoneNumber() {
-    return $_value("#cell1") + "-" + $_value("#cell2") + "-" + $_value("#cell3");
+    return $_value($("#cell1")) + "-" + $_value($("#cell2")) + "-" + $_value($("#cell3"));
 }

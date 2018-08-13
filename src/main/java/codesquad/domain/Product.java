@@ -1,13 +1,25 @@
 package codesquad.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import codesquad.support.MoneyFormatter;
+import codesquad.support.PriceCalcultor;
+import com.fasterxml.jackson.annotation.*;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.builder.ToStringExclude;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Size;
+import java.text.NumberFormat;
 
 @Entity
+@Data
+@Slf4j
+//todo Builder 삭제
+@Builder @AllArgsConstructor
+//todo 왜 NoArgsConstructor 따로..?
+@NoArgsConstructor
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,23 +37,32 @@ public class Product {
     @DecimalMin(value = "0")
     private Long price;
 
-    public Long getId() {
-        return id;
-    }
+    //todo categoryId
+    @JsonIgnore @ToString.Exclude
+    @ManyToOne(optional = false)
+    private Category category;
 
-    public String getTitle() {
-        return title;
-    }
+    //todo discountRate -- int? long?
+    @Column(nullable = false)
+    private Long discountRate = 0L;
 
-    public String getDescription() {
-        return description;
-    }
+    @Column(nullable = false)
+    private boolean deliverable = false;
 
-    public String getImgUrl() {
-        return imgUrl;
+    //todo priceCalculator 구현
+    public Long calculatePrice(PriceCalcultor priceCalcultor, int count) {
+        return priceCalcultor.calculatePrice(price, discountRate, count);
     }
-
-    public Long getPrice() {
-        return price;
+//    //todo 해결방법 찾기
+//    @JsonGetter("formattedPrice")
+//    @Autowired
+//    public String getFormattedPrice(MoneyFormatter moneyFormatter){
+//        log.debug("getFormattedPrice called 1");
+//        return moneyFormatter.longToMoney(this.price);
+//    }
+    @JsonGetter("formattedPrice")
+    public String getFormattedPrice(){
+        log.debug("getFormattedPrice called 2 ");
+        return String.valueOf(this.price);
     }
 }
