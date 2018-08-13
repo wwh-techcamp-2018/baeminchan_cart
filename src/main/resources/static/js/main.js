@@ -10,15 +10,13 @@ function $_value(selector) {
     return $(selector).value;
 }
 
-function fetchManager({ url, method, body, headers, success, error }) {
-    fetch(url, {
+const fetchManager = async ({url, method, body, headers, callback}) => {
+    const response = await fetch(url, {
         method,
         body,
         headers,
         credentials: "same-origin"
-    }).then((result) => {
-        success(result)
-    }).catch(e => {
-        error(e);
-    })
-}
+    });
+    const data = await response.json();
+    callback(data);
+};

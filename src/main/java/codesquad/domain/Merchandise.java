@@ -1,7 +1,16 @@
 package codesquad.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.util.Objects;
 
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Merchandise {
 
     private Long pId;
@@ -9,25 +18,10 @@ public class Merchandise {
     private boolean isDelivery = true;
     private Product product;
 
-    public Merchandise() {
-    }
-
     public Merchandise(int amount, boolean isDelivery, Product product) {
         this.amount = amount;
         this.isDelivery = isDelivery;
         this.product = product;
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
-    public boolean isDelivery() {
-        return isDelivery;
-    }
-
-    public Product getProduct() {
-        return product;
     }
 
     @Override
@@ -41,25 +35,5 @@ public class Merchandise {
     @Override
     public int hashCode() {
         return Objects.hash(product);
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
-
-    public void setDelivery(boolean delivery) {
-        isDelivery = delivery;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public Long getpId() {
-        return pId;
-    }
-
-    public void setpId(Long pId) {
-        this.pId = pId;
     }
 }

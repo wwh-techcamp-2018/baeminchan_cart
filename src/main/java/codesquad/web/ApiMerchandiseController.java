@@ -3,40 +3,32 @@ package codesquad.web;
 import codesquad.domain.Merchandise;
 import codesquad.domain.ProductRepository;
 import codesquad.domain.ShoppingBasket;
+import codesquad.dto.CartDTO;
 import codesquad.exception.RestResponse;
-import codesquad.security.BasicAuthInterceptor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import codesquad.security.SessionUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/merchandise")
 public class ApiMerchandiseController {
-
-    private static final Logger log = LoggerFactory.getLogger(ApiMerchandiseController.class);
 
     @Autowired
     private ProductRepository productRepository;
 
     @PostMapping("")
-    public ResponseEntity<RestResponse> create(@RequestBody Merchandise mer, HttpSession httpSession) {
+    public ResponseEntity<RestResponse> addCart(@RequestBody CartDTO cartDTO, HttpSession httpSession) {
+        log.debug("cartDTO : {} {}", cartDTO.getId(), cartDTO.getAmount());
 
-        log.debug("pId : {}", mer.getpId());
+        ShoppingBasket shoppingBasket = SessionUtils.getShoppingCartInSession(httpSession);
+        shoppingBasket.putCart(cartDTO);
 
-        Merchandise merchandise = new Merchandise(mer.getAmount(),false, productRepository.findById(mer.getpId()).get());
-
-        if(httpSession.getAttribute("SHOPPING_CART") == null) {
-            httpSession.setAttribute("SHOPPING_CART", new ShoppingBasket());
-        }
-
-        ShoppingBasket shoppingBasket = (ShoppingBasket) httpSession.getAttribute("SHOPPING_CART");
-        shoppingBasket.put(merchandise);
-
-        return ResponseEntity.ok(new RestResponse(shoppingBasket.getMerchandises().keySet().size()));
+        return ResponseEntity.ok(new RestResponse(shoppingBasket.getCartSize()));
     }
 
 }

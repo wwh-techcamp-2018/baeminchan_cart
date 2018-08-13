@@ -2,7 +2,6 @@ package codesquad.domain;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
 
@@ -21,8 +20,8 @@ public class ShoppingBasketTest {
     public void put_성공() {
         Product product = new Product("hong","hong","", 1000L);
         Merchandise merchandise = new Merchandise(1, true, product);
-        shoppingBasket.put(merchandise);
-        shoppingBasket.put(merchandise);
+        shoppingBasket.putCart(merchandise);
+        shoppingBasket.putCart(merchandise);
         Map<Merchandise, Integer> map = shoppingBasket.getMerchandises();
         assertThat(map.get(merchandise)).isEqualTo(2);
     }

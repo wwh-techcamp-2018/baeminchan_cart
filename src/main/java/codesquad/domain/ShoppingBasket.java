@@ -1,32 +1,28 @@
 package codesquad.domain;
 
+import codesquad.dto.CartDTO;
+import lombok.Getter;
+
 import java.util.*;
 
+@Getter
 public class ShoppingBasket {
 
-    private Map<Merchandise, Integer> merchandises = new HashMap<>();
+    private Map<Long, Integer> carts = new HashMap<>();
 
     public ShoppingBasket() {
     }
 
-    public ShoppingBasket(Map<Merchandise, Integer> merchandises) {
-        this.merchandises = merchandises;
+    public ShoppingBasket(Map<Long, Integer> merchandises) {
+        this.carts = merchandises;
     }
 
-    public void put(Merchandise merchandise) {
-
-        Iterator<Merchandise> keys = this.merchandises.keySet().iterator();
-        for (Merchandise m : merchandises.keySet()) {
-            if(merchandise.equals(m)) {
-                this.merchandises.put(merchandise, this.merchandises.get(m) + merchandise.getAmount());
-                return;
-            }
-        }
-
-        this.merchandises.put(merchandise, 1);
+    public void putCart(CartDTO cartDTO) {
+        Integer count = Optional.ofNullable(carts.get(cartDTO.getId())).orElse(0);
+        this.carts.put(cartDTO.getId(), count + cartDTO.getAmount());
     }
 
-    public Map<Merchandise, Integer> getMerchandises() {
-        return merchandises;
+    public int getCartSize() {
+        return carts.size();
     }
 }

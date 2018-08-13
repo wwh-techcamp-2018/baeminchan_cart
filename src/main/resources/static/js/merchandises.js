@@ -12,15 +12,25 @@ function putMerchandise(element){
         method: "POST",
         headers: { 'content-type': 'application/json; charset=utf-8' },
         body: JSON.stringify({
-            'pId' : pId,
+            'id' : pId,
             'amount' : amount
         }),
-        success: putMerchandiseSuccess,
+        callback : putMerchandiseSuccess
     });
 }
 
 function putMerchandiseSuccess(response) {
-    const data = response.json().data;
+    const data = response.data;
+    data ? displayCount(data) :  displayNotCount();
+}
 
-    $(".top_box_number > span").replace("<span class=\"txt\" style=\"display:;\" id=\"cart_display_none\">담은상품이<br>없습니다.</span>\n", "<span>" + data +"</span>>");
+function displayCount(count) {
+    $("#cart_display_none").style.display = "none";
+    $("#cart_display_exist").style.display = "block";
+    $("#basket-counter").innerText = count;
+}
+
+function displayNotCount() {
+    $("#cart_display_none").style.display = "block";
+    $("#cart_display_exist").style.display = "none";
 }
