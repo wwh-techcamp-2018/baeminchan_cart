@@ -1,34 +1,48 @@
 package codesquad.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-@Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Cart {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private List<CartItem> cartItems = new ArrayList<>();
 
-//    private String sessionId;
+    public void addCartItem(CartItem newCartItem){
+        if(isPresentCartItem(newCartItem)) {
+            itemCountUp(newCartItem);
+            return;
+        }
+        cartItems.add(newCartItem);
+    }
 
-    private String title;
+    private void itemCountUp(CartItem newCartItem) {
+        cartItems.forEach(item -> {
+            if (item.equals(getPresentCartItem(newCartItem))) {
+                item.quantityCountUp();
+            }
+        });
+    }
 
-    private String description;
+    private boolean isPresentCartItem(CartItem newCartItem) {
+        Optional<CartItem> presentCartItem = getPresentCartItem(newCartItem);
 
-    private String imgUrl;
+        if(!presentCartItem.isPresent()) { return false; }
+        return true;
+    }
 
-    private int price;
+    private Optional<CartItem> getPresentCartItem(CartItem newCartItem) {
+        return cartItems.stream().filter(item->
+                            item.getProduct().equals(newCartItem.getProduct())).findFirst();
+    }
 
-    private int itemCount;
 
 }
