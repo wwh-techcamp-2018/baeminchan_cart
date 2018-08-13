@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Order {
     private static final long DELIVERY_FEE = 2500;
-    private static final long PRICE_NEEDED_DELEVERY_FEE = 40000;
+    private static final long PRICE_NEEDED_DELIVERY_FEE = 40000;
 
     private List<Cart> carts;
     private long totalPrice;
@@ -51,7 +51,7 @@ public class Order {
     }
     
     private boolean isNeedDeliveryFee(){
-        return totalPrice < PRICE_NEEDED_DELEVERY_FEE;
+        return totalPrice < PRICE_NEEDED_DELIVERY_FEE;
     }
 
     @Override

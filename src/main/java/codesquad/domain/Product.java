@@ -1,9 +1,6 @@
 package codesquad.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Size;
 import java.util.Objects;
@@ -32,6 +29,7 @@ public class Product {
     private Long price;
 
     @DecimalMin(value = "0")
+    @Column(nullable = true)
     private int saleRate;
 
     public Product() {

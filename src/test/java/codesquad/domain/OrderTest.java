@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
-public class OrderPrice {
+public class OrderTest {
 
     private Order order;
 
