@@ -3,11 +3,13 @@ package codesquad.domain;
 import codesquad.dto.UserDTO;
 import codesquad.exception.UserVerificationException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.ToString;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 
 @Entity
+@ToString(onlyExplicitlyIncluded = true)
 public class User {
     public static final String FIELD_NAME_EMAIL = "email";
     public static final String FIELD_NAME_PASSWORD = "password";
@@ -17,6 +19,7 @@ public class User {
     private long id;
 
     @Column(length = 40, unique = true, nullable = false, updatable = false)
+    @ToString.Include
     private String email;
 
     @Column(nullable = false)

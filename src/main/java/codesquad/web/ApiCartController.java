@@ -43,6 +43,8 @@ public class ApiCartController {
     public ResponseEntity<ApiSuccessResponse> changeAmount(@RequestBody SetCartProductDTO setCartProductDTO, HttpSession session){
         Cart cart = SessionUtils.getCartFromSession(session);
         User user = SessionUtils.getUserFromSession(session);
+        log.debug("cart in session {} {}", cart, cart.hashCode());
+        log.debug("user in session {}", user);
         Cart addedCart = cartService.changeCartItem(setCartProductDTO, cart, user);
         SessionUtils.setCartInSession(session, addedCart);
         return ResponseEntity.ok(new ApiSuccessResponse(HttpStatus.OK, addedCart, null));

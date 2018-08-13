@@ -87,7 +87,11 @@ public class Cart extends AbstractEntity {
         cartProductCnt++;
     }
 
-//    @Override
+    public boolean isOwner(User user) {
+        return this.user.equals(user);
+    }
+
+    //    @Override
 //    public String toString() {
 //        return "Cart{" +
 //                "cartProducts=" +

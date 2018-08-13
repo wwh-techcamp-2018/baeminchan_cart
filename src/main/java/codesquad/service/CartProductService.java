@@ -56,7 +56,8 @@ public class CartProductService {
     @Transactional
     public Cart changeCartItem(SetCartProductDTO setCartProductDTO, Cart cart, User user) {
         //todo refactor
-        if(!user.isGuestUser() && !cart.getUser().equals(user)){
+        log.debug("cart ", cart);
+        if(!user.isGuestUser() && !cart.isOwner(user)){
             throw new NotAuthorizedException();
         }
         log.debug("setCartProductDTO {}", setCartProductDTO);
