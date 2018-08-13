@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public class Cart {
 
+    public static final Cart EMPTY_CART = new Cart();
     private final long FREE_SHIPMENT_BOUND_PRICE = 40000;
     private final long SHIPMENT_PRICE = 2500;
 

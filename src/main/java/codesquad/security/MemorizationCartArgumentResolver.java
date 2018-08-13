@@ -18,6 +18,6 @@ public class MemorizationCartArgumentResolver implements HandlerMethodArgumentRe
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         if(SessionUtils.isMemorizationCart(webRequest))
             return SessionUtils.getCartInSession(webRequest);
-        return new Cart();
+        return Cart.EMPTY_CART;
     }
 }
