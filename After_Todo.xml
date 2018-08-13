@@ -1,0 +1,161 @@
+<CartTodoList>
+
+    - 프론트는 못하니까 차근차근 분석, 공부하면서 하기
+    // 되게만 되게 하지 말자 !
+
+    - 백엔드는 항상 메시지 패싱으로 해결하기
+    // 객체를 데이터가 아닌 행위의 관점으로 바라보는 연습
+
+    - 백엔드 불필요한 레이어 추가 되지 않게 고민하기
+
+    - Requirements -> Requirement -> Result 는
+        구현 후 셀프 리뷰하거나 다른 사람들이랑 얘기한 내용들 정리
+
+    - 회고 : Result 보고 새롭게 내가 해야 할 일들이랑 그 이유들 정리
+
+    <Requirements type="Service">
+        <Requirement type="Cart">
+            <Context>
+                - 로그인하지 않은 사용자도 장바구니 가능
+                - 로그아웃 상태에서 로그인 상태로 바뀌어도 장바구니 유지
+                - 로그인 상태에서 로그아웃 상태로 바뀌어도 장바구니 유지
+            </Context>
+            <Analysis>
+                - 로그인 여부 관계 없이 세션을 기준으로 가면 될 듯
+                    - 모든 클라이언트 세션에 장바구니가 필요할까?
+                        : 비어있는 장바구니가 성능상에 별 이슈가 없으면
+                        굳이 해당 이슈에 대해 불필요한 비용을 많이 쏟지 말자
+                - 모든 장바구니가 영속적으로 관리될 필요는 없을 듯
+            </Analysis>
+        </Requirement>
+
+        <Requirement type="Cart">
+            <Context>
+                - 관리자는 각 사용자의 장바구니에 상품 등록 이력을 추적하고 싶다.
+                    - 이유 : 상품 발굴, 사용자 패턴을 분석하는 데 활용하기 위해서
+                    - 고려할 점 : 상품을 등록한 후 구매까지 이어졌는지의 여부
+                    - 고려할 점 : 상품이 추가되었다가 바로 취소되는 경우
+            </Context>
+            <Analysis>
+                - 영속화할 장바구니의 조건은 ????
+                    - 모든 세션의 장바구니가 영속적으로 관리되야 할까?
+                - 향후 데이터 분석을 위해 필요한 데이터가 뭔지 찾기
+                    (모든 속성이 필요한 게 아닐 수 도 있으니까)
+                    - 필요 :
+                    - 안필요 :
+            </Analysis>
+        </Requirement>
+
+        <Requirement type="Cart">
+            <Context>
+                - 반찬 가격 결정 정책 - 갯수 할인
+                    - 각 반찬 마다 할인율이 존재
+                    - 같은 반찬을 10개 이상 주문하면 기존 할인율에서 5% 추가 할인
+                    - 할인율이 20% 이상인 반찬은 10개 이상 주문시에도 5% 추가 할인 미적용
+            </Context>
+            <Analysis>
+                - 반찬별 할인율은 어떻게 설계 되어야 좋을 지 고민하기
+                    - 확장성 이슈가 있을지 생각
+                - "10개 이상에 대한 할인"
+                    - N개 이상에 대한 M% 할인 : N과 M에 대한 확장을 열어야 할 지
+            </Analysis>
+
+        </Requirement>
+
+        <Requirement>
+            <Context>
+                - 반찬 가격 결정 정책 - 배송료 issue
+                    - 구매 금액이 4만원 미만시 배송료 추가
+                    - 구매 금액이 4만원 이상시 배송료 무료
+                    - 현재 배송료 가격 정책은 2500원
+            </Context>
+            <Analysis>
+                - 배송료 추가 조건에 대한 확장성 고려하기
+                - 배송료 가격은 어차피 거의 변할 일이 없을 듯 => 확장성 고려하는 건 불필요 할듯
+            </Analysis>
+        </Requirement>
+    </Requirements>
+
+    <Requirements type="FrontEnd">
+        <Requirement type="반찬 목록 페이지">
+            <Context>
+                - 수량은 1개에서 무한대로 입력 가능
+            </Context>
+            <Analysis>
+                - '.up', '.down' 컴포넌트로 수량 조절
+                - 'anchor', 'title="수량 더하기/빼기"'
+                - 이벤트 발생시 마다 수량 출력 부분 새롭게 랜더링 되게
+                - 'data-role = "data-role="add-to-cart-button"' // 클릭 이벤트 때 해줘야 할 일
+            </Analysis>
+            <Result></Result>
+        </Requirement>
+        <Requirement type="반찬 목록 페이지">
+            <Context>
+                - 수량이 조절될 때마다 가격이 실시간으로 반영
+            </Context>
+            <Analysis>
+                - '.up', '.down' 컴포넌트로 수량 조절
+                - 'anchor', 'title="수량 더하기/빼기"'
+                - 이벤트 발생시 마다 가격 출력 부분 새롭게 랜더링 되게
+                - 굳이 서버로 부터 수량에 대한 총액을 받아올 필요가 있나?
+            </Analysis>
+            <Result></Result>
+        </Requirement>
+        <Requirement type="반찬 목록 페이지">
+            <Context>
+                - 담기를 누르면 ajax 요청
+                    - 담기 결과를 요청으로 받은 후 우측 장바구니 UI 컴포넌트에 갯수 표시
+                    - 화면 하단에 담기 완료라는 layer가 애니메이션으로 나왔다가 사라지게
+            </Context>
+            <Analysis>
+                - 담기 결과 ajax 요청 후 장바구니 UI 컴포넌트
+                    - 비동기 callback 들 호출 순서 조심하기
+                        - 이상한 데서 디버깅 이슈 찾지 말기
+                    - html literal template 구성에 대해서 고민하기
+
+                - 담기 완료 layer 애니메이션
+                    - 저번에 한 transition 관련 css에서 구현 방법 찾을 수 있을듯
+                    - 근데 나왔다가 사라지는 타이밍 어떻게 싱크 관리할 수 있을지
+                    - 애니메이션 싱크 관리하는 로직을 어떻게 설계해야 테스트가 용이할까?
+            </Analysis>
+            <Result></Result>
+        </Requirement>
+    </Requirements>
+
+    <Requirements type="BackEnd">
+        <Requirement>
+            <Context>장바구니 세션 관리 정책</Context>
+            <Analysis>
+
+            </Analysis>
+            <Result></Result>
+        </Requirement>
+        <Requirement>
+            <Context>영속화 할 장바구니 정책</Context>
+            <Analysis></Analysis>
+            <Result></Result>
+        </Requirement>
+        <Requirement>
+            <Context>영속화 할 장바구니 속성</Context>
+            <Analysis></Analysis>
+            <Result></Result>
+        </Requirement>
+        <Requirement>
+            <Context></Context>
+            <Analysis></Analysis>
+            <Result></Result>
+        </Requirement>
+        <Requirement>
+            <Context></Context>
+            <Analysis></Analysis>
+            <Result></Result>
+        </Requirement>
+    </Requirements>
+
+    <ToDoList>
+    </ToDoList>
+
+    <회고>
+    </회고>
+
+</CartTodoList>
