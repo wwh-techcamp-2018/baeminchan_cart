@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Slf4j
 public class CartProductService {
@@ -43,15 +45,21 @@ public class CartProductService {
         return productRepository.findById(cartProductDTO.getProductId()).orElseThrow(ResourceNotFoundException::new);
     }
 
-    public void saveUser(User loginUser, Cart cartFromSession) {
+    public Cart saveUser(User loginUser, Cart cartFromSession) {
         log.debug("Cart {}", cartFromSession);
         cartFromSession.setUser(loginUser);
         Cart cart = null;
+        if(!loginUser.isGuestUser()){
+            Optional<Cart> foundCart = cartRepository.findByUserId(loginUser.getId());
+            if(foundCart.isPresent())
+                return foundCart.get();
+        }
         if(!cartFromSession.isEmptyCart()) {
             cart = cartRepository.save(cartFromSession);
         }
 
         log.debug("user added {}", cart);
+        return cart;
     }
     @Transactional
     public Cart changeCartItem(SetCartProductDTO setCartProductDTO, Cart cart, User user) {

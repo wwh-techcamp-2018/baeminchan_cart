@@ -35,7 +35,9 @@ public class ApiUserController {
     public ResponseEntity<ApiSuccessResponse> login(HttpSession session, @RequestBody LoginDTO loginDTO) {
         User loginUser = userService.login(loginDTO);
         SessionUtils.setUserInSession(session, loginUser);
-        cartService.saveUser(loginUser, SessionUtils.getCartFromSession(session));
+
+        SessionUtils.setCartInSession(session, cartService.saveUser(loginUser, SessionUtils.getCartFromSession(session)));
+
         return ResponseEntity.created(URI.create("/")).body(ApiSuccessResponse.builder("success"));
     }
 }

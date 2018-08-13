@@ -63,7 +63,7 @@ public class CartProduct extends AbstractEntity{
         this.totalPrice = product.calculatePrice(priceCalcultor, this.count);
     }
     @PostLoad
-    @PrePersist
+    @PrePersist @PreUpdate
     public void initTotalPrice() {
         this.totalPrice =  product.calculatePrice(PriceCalcultor.getInstance(), this.count);
         log.debug(" initTotalPrice called CartProduct {} ",totalPrice);

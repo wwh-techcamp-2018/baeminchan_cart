@@ -1,6 +1,7 @@
 package codesquad.web;
 
 import codesquad.domain.Cart;
+import codesquad.domain.User;
 import codesquad.security.SessionUtils;
 import codesquad.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
