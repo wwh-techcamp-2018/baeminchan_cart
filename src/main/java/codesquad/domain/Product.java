@@ -6,6 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 @Entity
 public class Product {
@@ -24,6 +25,18 @@ public class Product {
 
     @DecimalMin(value = "0")
     private Long price;
+
+    public Product () {
+
+    }
+
+    public Product(String title, String description, String imgUrl, Long price) {
+        this.title = title;
+        this.description = description;
+        this.imgUrl = imgUrl;
+        this.price = price;
+    }
+
 
     public Long getId() {
         return id;
@@ -44,4 +57,22 @@ public class Product {
     public Long getPrice() {
         return price;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Objects.equals(id, product.id) &&
+                Objects.equals(title, product.title) &&
+                Objects.equals(description, product.description) &&
+                Objects.equals(imgUrl, product.imgUrl) &&
+                Objects.equals(price, product.price);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, description, imgUrl, price);
+    }
+
 }
