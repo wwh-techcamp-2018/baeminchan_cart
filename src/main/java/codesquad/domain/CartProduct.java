@@ -4,31 +4,33 @@ import codesquad.dto.CartProductDTO;
 import codesquad.support.AbstractEntity;
 import codesquad.support.PriceCalcultor;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.builder.ToStringExclude;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.sql.DataSourceDefinition;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
-//@Data
-@Getter @Setter
+@Data
 //todo @DATA 공부
 @NoArgsConstructor
 
 //todo builder 삭제
 @Builder @AllArgsConstructor
 @Entity
+@Slf4j
 public class CartProduct extends AbstractEntity{
     @ManyToOne(optional = false)
     @NotNull
+    @ToString.Exclude
     private Cart cart;
 
     @ManyToOne(optional = false)
     @NotNull
+    @ToString.Exclude
     private Product product;
 
     @Column(nullable = false)
@@ -36,7 +38,7 @@ public class CartProduct extends AbstractEntity{
 
     @Transient
     @DecimalMin(value = "0")
-    Long totalPrice;
+    Long totalPrice = 0L;
 
 
     public CartProduct(PriceCalcultor calcultor){
@@ -60,25 +62,36 @@ public class CartProduct extends AbstractEntity{
         this.count = count;
         this.totalPrice = product.calculatePrice(priceCalcultor, this.count);
     }
-
-    //hint Product, Cart 가 같은 경우, 같은 CartProduct - 식별키
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        //todo 질문하기 - contains & equals를 쓰지 않는다?
-        //if (!super.equals(o)) return false;
-        CartProduct that = (CartProduct) o;
-        return
-                Objects.equals(cart, that.cart) &&
-                Objects.equals(product, that.product) ;
+    @PostLoad
+    @PrePersist
+    public void initTotalPrice() {
+        this.totalPrice =  product.calculatePrice(PriceCalcultor.getInstance(), this.count);
+        log.debug(" initTotalPrice called CartProduct {} ",totalPrice);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), cart, product);
+    public Long getTotalPrice() {
+        return totalPrice;
     }
 
+    /*
+        //hint Product, Cart 가 같은 경우, 같은 CartProduct - 식별키
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            //todo 질문하기 - contains & equals를 쓰지 않는다?
+            //if (!super.equals(o)) return false;
+            CartProduct that = (CartProduct) o;
+            return
+                    Objects.equals(cart, that.cart) &&
+                    Objects.equals(product, that.product) ;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(super.hashCode(), cart, product);
+        }
+    */
     public void changeCountBy(CartProduct cartProduct) {
         this.count += cartProduct.count;
     }

@@ -44,6 +44,7 @@ public class ApiCartController {
         Cart cart = SessionUtils.getCartFromSession(session);
         User user = SessionUtils.getUserFromSession(session);
         Cart addedCart = cartService.changeCartItem(setCartProductDTO, cart, user);
+        SessionUtils.setCartInSession(session, addedCart);
         return ResponseEntity.ok(new ApiSuccessResponse(HttpStatus.OK, addedCart, null));
     }
 /*

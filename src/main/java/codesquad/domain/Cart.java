@@ -46,60 +46,22 @@ public class Cart extends AbstractEntity {
         return false;
     }
 
-
+    @PostLoad @PrePersist //@PostPersist
     public void initCartProductCnt() {
         this.cartProductCnt = getCartProducts().size();//cartProducts.size();
         log.debug("initCartProductCnt {}", cartProductCnt);
     }
-
-    @PostPersist
-    public void postPersist(){
-        log.debug("postPersist {}", cartProducts.size());
-        initCartProductCnt();
-    }
-    @PostLoad
-    public void postLoad(){
-        log.debug("PostLoad {}", cartProducts.size());
-        initCartProductCnt();
-    }
-    @PostUpdate
-    public void postUpdate(){
-        log.debug("postUpdate {}", cartProductCnt);
-        initCartProductCnt();
-    }
-
-    @PrePersist
-    public void PrePersist(){
-        log.debug("PrePersist {}", cartProductCnt);
-        initCartProductCnt();
-    }
-    @PreUpdate
-    public void preUpdate(){
-        log.debug("preUpdate {}", cartProductCnt);
-        initCartProductCnt();
-    }
-//       @JsonInclude
-//    //@JsonAnyGetter
-//    @JsonGetter("calculation")
-//    @Autowired
-//    public Map getCalculation(PriceCalcultor priceCalcultor, MoneyFormatter moneyFormatter) {
-//        Map<String, Object> calculation = new HashMap();
-//        Long totalPrice = cartProducts.stream().mapToLong(CartProduct::getTotalPrice).sum();//.reduce( (x, y) -> x+y );
-//        Long deliveryTotalPrice = priceCalcultor.calculateTotalPrice(totalPrice);
-//        calculation.put("totalPrice",totalPrice);
-//        calculation.put("deliveryTotalPrice", deliveryTotalPrice);
-//        calculation.put("formattedTotalPrice", moneyFormatter.longToMoney(totalPrice));
-//        calculation.put("formattedDeliveryTotalPrice", moneyFormatter.longToMoney(deliveryTotalPrice));
-//
-//        return calculation;
-//    }
     //todo 어떻게 하나
     //@JsonAnyGetter
     @JsonGetter("calculation")
     @JsonSetter("calculation")
     public Map getCalculation() {
         Map<String, Object> calculation = new HashMap();
-        Long totalPrice = cartProducts.stream().mapToLong(CartProduct::getTotalPrice).sum();//.reduce( (x, y) -> x+y );
+        Long totalPrice = 0L;
+        for (CartProduct cartProduct :cartProducts) {
+            totalPrice += cartProduct.getTotalPrice();
+        }
+        //Long totalPrice = cartProducts.stream().mapToLong(CartProduct::getTotalPrice).sum();//.reduce( (x, y) -> x+y );
         Long deliveryFee = new PriceCalcultor().calculateDeliveryFee(totalPrice);
         Long deliveryTotalPrice = totalPrice + deliveryFee;
         calculation.put("totalPrice",totalPrice);
@@ -116,23 +78,25 @@ public class Cart extends AbstractEntity {
         Optional<CartProduct> duplicate = cartProducts.stream()
                 .filter(x -> x.getProduct().getId().equals(cartProduct.getProduct().getId())).findFirst();
         if (duplicate.isPresent()){
+            log.debug(" isPresent {}", duplicate.get());
             duplicate.get().changeCountBy(cartProduct);
+            log.debug("isPresent cartProduct {} {}", cartProduct, cartProduct.hashCode());
             return;
         }
         this.cartProducts.add(cartProduct);
         cartProductCnt++;
     }
 
-    @Override
-    public String toString() {
-        return "Cart{" +
-                "cartProducts=" +
-                cartProducts.stream().map(x-> x.getId()).collect(Collectors.toList()) +
-                ", user=" + user +
-                ", cartProductCnt=" + cartProductCnt +
-                //", calculation "+ getPrice(new PriceCalcultor(), new MoneyFormatter()) +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Cart{" +
+//                "cartProducts=" +
+//                cartProducts.stream().map(x-> x.getId()).collect(Collectors.toList()) +
+//                ", user=" + user +
+//                ", cartProductCnt=" + cartProductCnt +
+//                //", calculation "+ getPrice(new PriceCalcultor(), new MoneyFormatter()) +
+//                '}';
+//    }
     private static class EmptyCart extends Cart {
         @Override
         public boolean isEmptyCart() {

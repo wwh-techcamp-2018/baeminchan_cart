@@ -16,4 +16,7 @@ public class SetCartProductDTO {
 
     @NotNull
     private Long cartId;
+
+    @NotNull
+    private Long productId;
 }

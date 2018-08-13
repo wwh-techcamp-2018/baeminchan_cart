@@ -20,8 +20,8 @@ class CartTooltip{
     ajaxSetAmount(productId, amount) {
         return fetchJsonPost({url: '/api/cart', body: {count: amount, productId}});
     }
-    ajaxChangeAmount(cartId, amount) {
-        return fetchJsonRequest({url: '/api/cart', method: 'put',body: {count: amount, cartId}});
+    ajaxChangeAmount(cartId, productId, amount) {
+        return fetchJsonRequest({url: '/api/cart', method: 'put',body: {count: amount, cartId, productId}});
     }
     updateAmount(amount, minAmount = 1) {
         if (amount < minAmount) return;
@@ -81,28 +81,26 @@ class Cart{
             return;
         }
         //<button>
-        this.clickAddToCartBtn();
+        this.clickAddToCartBtn(elem);
     }
 
     clickAmtLink(elem) {
-        this.cartTooltip.updateAmount.call(this.$inputBuyCnt, this.getNextAmount(elem, Number(this.$inputBuyCnt.value)),);
-        this.setItemTotalPrice(elem,  Number(this.$inputBuyCnt.value));
+
+        this.cartTooltip.updateAmount.call(this.$inputBuyCnt, this.getNextAmount(elem, Number(this.$inputBuyCnt.value)));
     }
     setItemTotalPrice(elem, amount){
         const procutPrice = $('#productPrice', elem.closest('tr')).innerHTML;
         $('#sumSalePrice', elem.closest('tr')).innerHTML =  formatMoney(procutPrice * amount);
     }
 
-    calculateTotalPrice(){
-
-    }
-    clickAddToCartBtn() {
+    clickAddToCartBtn(elem) {
         //todo Map-으로 바꾸고, CartProductRepository 도입? > 아래 productNo --> cartNo (CartProduct.id)
-        this.cartTooltip.ajaxChangeAmount(this.cartNo, Number(this.$inputBuyCnt.value))
+        this.cartTooltip.ajaxChangeAmount(this.cartNo, this.productNo, Number(this.$inputBuyCnt.value))
             .then((response) => {
                 //총 액수 등 변해야함
                 console.log(response);
                 this.cartTooltip.updateAmount.call(this.$inputBuyCnt, this.$inputBuyCnt.getAttribute('data-min'));
+                this.setItemTotalPrice(elem,  Number(this.$inputBuyCnt.value));
                 this.setCalculation(response.data.calculation)
             });
     }

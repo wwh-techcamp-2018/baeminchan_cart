@@ -18,9 +18,10 @@ public class CartProductService {
     private CartRepository cartRepository;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private CartProductRepository cartProductRepository;
 
-
-    //todo 아래 메소드를 나누고 싶은데, 단위테스트때문에 어떻게 나눠야할지 감이 안잡힌다...단위 테스트 잘못짠것같다. 더 작게 짰어야했나
+    //todo 중복축되는 문제 어떻게 해결?
     public Cart initCartProduct(CartProductDTO cartProductDTO, Cart cart, User user){
         if(cart.isEmptyCart())
             cart = new Cart();
@@ -28,15 +29,14 @@ public class CartProductService {
             cart.setUser(user);
 
         cartProductDTO.fill(cart, findProductByDTO(cartProductDTO), new PriceCalcultor());
-        CartProduct cartProduct = cartProductDTO.toEntity();
-        return cart;
+        CartProduct newCartProduct = cartProductDTO.toEntity();
+        Cart newCart = cartRepository.save(newCartProduct.getCart());
+        return newCart;
     }
-    //todo @Transactional?
-    @Transactional
     public Cart addToCart(CartProductDTO cartProductDTO, Cart cart, User user){
         cart = initCartProduct(cartProductDTO, cart, user);
 
-        cartRepository.save(cart);
+
         return cart;
     }
     public Product findProductByDTO(CartProductDTO cartProductDTO){
@@ -53,17 +53,26 @@ public class CartProductService {
 
         log.debug("user added {}", cart);
     }
-
+    @Transactional
     public Cart changeCartItem(SetCartProductDTO setCartProductDTO, Cart cart, User user) {
         //todo refactor
         if(!user.isGuestUser() && !cart.getUser().equals(user)){
             throw new NotAuthorizedException();
         }
+        log.debug("setCartProductDTO {}", setCartProductDTO);
+      // update가 아닌 insert 문으로 실행된다. 왜일까?
         CartProduct cartProduct = cart.getCartProducts().stream().filter(x -> x.getId() == setCartProductDTO.getCartId()).findFirst().orElseThrow(ResourceNotFoundException::new);
         cartProduct.setCount(setCartProductDTO.getCount());
+        Cart changedCart = cartRepository.save(cart);
+        log.debug("cartProduct Exists {}", cartProduct);
 
-        cartRepository.save(cartProduct.getCart());
-        log.debug("changedCart {}", cart);
-        return cart;
+
+//
+//        CartProduct cartProduct = cartProductRepository.findById(setCartProductDTO.getCartId()).orElseThrow(ResourceNotFoundException::new);
+//        cartProduct.setCount(setCartProductDTO.getCount());
+//        log.debug("cartProduct {}", cartProduct);
+//        cartProduct = cartProductRepository.save(cartProduct);
+        log.debug("changedCart {}", cartProduct.getCart());
+        return changedCart; //cartProduct.getCart();
     }
 }
