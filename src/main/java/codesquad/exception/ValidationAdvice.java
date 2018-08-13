@@ -1,6 +1,7 @@
 package codesquad.exception;
 
 
+import codesquad.web.RestError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,6 +57,18 @@ public class ValidationAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ValidationErrorResponse ununiqueException(UserVerificationException exception){
         return new ValidationErrorResponse().addError(exception.getError());
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public RestError notFound(EntityNotFoundException exception){
+        return new RestError(exception.getLocalizedMessage());
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public RestError illegalArgument(IllegalArgumentException exception){
+        return new RestError(exception.getLocalizedMessage());
     }
 
 }

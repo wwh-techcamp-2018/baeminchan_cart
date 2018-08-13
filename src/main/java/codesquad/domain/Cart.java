@@ -1,7 +1,8 @@
 package codesquad.domain;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.Optional;
+import java.util.List;
 
 public class Cart {
 
@@ -15,24 +16,30 @@ public class Cart {
         return products;
     }
 
-    public void addProduct(Long productId, Integer count) {
-        Integer countBefore = Optional.ofNullable(products.get(productId)).orElse(0);
-        products.put(productId, countBefore + count);
+    public List<Long> getProductIds() {
+        return new ArrayList<>(products.keySet());
     }
 
-    public void updateProduct(Long productId, Integer count) {
-        products.put(productId, count);
+    public Integer getProductCount(Long id) {
+        return products.getOrDefault(id, 0);
     }
 
-    public void deleteProduct(Long productId, Integer count) {
-        Optional.ofNullable(products.get(productId))
-                .ifPresent(productCount -> {
-                    if (count == null || productCount <= count) {
-                        products.remove(productId);
-                        return;
-                    }
-                    products.put(productId, productCount - count);
-                });
+    public void updateProduct(Long id, Integer count) {
+        if (count == 0) {
+            deleteProduct(id);
+            return;
+        }
+        if (count < 0) {
+            throw new IllegalArgumentException();
+        }
+        products.put(id, count);
+    }
+
+    public void deleteProduct(Long id) {
+        if (!products.containsKey(id)) {
+            throw new IllegalArgumentException();
+        }
+        products.remove(id);
     }
 
     @Override

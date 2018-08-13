@@ -10,6 +10,10 @@ import javax.validation.constraints.Size;
 
 @Entity
 public class Product {
+
+    private static final Double ADDITIONAL_DISCOUNT_RATE = 5D;
+    private static final Double ADDITIONAL_DISCOUNT_LIMIT = 20D;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -69,6 +73,14 @@ public class Product {
 
     public Long getSalesPrice() {
         return price - Double.valueOf((price * discountRate) / 100).longValue();
+    }
+
+    public Long getSalesPrice(Integer count) {
+        Long totalSalesPrice = getSalesPrice() * count;
+        if (discountRate < ADDITIONAL_DISCOUNT_LIMIT) {
+            totalSalesPrice -= Double.valueOf((totalSalesPrice * ADDITIONAL_DISCOUNT_RATE) / 100).longValue();
+        }
+        return totalSalesPrice;
     }
 
     public static ProductBuilder builder() {
