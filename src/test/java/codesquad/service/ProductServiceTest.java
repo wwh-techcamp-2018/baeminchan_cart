@@ -30,7 +30,7 @@ public class ProductServiceTest {
                 .description("description")
                 .discountRate(10D)
                 .imgUrl("")
-                .price(1000L)
+                .price(1000)
                 .build();
 
         Product two = Product.builder()
@@ -39,7 +39,7 @@ public class ProductServiceTest {
                 .description("description")
                 .discountRate(10D)
                 .imgUrl("")
-                .price(1000L)
+                .price(1000)
                 .build();
 
         Product three = Product.builder()
@@ -48,7 +48,7 @@ public class ProductServiceTest {
                 .description("description")
                 .discountRate(10D)
                 .imgUrl("")
-                .price(1000L)
+                .price(1000)
                 .build();
 
 

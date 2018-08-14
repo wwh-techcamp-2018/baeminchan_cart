@@ -11,8 +11,9 @@ import javax.validation.constraints.Size;
 @Entity
 public class Product {
 
-    private static final Double ADDITIONAL_DISCOUNT_RATE = 5D;
-    private static final Double ADDITIONAL_DISCOUNT_LIMIT = 20D;
+    private static final Double EXTRA_DISCOUNT_RATE = 5D;
+    private static final Double EXTRA_DISCOUNT_LIMIT = 20D;
+    private static final Integer EXTRA_DISCOUNT_THRESHOLD = 10;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +29,7 @@ public class Product {
     private String imgUrl;
 
     @DecimalMin(value = "0")
-    private Long price;
+    private Integer price;
 
     @DecimalMin(value = "0")
     @DecimalMax(value = "100")
@@ -38,7 +39,7 @@ public class Product {
 
     }
 
-    public Product(Long id, @Size(min = 1, max = 255) String title, @Size(min = 1, max = 255) String description, @Size(min = 1, max = 255) String imgUrl, @DecimalMin(value = "0") Long price, @DecimalMin(value = "0") @DecimalMax(value = "100") Double discountRate) {
+    public Product(Long id, @Size(min = 1, max = 255) String title, @Size(min = 1, max = 255) String description, @Size(min = 1, max = 255) String imgUrl, @DecimalMin(value = "0") Integer price, @DecimalMin(value = "0") @DecimalMax(value = "100") Double discountRate) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -63,24 +64,24 @@ public class Product {
         return imgUrl;
     }
 
-    public Long getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public Long getDiscountRate() {
-        return Double.valueOf(discountRate).longValue();
+    public Integer getDiscountRate() {
+        return Double.valueOf(discountRate).intValue();
     }
 
-    public Long getSalesPrice() {
-        return price - Double.valueOf((price * discountRate) / 100).longValue();
+    public Integer getSalesPrice() {
+        return price - Double.valueOf((price * discountRate) / 100).intValue();
     }
 
-    public Long getSalesPrice(Integer count) {
-        Long totalSalesPrice = getSalesPrice() * count;
-        if (discountRate < ADDITIONAL_DISCOUNT_LIMIT) {
-            totalSalesPrice -= Double.valueOf((totalSalesPrice * ADDITIONAL_DISCOUNT_RATE) / 100).longValue();
+    public Integer getSalesPrice(Integer count) {
+        Double discountRate = this.discountRate;
+        if (EXTRA_DISCOUNT_THRESHOLD <= count && discountRate < EXTRA_DISCOUNT_LIMIT) {
+            discountRate += EXTRA_DISCOUNT_RATE;
         }
-        return totalSalesPrice;
+        return (price - Double.valueOf((price * discountRate) / 100).intValue()) * count;
     }
 
     public static ProductBuilder builder() {
@@ -92,7 +93,7 @@ public class Product {
         private String title;
         private String description;
         private String imgUrl;
-        private Long price;
+        private Integer price;
         private Double discountRate;
 
         public ProductBuilder id(long id) {
@@ -115,7 +116,7 @@ public class Product {
             return this;
         }
 
-        public ProductBuilder price(Long price) {
+        public ProductBuilder price(Integer price) {
             this.price = price;
             return this;
         }
