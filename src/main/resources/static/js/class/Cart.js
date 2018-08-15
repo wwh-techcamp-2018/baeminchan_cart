@@ -1,6 +1,7 @@
 class Cart {
 
     constructor() {
+        this.findAll = this.findAll.bind(this);
         this.count = this.count.bind(this);
         this.save = this.save.bind(this);
         this.update = this.update.bind(this);
@@ -17,11 +18,15 @@ class Cart {
         this.toasterView = toasterView;
     }
 
+    findAll() {
+        return fetch('/api/cart', { credentials: "same-origin" })
+                .then(this.validateResponse)
+    }
+
     count() {
         return fetch('/api/cart/products/count', { credentials: "same-origin" })
                 .then(this.validateResponse)
-                .then(this.renderCounter)
-                .then(this.animateToaster);
+                .then(this.renderCounter);
     }
 
     save(productId, count) {
@@ -46,8 +51,7 @@ class Cart {
         return fetch(`/api/cart/products/${productId}`, {
                     method: 'delete',
                     credentials: "same-origin"
-                })
-                .then(this.validateResponse);
+                });
     }
 
     validateResponse(response) {

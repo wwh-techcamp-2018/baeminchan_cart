@@ -1,9 +1,6 @@
 package codesquad.web;
 
-import codesquad.domain.Cart;
-import codesquad.dto.CartDTO;
 import codesquad.service.ProductService;
-import codesquad.util.SessionCart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,9 +25,7 @@ public class BaeminchanController {
     }
 
     @GetMapping("/cart")
-    public String cart(Model model, @SessionCart Cart cart) {
-        CartDTO cartDTO = new CartDTO(cart.getProducts(), productService);
-        model.addAttribute("products", cartDTO.getProducts());
+    public String cart() {
         return "cart";
     }
 

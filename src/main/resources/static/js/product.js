@@ -5,7 +5,7 @@ const productCounter = new ProductCounter();
 function addProductToCart(e) {
     const productId = location.pathname.split('/').pop().replace(/\D/g, '');
     const count = $('.prd_account .buy_cnt').value;
-    cart.save(productId, count)
+    cart.save(productId, count);
 }
 
 function updateTotalPrice(e) {
@@ -15,13 +15,17 @@ function updateTotalPrice(e) {
     totalPrice.innerText = (salePrice * quantity).toLocaleString();
 }
 
-productCounter.delegateFrom($('.desc_option_calc .prd_account'));
-$('.option_only_quantity').addEventListener('click', updateTotalPrice);
-$('.option_only_quantity').addEventListener('keyup', updateTotalPrice);
-$('.option_only_quantity').addEventListener('input', updateTotalPrice);
-$('.option_only_quantity').addEventListener('change', updateTotalPrice);
-$('.btn_into_basket.purchageable').addEventListener('click', addProductToCart);
+document.addEventListener('DOMContentLoaded', () => {
+    productCounter.delegateFrom($('.desc_option_calc .prd_account'));
+    $('.option_only_quantity').addEventListener('click', updateTotalPrice);
+    $('.option_only_quantity').addEventListener('keyup', updateTotalPrice);
+    $('.option_only_quantity').addEventListener('input', updateTotalPrice);
+    $('.option_only_quantity').addEventListener('change', updateTotalPrice);
+    $('.btn_into_basket.purchageable').addEventListener('click', addProductToCart);
 
-cart.setCounterView(stickyCartView);
-cart.setToasterView(stickyCartView);
-cart.count();
+    cart.setCounterView(stickyCartView);
+    cart.setToasterView(stickyCartView);
+    cart.count();
+
+    updateTotalPrice();
+});

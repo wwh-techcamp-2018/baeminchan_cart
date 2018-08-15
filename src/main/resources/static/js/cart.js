@@ -1,60 +1,57 @@
-const productCounter = new ProductCounter();
-productCounter.delegateFrom($('.tb_order_style.cart'));
-
 const cart = new Cart();
+const productCounter = new ProductCounter();
 
-function initCartPrices() {
-    document.querySelectorAll('.cart_prd_list')
-        .forEach(row => updateSumPrice({ target: row }, false));
-    updateTotalPrice();
+function renderCartProducts() {
+    showLoading();
+    return cart.findAll()
+                .then(({data}) => {
+                    const cartList = $('#cart tbody');
+                    cartList.innerHTML = '';
+                    cartList.insertAdjacentHTML('afterbegin', data.cartProducts.map(productInfoTemplate).join(''));
+                    return { totalPrice, shippingFee } = data;
+                })
+                .then(renderTotalPrice)
+                .then(hideLoading)
+                .catch(hideLoading);
 }
 
-function updateSumPrice({ target }, update = true) {
-    if (!target.classList.contains('cart_prd_list') && !target.closest('.prd_account')) {
+function renderTotalPrice({ totalPrice, shippingFee }) {
+    $('#salePrice').innerText = totalPrice.toLocaleString();
+    $('#shippingFee').innerText = shippingFee.toLocaleString();
+    $('#totalPrice').innerText = (totalPrice + shippingFee).toLocaleString();
+}
+
+function updateCart({ target }) {
+    if (!target.classList.contains('quantity_change_confirm')) {
         return;
     }
-    const productRow = target.closest('tr');
-    const productId = productRow.id.split('_').pop();
-    const price = parseInt(productRow.querySelector('#productPrice').innerText);
-    const count = parseInt(productRow.querySelector('.prd_account .buy_cnt').value);
 
-    productRow.querySelector('#sumSalePrice').innerText = (price * count).toLocaleString();
-    update && cart.updateProduct(productId, count).then(updateTotalPrice);
-}
+    const row = target.closest('tr');
+    const productId = row.id.split('_').pop();
+    const count = row.querySelector('.prd_account .buy_cnt').value;
 
-function updateTotalPrice() {
-    const FREE_SHIP_THRESHOLD = 40000;
-    const DEFAULT_SHIP_FEE = 2500;
-    const salePrice = [...document.querySelectorAll('#sumSalePrice')]
-                         .map(toPrice)
-                         .reduce((sum, price) => sum += price, 0);
-
-    const shippingFee = $('#shippingFee');
-    shippingFee.innerText = FREE_SHIP_THRESHOLD <= salePrice ? 0 : DEFAULT_SHIP_FEE;
-
-    const totalPrice = salePrice + toPrice(shippingFee);
-    $('#salePrice').innerText = salePrice.toLocaleString();
-    $('#totalPrice').innerText = (salePrice ? totalPrice : 0).toLocaleString();
+    cart.update(productId, count)
+        .then(renderCartProducts);
 }
 
 function deleteClickedProduct({ target }) {
     if (!target.classList.contains('delete_cart_item')) {
         return;
     }
-    const productRow = target.closest('tr');
-    const productId = productRow.id.split('_').pop();
-    const count = parseInt(productRow.querySelector('.prd_account .buy_cnt').value);
-    cart.deleteProduct(productId, count)
-        .then(() => productRow.remove())
-        .then(updateTotalPrice);
+
+    const row = target.closest('tr');
+    const productId = row.id.split('_').pop();
+    const count = row.querySelector('.prd_account .buy_cnt').value;
+
+    cart.delete(productId, count)
+        .then(renderCartProducts);
 }
 
 function deleteSelectedProducts() {
     const deleteProductIdList = [...document.querySelectorAll('tbody .custom_checkbox.on')]
                         .map(checkbox => checkbox.closest('tr').id.split('_').pop());
-    Promise.all(deleteProductIdList.map(cart.deleteProduct))
-        .then(() => deleteProductIdList.forEach(productId => $(`#cart_prd_${productId}`).remove()))
-        .then(updateTotalPrice);
+    Promise.all(deleteProductIdList.map(cart.delete))
+           .then(renderCartProducts);
 }
 
 function toggleSelect(e) {
@@ -71,13 +68,73 @@ function toggleSelect(e) {
     checkLabel.classList.toggle('on');
 }
 
-function toPrice(element) {
-    return parseInt(element.innerText.replace(/\D/g, '') || 0);
+function showLoading() {
+    $('#loading').style.display = 'block';
 }
 
-document.addEventListener('DOMContentLoaded', initCartPrices);
-$('#cart').addEventListener('click', updateSumPrice);
-$('#cart').addEventListener('keyup', updateSumPrice);
-$('#cart').addEventListener('click', toggleSelect);
-$('#cart').addEventListener('click', deleteClickedProduct);
-$('#delete_select').addEventListener('click', deleteSelectedProducts);
+function hideLoading() {
+    $('#loading').style.display = 'none';
+}
+
+function productInfoTemplate({ product: {id, title, imgUrl, price, salesPrice, discountRate }, count, sumPrice }) {
+    return `<tr id="cart_prd_${id}" class="cart_prd_list">
+                <td>
+                    <label class="custom_checkbox on">
+                        <i class="chk_box"></i>
+                        <input type="checkbox" name="cart_select" class="bf hidden_chk">
+                    </label>
+                </td>
+                <td class="thumb">
+                    <a href="/product/${id}">
+                        <img src="${imgUrl}">
+                    </a>
+                </td>
+                <td class="left">
+                    <p class="title prd_name">
+                        <a href="/product/${id}">${title}</a>
+                    </p>
+                    <p class="soldout bf_red" style="display: none;">
+                        <strong class="soldout-text"></strong>
+                    </p>
+
+                    <p class="cartItemMessage bf_red" style="display: none;"></p>
+                    <p class="receipt_limit bf_red" style="display: none;">
+                        배송 가능일이 한정되어 있는 상품입니다.
+                        <strong class="limit-date">
+                            <br>2018-07-19~2018-08-15</strong>
+                    </p>
+                </td>
+                <td>
+                    <span cartdata="" id="productPrice">${salesPrice}</span>원</td>
+                <td>
+                    <div class="prd_account">
+                        <label>
+                            <input type="text" class="buy_cnt" min="1" max="999" value="${count}" data-quantity=""
+                                formnovalidate="">
+                        </label>
+                        <span>
+                            <a title="수량 더하기" role="increase" class="up quantity_change">수량 더하기</a>
+                            <a title="수량 빼기" role="decrease" class="down quantity_change">수량 빼기</a>
+                        </span>
+                    </div>
+                    <button type="button" class="btn btn_white quantity_change_confirm">변경</button>
+                </td>
+                <td>
+                    <span cartdata="origin/sum_final_sell_prc" id="sumSalePrice">${sumPrice}</span>원</td>
+                <td>
+                    <span class="once_only bf_red">정기배송 불가</span>
+                </td>
+                <td>
+                    <a class="ico-delete delete_cart_item" style="cursor:pointer">삭제</a>
+                </td>
+            </tr>`;
+}
+
+productCounter.delegateFrom($('.tb_order_style.cart'));
+document.addEventListener('DOMContentLoaded', () => {
+    $('#cart').addEventListener('click', updateCart);
+    $('#cart').addEventListener('click', toggleSelect);
+    $('#cart').addEventListener('click', deleteClickedProduct);
+    $('#delete_select').addEventListener('click', deleteSelectedProducts);
+    renderCartProducts();
+});
