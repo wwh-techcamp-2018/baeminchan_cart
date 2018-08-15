@@ -27,7 +27,7 @@ public class ApiCartController {
         return ResponseEntity.ok(new RestResponse(cartProducts));
     }
 
-    @GetMapping("/count")
+    @GetMapping("/products/count")
     public ResponseEntity<RestResponse> getCartCount(@SessionCart Cart cart) {
         return ResponseEntity.ok(new RestResponse(cart.getProducts().keySet().size()));
     }
@@ -48,11 +48,11 @@ public class ApiCartController {
     }
 
     @PutMapping("/products/{id}")
-    public ResponseEntity<Void> updateProduct(@PathVariable Long id,
+    public ResponseEntity<RestResponse> updateProduct(@PathVariable Long id,
                                                       @RequestParam(value = "count") Integer count,
                                                       @SessionCart Cart cart) {
         cart.updateProduct(id, count);
-        return ResponseEntity.ok().build();
+        return getCartCount(cart);
     }
 
     @DeleteMapping("/products/{id}")
