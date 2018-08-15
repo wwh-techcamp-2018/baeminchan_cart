@@ -1,31 +1,53 @@
 class Cart {
 
     constructor() {
-        this.renderCartProducts = this.renderCartProducts.bind(this);
-        this.deleteProduct = this.deleteProduct.bind(this);
+        this.count = this.count.bind(this);
+        this.save = this.save.bind(this);
+        this.update = this.update.bind(this);
+        this.delete = this.delete.bind(this);
+        this.renderCounter = this.renderCounter.bind(this);
+        this.animateToaster = this.animateToaster.bind(this);
     }
 
-    getProducts() {
-        return fetch('/api/cart', { credentials: "same-origin" })
+    setCounterView(counterView) {
+        this.counterView = counterView;
+    }
+
+    setToasterView(toasterView) {
+        this.toasterView = toasterView;
+    }
+
+    count() {
+        return fetch('/api/cart/products/count', { credentials: "same-origin" })
                 .then(this.validateResponse)
+                .then(this.renderCounter)
+                .then(this.animateToaster);
     }
 
-    addProduct(id, count) {
-        return fetch(`/api/cart/products/${id}${count ? '?count=' + count : ''}`,
-                { method: 'post', credentials: "same-origin" })
-                    .then(this.validateResponse)
+    save(productId, count) {
+        return fetch(`/api/cart/products/${productId}${count > 0 ? '?count=' + count : ''}`, {
+                    method: 'post',
+                    credentials: "same-origin"
+                })
+                .then(this.validateResponse)
+                .then(this.renderCounter)
+                .then(this.animateToaster);
     }
 
-    updateProduct(id, count) {
-        return fetch(`/api/cart/products/${id}?count=${count}`,
-                { method: 'put', credentials: "same-origin" })
-                    .then(this.validateResponse)
+    update(productId, count) {
+        return fetch(`/api/cart/products/${productId}?count=${count}`, {
+                    method: 'put',
+                    credentials: "same-origin"
+                })
+                .then(this.validateResponse);
     }
 
-    deleteProduct(id, count) {
-        return fetch(`/api/cart/products/${id}${count ? '?count=' + count : ''}`,
-                { method: 'delete', credentials: "same-origin" })
-                    .then(this.validateResponse)
+    delete(productId) {
+        return fetch(`/api/cart/products/${productId}`, {
+                    method: 'delete',
+                    credentials: "same-origin"
+                })
+                .then(this.validateResponse);
     }
 
     validateResponse(response) {
@@ -33,30 +55,14 @@ class Cart {
             throw new Error('Error occured!');
         }
         return response.json();
-    }    
+    }
 
-    renderCartProducts({ data }) {
-        const totalCount = Object.values(data).reduce((sum, count) => sum += count, 0);
-        totalCount ? this.displayExist(totalCount) : this.displayNotExist();
+    renderCounter({ data }) {
+        this.counterView && this.counterView.renderCounter(data);
     }
-    
-    displayExist(length) {
-        $('#basket-counter').innerText = length;
-        $('#cart_display_none').style.display = 'none';
-        $('#cart_display_exist').style.display = 'block';
-        $('#go_to_cart').closest('div').classList.remove('empty');
-    }
-    
-    displayNotExist() {
-        $('#cart_display_exist').style.display = 'none';
-        $('#cart_display_none').style.display = 'block';
-        $('#go_to_cart').closest('div').classList.add('empty');
-    }
-    
-    animateBasketToaster() {
-        const toaster = $('#basket-toaster');
-        toaster.classList.add('active');
-        setTimeout(() => toaster.classList.remove('active'), 1000);
+
+    animateToaster() {
+        this.toasterView && this.toasterView.animateToaster();
     }
 
 }

@@ -1,11 +1,6 @@
-const productCounter = new ProductCounter();
-productCounter.delegateFrom($('#products'));
-
 const cart = new Cart();
-cart.getProducts()
-    .then(cart.renderCartProducts);
-
-$('#products').addEventListener('click', addProductToCart);
+const stickyCartView = new StickyCartView();
+const productCounter = new ProductCounter();
 
 function addProductToCart({ target }) {
     if (!target.classList.contains('btn') || !target.classList.contains('cart')) {
@@ -16,7 +11,12 @@ function addProductToCart({ target }) {
     const productId = productTitle.querySelector('a').href.split('/').pop();
     const productCount = target.closest('li').querySelector('input.buy_cnt').value;
 
-    cart.addProduct(productId, productCount)
-        .then(cart.renderCartProducts)
-        .then(cart.animateBasketToaster)
+    cart.save(productId, productCount);
 }
+
+productCounter.delegateFrom($('#products'));
+$('#products').addEventListener('click', addProductToCart);
+
+cart.setCounterView(stickyCartView);
+cart.setToasterView(stickyCartView);
+cart.count();
