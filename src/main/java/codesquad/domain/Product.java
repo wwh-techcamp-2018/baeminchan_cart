@@ -3,13 +3,18 @@ package codesquad.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Size;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class Product {
     @Id
@@ -30,9 +35,6 @@ public class Product {
 
     @DecimalMin(value = "0")
     private Long discountRatio;
-
-    @ManyToOne
-    private Cart cart;
 
     @Builder
     public Product(Long id, String title, String description, String imgUrl, Long price, Long discountRatio) {

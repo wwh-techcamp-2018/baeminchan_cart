@@ -2,45 +2,70 @@ package codesquad.domain;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
+import java.util.HashMap;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private Long id;
 
     @OneToOne
     private User user;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<Product> productList = new ArrayList<>();
+    @MapKeyJoinColumn
+    @CollectionTable
+    @Lob
+    private HashMap<Long, Integer> products;
 
     @DecimalMin(value = "0")
     private Long deliveryCharge;
 
+    @DateTimeFormat
+    private Date createDate;
+
+    @DateTimeFormat
+    private Date updatedDate;
+
+    @DateTimeFormat
+    private Date orderDate;
+
+    public Cart() {
+        this.products = new HashMap<>();
+    }
+
     @Builder
-    public Cart(Long id, User user, List<Product> productList, Long deliveryCharge) {
+    public Cart(Long id, User user, Long deliveryCharge, Date createDate, Date updatedDate, Date orderDate) {
+        this();
         this.id = id;
         this.user = user;
-        this.productList = productList;
         this.deliveryCharge = deliveryCharge;
+        this.createDate = createDate;
+        this.updatedDate = updatedDate;
+        this.orderDate = orderDate;
     }
 
-    public void addProduct(Product product) {
-        this.productList.add(product);
+    public void addProduct(Long productId, Integer productNum) {
+        if (!products.containsKey(productId)) {
+            products.put(productId, 0);
+        }
+        products.put(productId, products.get(productId) + productNum);
     }
 
-    public int productNumber() {
-        return productList.size();
+    public Integer getSumProductNum() {
+        return products.values().stream().mapToInt(Integer::intValue).sum();
+    }
+
+    public boolean matchUser(User user) {
+        return this.user == user;
     }
 }

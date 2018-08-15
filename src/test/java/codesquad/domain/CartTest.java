@@ -3,44 +3,55 @@ package codesquad.domain;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CartTest {
-    private Product productOne;
-    private List<Product> products;
+    private Product product;
+    private Product addedProduct;
+    private HashMap<Product, Integer> products;
     private Cart cart;
 
     @Before
     public void setUp() throws Exception {
-        productOne = Product.builder()
-                .title("집밥")
-                .build();
+        product = Product.builder().id(1L).title("곱창").build();
+        addedProduct = Product.builder().id(2L).title("간장게장").build();
 
-        products = new ArrayList<>();
-        products.add(productOne);
-
-        cart = Cart.builder()
-                .id(1L)
-                .productList(products)
-                .build();
+        cart = Cart.builder().build();
+        cart.addProduct(product.getId(), 1);
     }
 
     @Test
     public void addProduct() {
-        Product productTwo = Product.builder()
-                .title("소고기국밥")
-                .build();
-
-        cart.addProduct(productTwo);
-        assertThat(cart.getProductList().size()).isEqualTo(2L);
+        cart.addProduct(addedProduct.getId(), 2);
+        cart.addProduct(addedProduct.getId(), 4);
+        assertThat(cart.getProducts().keySet()).contains(product.getId());
+        assertThat(cart.getProducts().keySet()).contains(addedProduct.getId());
+        assertThat(cart.getProducts().keySet().size()).isEqualTo(2);
     }
 
     @Test
-    public void getProductInCart() {
-        assertThat(cart.productNumber()).isEqualTo(1L);
+    public void getSumProductNum() {
+        cart.addProduct(addedProduct.getId(), 2);
+        cart.addProduct(addedProduct.getId(), 4);
+        assertThat(cart.getSumProductNum()).isEqualTo(7);
+    }
+
+    @Test
+    public void matchUser() {
+        User user = User.builder().build();
+        Cart cart = Cart.builder().user(user).build();
+
+        assertThat(cart.matchUser(user)).isTrue();
+    }
+
+    @Test
+    public void notMatchUser() {
+        User user = User.builder().build();
+        User otherUser = User.builder().build();
+        Cart cart = Cart.builder().user(user).build();
+
+        assertThat(cart.matchUser(otherUser)).isFalse();
     }
 }
