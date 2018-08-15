@@ -16,5 +16,7 @@ public abstract class AcceptanceTest {
     public TestRestTemplate template() {
         return template;
     }
+
+
 }
 
