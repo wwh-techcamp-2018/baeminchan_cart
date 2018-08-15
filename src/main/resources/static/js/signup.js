@@ -12,16 +12,15 @@ document.addEventListener("DOMContentLoaded", function (evt) {
             "phoneNumber": getPhoneNumber(),
         };
 
-        fetchManager({
-            url: "/users/signup",
-            method: "POST",
+        fetch('/users/signup', {
+            method: 'post',
             headers: {"content-type": "application/json"},
             body: JSON.stringify(postObject),
-            callback: displayErrors
-        });
-
-    })
-
+            credentials: 'same-origin'
+        })
+            .then(response => response.json())
+            .then(displayErrors);
+    });
 });
 
 function displayErrors(result) {

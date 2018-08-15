@@ -57,17 +57,17 @@
 	                              <img src="{{imgUrl}}" alt="">
 
                                 <a href="/product/{{id}}" ga_id="17435" ga_name="{{description}}">
-                                  <div class="thumb_badge"><span class="num">20</span><span class="unit">%</span></div>
+                                  <div class="thumb_badge"><span class="num">{{discountRate}}</span><span class="unit">%</span></div>
                                 </a>
                             </div>
                             <dl class="prds_lst_info">
                                 <dt class="prd_tlt">
                                     <a href="/product/{{id}}" ga_id="17435" ga_name="{{description}}">
-                                        <span>{{description}}</span>
+                                        <span>{{title}}</span>
                                     </a>
                                 </dt>
                                 <dd class="prd_thumb_price">
-                                    <p class="selling-price">4,640<span class="won">원</span></p>
+                                    <p class="selling-price">{{salesPrice}}<span class="won">원</span></p>
                                     <p class="origin-price"><del>{{price}}원</del></p>
                                 </dd>
                                 <dd class="prd_to_basket">
@@ -88,24 +88,18 @@
                         {{/products}}
                     </ul>
                 </div>
-                <div class="put_in_basket sticky_box">
-                    <h3>
-                        <span class="">장바구니</span>
-                    </h3>
-                    <div class="empty">
-                        <p class="top_box_number">
-                            <span class="txt" style="display:;" id="cart_display_none">담은상품이<br>없습니다.</span>
-                            <strong class="number" id="cart_display_exist" style="display:none"><span id="basket-counter" class="number_txt">0</span><span class="unit">개</span></strong>
-                        </p>
-                        <a href="/cart" id="go_to_cart" class="go_to_basket">장바구니 이동 <span>&gt;</span></a>
-                    </div>
-                    <div id="basket-toaster" class="tooltip" style="display: none;">
-                        <i class="tooltip_arr"></i>
-                        <span class="prd_name">상품</span>
-                        담기완료
-                    </div>
-                </div>
+
+                {{> sticky_cart}}
+
             </div>
         </div>
     </div>
+{{/block}}
+
+{{#block "footer"}}
+<script src="/js/main.js"></script>
+<script src="/js/class/Cart.js"></script>
+<script src="/js/class/StickyCartView.js"></script>
+<script src="/js/class/ProductCounter.js"></script>
+<script src="/js/products.js"></script>
 {{/block}}

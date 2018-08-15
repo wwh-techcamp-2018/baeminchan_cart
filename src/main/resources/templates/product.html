@@ -77,7 +77,7 @@
                                     <dt class="blind">가격</dt>
                                     <dd class="desc_price">
                                         <del class="origin-price">{{price}}원</del>
-                                        <strong class="sale-price">5,400
+                                        <strong class="sale-price">{{salesPrice}}
                                             <span class="unit">원</span>
                                         </strong>
                                     </dd>
@@ -104,7 +104,7 @@
                                             </div>
                                             <p class="calculated_price">
                                                 <span class="price_label">총 상품금액</span>
-                                                <strong id="detail_total_price" class="price_number">5,400</strong>
+                                                <strong id="detail_total_price" class="price_number"></strong>
                                                 <span class="unit">원</span>
                                             </p>
                                             <button type="button" class="btn btn_mint btn_into_basket purchageable">담기</button>
@@ -115,29 +115,9 @@
                         </div>
                         {{/product}}
                     </div>
-                    <div class="put_in_basket sticky_box">
-                        <h3>
-                            <span class="">장바구니</span>
-                        </h3>
-                        <div class="empty">
-                            <p class="top_box_number">
-                                <span class="txt" style="display:;" id="cart_display_none">담은상품이
-                                    <br>없습니다.</span>
-                                <strong class="number" id="cart_display_exist" style="display:none">
-                                    <span id="basket-counter" class="number_txt">0</span>
-                                    <span class="unit">개</span>
-                                </strong>
-                            </p>
-                            <a href="/cart" id="go_to_cart" class="go_to_basket">장바구니 이동
-                                <span>&gt;</span>
-                            </a>
-                        </div>
-                        <div id="basket-toaster" class="tooltip" style="display: none;">
-                            <i class="tooltip_arr"></i>
-                            <span class="prd_name">상품</span>
-                            담기완료
-                        </div>
-                    </div>
+
+                    {{> sticky_cart}}
+                    
                 </div>
             </div>
 
@@ -163,4 +143,12 @@
                 </div>
             </div>
         </div>
+{{/block}}
+
+{{#block "footer"}}
+<script src="/js/main.js"></script>
+<script src="/js/class/Cart.js"></script>
+<script src="/js/class/StickyCartView.js"></script>
+<script src="/js/class/ProductCounter.js"></script>
+<script src="/js/product.js"></script>
 {{/block}}

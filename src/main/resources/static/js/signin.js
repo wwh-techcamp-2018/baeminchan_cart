@@ -7,16 +7,15 @@ document.addEventListener("DOMContentLoaded", function(evt) {
             "password": getUserPassword()
         };
 
-        fetchManager({
-            url: "/users/login",
-            method: "POST",
+        fetch('/users/login', {
+            method: 'post',
             headers: {"content-type": "application/json"},
             body: JSON.stringify(postObject),
-            callback: displayErrors
-        });
+            credentials: 'same-origin'
+        })
+            .then(response => response.json())
+            .then(displayErrors);
     });
-
-
 });
 
 function displayErrors(result) {
