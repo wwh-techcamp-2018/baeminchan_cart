@@ -3,6 +3,7 @@ package codesquad.domain;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Optional;
 
 public class Cart {
 
@@ -25,14 +26,11 @@ public class Cart {
     }
 
     public void addProduct(Long id) {
-        products.put(id, getProductCount(id) + 1);
+        addProduct(id, 1);
     }
 
     public void addProduct(Long id, Integer count) {
-        if (count == null) {
-            addProduct(id);
-            return;
-        }
+        count = Optional.ofNullable(count).orElse(1);
         if (count < 1) {
             throw new IllegalArgumentException();
         }
