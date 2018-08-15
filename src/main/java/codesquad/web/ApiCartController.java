@@ -2,6 +2,7 @@ package codesquad.web;
 
 import codesquad.domain.Cart;
 import codesquad.domain.Product;
+import codesquad.dto.CartDTO;
 import codesquad.dto.CartProductDTO;
 import codesquad.service.ProductService;
 import codesquad.util.SessionCart;
@@ -24,7 +25,7 @@ public class ApiCartController {
         List<CartProductDTO> cartProducts = productService.findAll(cart.getProductIds()).stream()
                 .map(product -> new CartProductDTO(product, cart.getProductCount(product.getId())))
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(new RestResponse(cartProducts));
+        return ResponseEntity.ok(new RestResponse(new CartDTO(cartProducts)));
     }
 
     @GetMapping("/products/count")

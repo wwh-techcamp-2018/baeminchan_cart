@@ -21,6 +21,10 @@ public class CartProductDTO {
         return product;
     }
 
+    public Integer getSumPrice() {
+        return product.getSalesPrice(count);
+    }
+
     public Integer getCount() {
         return count;
     }
