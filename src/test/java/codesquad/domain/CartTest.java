@@ -15,6 +15,26 @@ public class CartTest {
     }
 
     @Test
+    public void addProduct() {
+        cart.addProduct(1L);
+        assertThat(cart.getProducts()).containsKey(1L).containsValue(1);
+        cart.addProduct(1L, 1);
+        assertThat(cart.getProducts()).containsKey(1L).containsValue(2);
+        cart.addProduct(1L, 2);
+        assertThat(cart.getProducts()).containsKey(1L).containsValue(4);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addProductZero() {
+        cart.addProduct(1L, 0);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addProductNegative() {
+        cart.addProduct(1L, -1);
+    }
+
+    @Test
     public void updateProduct() {
         cart.updateProduct(1L, 2);
         assertThat(cart.getProducts()).containsKey(1L).containsValue(2);

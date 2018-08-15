@@ -13,54 +13,79 @@ public class ApiCartControllerAcceptanceTest extends AcceptanceTest {
 
     @Before
     public void setUp() throws Exception {
-        ResponseEntity<Void> response = putCart(1L, 2);
+        ResponseEntity<RestResponse> response = putCart(1L, 2);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().getData()).isEqualTo(1);
         cookie = response.getHeaders().getFirst(response.getHeaders().SET_COOKIE);
     }
 
     @Test
-    public void updateCart() {
-        ResponseEntity<Void> response = null;
+    public void addProductsToCart() {
+        ResponseEntity<RestResponse> response = null;
 
-        response = putCart(1L, 2);
+        response = addCart(1L, -1);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+        response = addCart(1L, 0);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+        response = addCart(1L);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().getData()).isEqualTo(1);
+
+        response = addCart(1L, 2);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().getData()).isEqualTo(1);
+    }
+
+    @Test
+    public void updateProductsInCart() {
+        ResponseEntity<RestResponse> response = null;
 
         response = putCart(1L, -1);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
         response = putCart(1L, 0);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().getData()).isEqualTo(0);
     }
 
     @Test
-    public void deleteCart() {
+    public void deleteProductInCart() {
         ResponseEntity<Void> response = null;
 
-        response = putCart(2L, 2);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        response = deleteCart(2L);
+        response = deleteCart(1L);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
-        response = deleteCart(2L);
+        response = deleteCart(1L);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
     private ResponseEntity<RestResponse> getCount() {
-        return template().getForEntity("/api/cart/count", RestResponse.class);
+        return template().getForEntity("/api/cart/products/count", RestResponse.class);
     }
 
-    private ResponseEntity<Void> putCart(Long id, Integer count) {
+    private ResponseEntity<RestResponse> addCart(Long id) {
+        String endPoint = String.format("/api/cart/products/%d", id);
+        return template().exchange(endPoint, HttpMethod.POST, applicationJsonHeader(), RestResponse.class);
+    }
+
+    private ResponseEntity<RestResponse> addCart(Long id, Integer count) {
         String endPoint = String.format("/api/cart/products/%d?count=%d", id, count);
-        return template().exchange(endPoint, HttpMethod.PUT, applicaionJsonHeader(), Void.class);
+        return template().exchange(endPoint, HttpMethod.POST, applicationJsonHeader(), RestResponse.class);
+    }
+
+    private ResponseEntity<RestResponse> putCart(Long id, Integer count) {
+        String endPoint = String.format("/api/cart/products/%d?count=%d", id, count);
+        return template().exchange(endPoint, HttpMethod.PUT, applicationJsonHeader(), RestResponse.class);
     }
 
     private ResponseEntity<Void> deleteCart(Long id) {
         String endPoint = String.format("/api/cart/products/%d", id);
-        return template().exchange(endPoint, HttpMethod.DELETE, applicaionJsonHeader(), Void.class);
+        return template().exchange(endPoint, HttpMethod.DELETE, applicationJsonHeader(), Void.class);
     }
 
-    private HttpEntity applicaionJsonHeader() {
+    private HttpEntity applicationJsonHeader() {
         HttpHeaders headers = new HttpHeaders();
         if (cookie != null) {
             headers.add("Cookie", cookie);

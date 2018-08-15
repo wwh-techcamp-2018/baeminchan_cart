@@ -39,6 +39,14 @@ public class ApiCartController {
         return ResponseEntity.ok(new RestResponse(new CartProductDTO(product, count)));
     }
 
+    @PostMapping("/products/{id}")
+    public ResponseEntity<RestResponse> addProduct(@PathVariable Long id,
+                                                   @RequestParam(value = "count", required = false) Integer count,
+                                                   @SessionCart Cart cart) {
+        cart.addProduct(id, count);
+        return getCartCount(cart);
+    }
+
     @PutMapping("/products/{id}")
     public ResponseEntity<Void> updateProduct(@PathVariable Long id,
                                                       @RequestParam(value = "count") Integer count,
