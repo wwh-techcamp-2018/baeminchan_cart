@@ -1,8 +1,6 @@
 INSERT INTO USER (email, password, name, phone_number, permissions ) VALUES ('javajigi@woowahan.com', 'password',  'javajigi', '010-1234-5678', 1);
 
-insert into cart(user_id, delivery_charge) values (1, 2500);
-
-insert into product(img_url, description, title, price, discount_ratio, cart_id) values('https://cdn.bmf.kr/_data/product/I4DEC/ebab7a5c6f31b59c1d0ffda25f0c82a3.jpg','[집밥의완성] 궁중식 소고기오이감정 370g','여름 오이와 함께 되직하게 끓여낸 입맛을 사로잡는 궁중요리',6500, 20, 1);
+insert into product(img_url, description, title, price, discount_ratio) values('https://cdn.bmf.kr/_data/product/I4DEC/ebab7a5c6f31b59c1d0ffda25f0c82a3.jpg','[집밥의완성] 궁중식 소고기오이감정 370g','여름 오이와 함께 되직하게 끓여낸 입맛을 사로잡는 궁중요리',6500, 20);
 insert into product(img_url, description, title, price, discount_ratio) values('https://cdn.bmf.kr/_data/product/I21A3/a5ae10184ec276667e0a35e6f3012f20.jpg','[집밥의완성] 매운 돼지가지볶음 380g','이번 주 매콤한 메인요리로 딱!',4200, 20);
 insert into product(img_url, description, title, price, discount_ratio) values('https://cdn.bmf.kr/_data/product/I6759/7be858b59943e500d72b134e5810bb76.jpg','[집밥의완성] 오징어 듬뿍 마늘종무침 170g','쫄깃한 오징어가 가득한 여름 별미',4500, 20);
 insert into product(img_url, description, title, price, discount_ratio) values('https://cdn.bmf.kr/_data/product/I86DF/31c3669a458564e5ebf0a528caae8ce8.jpg','[너의반찬] 소고기 육전 250g','양념간장 곁들여서 딱 드셔보세요~',12000, 20);
