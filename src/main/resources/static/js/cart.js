@@ -1,13 +1,15 @@
 class Cart {
     constructor() {
-        this.cartNumber = 0;
+        this.productNum = 1;
         this.products = {};
         this.registerEvent();
+        this.unit = ' 개';
     }
 
-    changeCartNumber() {
-        this.cartNumber += 1;
-        $('p.top_box_number').textContent = this.cartNumber + ' 개';
+    changeCartNumber(cartNum) {
+        if (cartNum !== null) {
+            $('p.top_box_number').textContent = cartNum + this.unit;
+        }
     }
 
     addProductNumber(productId) {
@@ -39,18 +41,19 @@ class Cart {
                 this.addProductNumber(productId);
                 this.changeCartNumber();
                 this.showSelectedProduct(target);
+                this.cartFetchManager({
+                                    url :'/api/cart',
+                                    method: 'POST',
+                                    body: JSON.stringify({
+                                        'productId' : productId,
+                                        'productNum' : this.productNum
+                                    }),
+                                    headers: {'content-type': 'application/json'},
+                                    callback: ({json}) => {
+                                        this.changeCartNumber(json.data);
+                                    }
+                                })
             }
-            this.cartFetchManager({
-                                url :'/api/cart',
-                                method: 'POST',
-                                body: JSON.stringify({
-                                    'productId' : productId
-                                }),
-                                headers: {'content-type': 'application/json'},
-                                callback: ({json}) => {
-                                    console.log(json.data);
-                                }
-                            })
         })
     }
 
