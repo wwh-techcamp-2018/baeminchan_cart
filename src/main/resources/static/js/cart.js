@@ -15,10 +15,10 @@ function renderCartProducts() {
                 .catch(hideLoading);
 }
 
-function renderTotalPrice({ totalPrice, shippingFee }) {
-    $('#salePrice').innerText = totalPrice.toLocaleString();
+function renderTotalPrice({ sumPrice, shippingFee, totalPrice }) {
+    $('#salePrice').innerText = sumPrice.toLocaleString();
     $('#shippingFee').innerText = shippingFee.toLocaleString();
-    $('#totalPrice').innerText = (totalPrice + shippingFee).toLocaleString();
+    $('#totalPrice').innerText = totalPrice.toLocaleString();
 }
 
 function updateCart({ target }) {

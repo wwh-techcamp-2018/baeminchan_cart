@@ -11,10 +11,6 @@ import javax.validation.constraints.Size;
 @Entity
 public class Product {
 
-    private static final Double EXTRA_DISCOUNT_RATE = 5D;
-    private static final Double EXTRA_DISCOUNT_LIMIT = 20D;
-    private static final Integer EXTRA_DISCOUNT_THRESHOLD = 10;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -74,14 +70,6 @@ public class Product {
 
     public Integer getSalesPrice() {
         return price - Double.valueOf((price * discountRate) / 100).intValue();
-    }
-
-    public Integer getSalesPrice(Integer count) {
-        Double discountRate = this.discountRate;
-        if (EXTRA_DISCOUNT_THRESHOLD <= count && discountRate < EXTRA_DISCOUNT_LIMIT) {
-            discountRate += EXTRA_DISCOUNT_RATE;
-        }
-        return (price - Double.valueOf((price * discountRate) / 100).intValue()) * count;
     }
 
     public static ProductBuilder builder() {

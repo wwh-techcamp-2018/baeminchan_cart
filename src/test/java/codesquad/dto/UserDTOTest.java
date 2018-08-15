@@ -1,4 +1,4 @@
-package codesquad.domain;
+package codesquad.dto;
 
 import codesquad.dto.UserDTO;
 import org.junit.Before;

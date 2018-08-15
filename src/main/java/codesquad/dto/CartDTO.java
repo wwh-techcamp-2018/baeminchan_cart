@@ -2,10 +2,10 @@ package codesquad.dto;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-@JsonPropertyOrder({ "cartProducts", "totalPrice", "shippingFee" })
+@JsonPropertyOrder({ "cartProducts", "sumPrice", "shippingFee", "totalPrice" })
 public class CartDTO {
 
     private static final Integer SHIPPING_FEE = 2500;
@@ -13,31 +13,37 @@ public class CartDTO {
 
     private List<CartProductDTO> cartProductList;
 
-    private Integer totalSumPrice;
+    private Integer sumPrice;
+
+    private Integer totalPrice;
 
     private Integer shippingFee;
 
     public CartDTO() {
-
+        this(new ArrayList<>());
     }
 
     public CartDTO(List<CartProductDTO> cartProductList) {
         this.cartProductList = cartProductList;
-        this.totalSumPrice = cartProductList.stream().mapToInt(CartProductDTO::getSumPrice).sum();
-        this.shippingFee = totalSumPrice < FREE_SHIPPING_THRESHOLD ? SHIPPING_FEE : 0;
+        this.sumPrice = cartProductList.stream().mapToInt(CartProductDTO::getSumPrice).sum();
+        this.shippingFee = sumPrice < FREE_SHIPPING_THRESHOLD ? SHIPPING_FEE : 0;
+        this.totalPrice = sumPrice + (sumPrice > 0 ? shippingFee : 0);
     }
 
     public List<CartProductDTO> getCartProducts() {
         return cartProductList;
     }
 
+    public Integer getSumPrice() {
+        return sumPrice;
+    }
+
     public Integer getTotalPrice() {
-        return totalSumPrice;
+        return totalPrice;
     }
 
     public Integer getShippingFee() {
         return shippingFee;
-
     }
 
 }

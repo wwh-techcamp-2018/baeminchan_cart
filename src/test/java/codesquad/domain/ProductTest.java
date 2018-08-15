@@ -11,8 +11,6 @@ public class ProductTest {
     private Product productA;
     private Product productB;
 
-    private static final Integer PRODUCT_COUNT = 10;
-
     @Before
     public void setUp() throws Exception {
         productA = Product.builder()
@@ -30,12 +28,6 @@ public class ProductTest {
     public void getSalesPrice() {
         assertThat(productA.getSalesPrice()).isEqualTo(9000);
         assertThat(productB.getSalesPrice()).isEqualTo(8000);
-    }
-
-    @Test
-    public void getSalesPriceExtraDiscouunt() {
-        assertThat(productA.getSalesPrice(PRODUCT_COUNT)).isEqualTo(8500 * PRODUCT_COUNT);
-        assertThat(productB.getSalesPrice(PRODUCT_COUNT)).isEqualTo(8000 * PRODUCT_COUNT);
     }
 
 }
