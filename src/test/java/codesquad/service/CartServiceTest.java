@@ -36,13 +36,28 @@ public class CartServiceTest {
         cartBuilder = Cart.builder();
     }
 
+    @Test
+    public void add() {
+        Product product = productBuilder.build();
+        Cart cart = cartBuilder.build();
+
+        when(productRepository.existsById(product.getId())).thenReturn(true);
+        when(cartRepository.findById(cart.getId())).thenReturn(Optional.of(cart));
+        when(cartRepository.save(cart)).thenReturn(cart);
+
+        assertThat(cartService.add(cart.getId(), product.getId()).getProducts().keySet()).contains(product.getId());
+    }
+
     @Test(expected = ResourceNotFoundException.class)
     public void add_wrong_product() {
         Product product = productBuilder
                 .id(Long.MAX_VALUE)
                 .build();
         Cart cart = cartBuilder.build();
-        CartDto dto = CartDto.builder().productId("" + product.getId()).build();
+
+        when(productRepository.existsById(product.getId())).thenReturn(false);
+        cartService.add(cart.getId(), product.getId());
+    }
 
         when(productRepository.findById(product.getId())).thenReturn(Optional.empty());
         cartService.add(cart, dto);

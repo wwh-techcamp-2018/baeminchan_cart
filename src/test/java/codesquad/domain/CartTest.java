@@ -23,7 +23,7 @@ public class CartTest {
     }
 
     @Test
-    public void addProduct() {
+    public void add_product() {
         cart.addProduct(addedProduct.getId(), 2);
         cart.addProduct(addedProduct.getId(), 4);
         assertThat(cart.getProducts().keySet()).contains(product.getId());
@@ -32,26 +32,16 @@ public class CartTest {
     }
 
     @Test
-    public void getSumProductNum() {
+    public void get_sum_product_num() {
         cart.addProduct(addedProduct.getId(), 2);
         cart.addProduct(addedProduct.getId(), 4);
         assertThat(cart.getSumProductNum()).isEqualTo(7);
     }
 
     @Test
-    public void matchUser() {
+    public void set_user_if_not() {
         User user = User.builder().build();
-        Cart cart = Cart.builder().user(user).build();
-
-        assertThat(cart.matchUser(user)).isTrue();
-    }
-
-    @Test
-    public void notMatchUser() {
-        User user = User.builder().build();
-        User otherUser = User.builder().build();
-        Cart cart = Cart.builder().user(user).build();
-
-        assertThat(cart.matchUser(otherUser)).isFalse();
+        cart.setUserIfNot(user);
+        assertThat(cart.getUser()).isEqualTo(user);
     }
 }
