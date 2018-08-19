@@ -1,4 +1,4 @@
-package codesquad.security;
+package codesquad.utils;
 
 import codesquad.domain.Cart;
 import codesquad.domain.User;
@@ -11,12 +11,12 @@ public class SessionUtils {
     public static final String USER_SESSION_KEY = "loginedUser";
     public static final String CART_SESSION_KEY = "cartUser";
 
-    public static List<Cart> getCartsFromSession(HttpSession session){
-        List<Cart> carts = (ArrayList) session.getAttribute(CART_SESSION_KEY);
-        if(carts == null) {
-            carts = new ArrayList<>();
+    public static Cart getCartFromSession(HttpSession session){
+        Cart cart = (Cart) session.getAttribute(CART_SESSION_KEY);
+        if(cart == null) {
+            cart = new Cart();
         }
-        return carts;
+        return cart;
     }
 
     public static void setUserInSession(HttpSession session, User loginUser) {
