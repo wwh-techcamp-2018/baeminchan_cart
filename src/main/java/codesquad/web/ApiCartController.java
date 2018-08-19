@@ -2,8 +2,6 @@ package codesquad.web;
 
 import codesquad.domain.Cart;
 import codesquad.domain.ResponseModel;
-import codesquad.domain.User;
-import codesquad.dto.CartDto;
 import codesquad.security.SessionUtils;
 import codesquad.service.CartService;
 import lombok.extern.slf4j.Slf4j;
@@ -21,32 +19,27 @@ public class ApiCartController {
     @Autowired
     private CartService cartService;
 
-    @PostMapping("")
+    @PostMapping("/product/{productId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseModel<Integer> addProduct(@RequestBody CartDto dto, HttpSession session, NativeWebRequest webRequest) {
-        setCartSessionIfNotExist(session);
-        Cart cart = SessionUtils.getCartFromSession(webRequest);
+    public ResponseModel<Integer> addProduct(@PathVariable Long productId, HttpSession session, NativeWebRequest webRequest) {
+        setCartInSessionIfNotExist(session);
+        Long cartId = SessionUtils.getCartIdFromSession(webRequest);
 
-        if (SessionUtils.isLoginUser(session)) {
-            setCartUser(cart, webRequest);
-        }
+        setCartUserIfLogin(session, webRequest, cartId);
 
-        Cart updatedCart = cartService.add(cart, dto);
-        SessionUtils.setCartInSession(session, updatedCart);
-
-        return ResponseModel.ofSuccess(updatedCart.getSumProductNum());
+        return ResponseModel.ofSuccess(cartService.add(cartId, productId).getSumProductNum());
     }
 
-    private void setCartSessionIfNotExist(HttpSession session) {
+    private void setCartInSessionIfNotExist(HttpSession session) {
         if (!SessionUtils.isCart(session)) {
-            SessionUtils.setCartInSession(session, cartService.create());
+            SessionUtils.setCartInSession(session, cartService.create().getId());
         }
     }
 
-    private void setCartUser(Cart cart, NativeWebRequest webRequest) {
-        User user = SessionUtils.getUserFromSession(webRequest);
-        if (!cart.matchUser(user)) {
-            cart.setUser(user);
+    private void setCartUserIfLogin(HttpSession session, NativeWebRequest webRequest, Long cartId) {
+        if (SessionUtils.isLoginUser(session)) {
+            Cart cart = cartService.findById(cartId);
+            cart.setUserIfNot(SessionUtils.getUserFromSession(webRequest));
         }
     }
 }

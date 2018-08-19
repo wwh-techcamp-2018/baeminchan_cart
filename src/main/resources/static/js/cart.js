@@ -1,6 +1,5 @@
 class Cart {
     constructor() {
-        this.productNum = 1;
         this.products = {};
         this.registerEvent();
         this.unit = ' 개';
@@ -39,16 +38,10 @@ class Cart {
             let productId = target.getAttribute('data-id');
             if (target.tagName === 'BUTTON') {
                 this.addProductNumber(productId);
-                this.changeCartNumber();
                 this.showSelectedProduct(target);
                 this.cartFetchManager({
-                                    url :'/api/cart',
+                                    url:'/api/cart/product/' + productId,
                                     method: 'POST',
-                                    body: JSON.stringify({
-                                        'productId' : productId,
-                                        'productNum' : this.productNum
-                                    }),
-                                    headers: {'content-type': 'application/json'},
                                     callback: ({json}) => {
                                         this.changeCartNumber(json.data);
                                     }

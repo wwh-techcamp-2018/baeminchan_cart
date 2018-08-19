@@ -39,6 +39,8 @@ public class Cart {
     @DateTimeFormat
     private Date orderDate;
 
+    private boolean buy;
+
     public Cart() {
         this.products = new HashMap<>();
     }
@@ -65,7 +67,13 @@ public class Cart {
         return products.values().stream().mapToInt(Integer::intValue).sum();
     }
 
-    public boolean matchUser(User user) {
+    public void setUserIfNot(User user) {
+        if (!matchUser(user)) {
+            this.user = user;
+        }
+    }
+
+    private boolean matchUser(User user) {
         return this.user == user;
     }
 }

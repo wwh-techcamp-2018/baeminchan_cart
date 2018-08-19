@@ -22,10 +22,12 @@ public class CartService {
     }
 
     @Transactional
-    public Cart add(Cart cart, CartDto dto) {
-        Long productId = Long.parseLong(dto.getProductId());
-        productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("반찬이 존재하지 않습니다."));
-        cart.addProduct(productId, dto.getProductNum());
+    public Cart add(Long cartId, Long productId) {
+        if (!productRepository.existsById(productId)) {
+            throw new ResourceNotFoundException("반찬이 존재하지 않습니다.");
+        }
+        Cart cart = findById(cartId);
+        cart.addProduct(productId, 1);
         return cartRepository.save(cart);
     }
 }
