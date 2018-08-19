@@ -16,8 +16,8 @@ import java.util.Optional;
 public class Cart {
     private List<CartItem> cartItems = new ArrayList<>();
 
-    public void addCartItem(CartItem newCartItem){
-        if(isPresentCartItem(newCartItem)) {
+    public void addCartItem(CartItem newCartItem) {
+        if (isPresentCartItem(newCartItem)) {
             itemCountUp(newCartItem);
             return;
         }
@@ -35,13 +35,15 @@ public class Cart {
     private boolean isPresentCartItem(CartItem newCartItem) {
         Optional<CartItem> presentCartItem = getPresentCartItem(newCartItem);
 
-        if(!presentCartItem.isPresent()) { return false; }
+        if (!presentCartItem.isPresent()) {
+            return false;
+        }
         return true;
     }
 
     private Optional<CartItem> getPresentCartItem(CartItem newCartItem) {
-        return cartItems.stream().filter(item->
-                            item.getProduct().equals(newCartItem.getProduct())).findFirst();
+        return cartItems.stream().filter(item ->
+                item.getProduct().equals(newCartItem.getProduct())).findFirst();
     }
 
 

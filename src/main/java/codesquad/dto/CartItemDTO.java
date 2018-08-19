@@ -1,6 +1,5 @@
 package codesquad.dto;
 
-import codesquad.domain.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
