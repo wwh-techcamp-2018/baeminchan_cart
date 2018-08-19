@@ -3,7 +3,7 @@ package codesquad.web;
 import codesquad.domain.User;
 import codesquad.dto.LoginDTO;
 import codesquad.dto.UserDTO;
-import codesquad.security.SessionUtils;
+import codesquad.utils.SessionUtils;
 import codesquad.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
