@@ -1,8 +1,16 @@
+document.addEventListener('DOMContentLoaded', () => {
+    new Cart();
+});
+
 class Cart {
     constructor() {
         this.products = {};
-        this.registerEvent();
         this.unit = ' 개';
+        this.registerEvent();
+    }
+
+    registerEvent() {
+        this.addProductInCart();
     }
 
     changeCartNumber(cartNum) {
@@ -39,32 +47,20 @@ class Cart {
             if (target.tagName === 'BUTTON') {
                 this.addProductNumber(productId);
                 this.showSelectedProduct(target);
-                this.cartFetchManager({
-                                    url:'/api/cart/product/' + productId,
-                                    method: 'POST',
-                                    callback: ({json}) => {
-                                        this.changeCartNumber(json.data);
-                                    }
-                                })
+                fetchManager({
+                    url:'/api/cart/product/' + productId,
+                    method: "POST",
+                    onSuccess: ({json}) => {
+                        this.changeCartNumber(json.data);
+                    },
+                    onFailed: () => {
+                        alert('잘못된 요청입니다.');
+                    },
+                    onError: () => {
+                        alert('요청중 문제가 발생하였습니다. 재접속 후 시도해주세요.');
+                    }
+                });
             }
         })
     }
-
-    cartFetchManager({url, method, body, headers, callback}) {
-        fetch(url, {method, body, headers, credentials: "same-origin"})
-            .then((response) => {
-                response.json().then(json => callback({json}))
-            });
-    }
-
-    registerEvent() {
-        document.addEventListener('DOMContentLoaded', () => {
-            this.addProductInCart();
-        });
-    }
 }
-
-new Cart();
-
-
-

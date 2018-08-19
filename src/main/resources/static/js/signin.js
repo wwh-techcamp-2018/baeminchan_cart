@@ -12,7 +12,13 @@ document.addEventListener("DOMContentLoaded", function(evt) {
             method: "POST",
             headers: {"content-type": "application/json"},
             body: JSON.stringify(postObject),
-            callback: displayErrors
+            onSuccess: () => {
+                location.href = '/';
+            },
+            onFailed: displayErrors,
+            onError: () => {
+                alert('요청중 문제가 발생하였습니다. 재접속 후 시도해주세요.');
+            }
         });
     });
 
@@ -20,14 +26,10 @@ document.addEventListener("DOMContentLoaded", function(evt) {
 });
 
 function displayErrors(result) {
-    if(!result) {
-        window.location.href = "/";
-    }
     let appendText = "";
     $(".error-message-holder").innerHTML = ""
-    for(message of result.errors) {
+    for(message of result.json.errors) {
         appendText += message.errorMessage + "<br />";
-
     }
     $(".error-message-holder").innerHTML = appendText;
 

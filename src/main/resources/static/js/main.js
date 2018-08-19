@@ -10,18 +10,18 @@ function $_value(selector) {
     return $(selector).value;
 }
 
-function fetchManager({url, method, body, headers, callback}) {
+function fetchManager({url, method, body, headers, onSuccess, onFailed, onError}) {
     fetch(url, {method, body, headers, credentials: "same-origin"})
         .then((response) => {
-            const value = response;
-            if(value.status == 200) {
-                return;
-            } else {
-                return value.json();
-            }
+            let callback;
+            const status = response.status;
+            if (status >= 400) {
+                callback = onFailed;
+            } else callback = onSuccess;
 
-        }).then((result) => {
-            callback(result);
-    });
+            console.log(response);
+
+            response.json().then(json => callback({status, json})).catch(() => callback({status}))
+        }).catch(onError)
 }
 
