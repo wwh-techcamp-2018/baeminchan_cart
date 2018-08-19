@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 class Products {
     constructor() {
-        this.products = {};
         this.unit = ' 개';
         this.registerEvent();
     }
@@ -17,13 +16,6 @@ class Products {
         if (cartNum !== null) {
             $('p.top_box_number').textContent = cartNum + this.unit;
         }
-    }
-
-    addProductNumber(productId) {
-        if (!(productId in this.products)) {
-            this.products[productId] = 0;
-        }
-        this.products[productId] += 1;
     }
 
     showSelectedProduct(target) {
@@ -45,7 +37,6 @@ class Products {
             let target = e.target;
             let productId = target.getAttribute('data-id');
             if (target.tagName === 'BUTTON') {
-                this.addProductNumber(productId);
                 this.showSelectedProduct(target);
                 fetchManager({
                     url:'/api/cart/product/' + productId,
