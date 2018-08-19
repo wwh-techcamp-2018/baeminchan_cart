@@ -80,8 +80,8 @@ public class CartServiceTest {
 
     @Test
     public void get_cart_products() {
-        Product product = productBuilder.price(10000L).build();
-        Product otherProduct = productBuilder.id(2L).price(12000L).build();
+        Product product = productBuilder.price(10_000L).build();
+        Product otherProduct = productBuilder.id(2L).price(12_000L).build();
         Cart cart = cartBuilder.build();
 
         cart.addProduct(product.getId(), 2);
@@ -97,9 +97,19 @@ public class CartServiceTest {
     @Test
     public void compute_cart_total_price() {
         List<CartProductDto> cartProductDtos = Arrays.asList(
-                CartProductDto.builder().totalPrice(2000L).build(),
-                CartProductDto.builder().totalPrice(5000L).build());
+                CartProductDto.builder().totalPrice(2_000L).build(),
+                CartProductDto.builder().totalPrice(5_000L).build());
 
-        assertThat(cartService.computeCartTotalPrice(cartProductDtos)).isEqualTo(7000L);
+        assertThat(cartService.computeCartTotalPrice(cartProductDtos)).isEqualTo(7_000L);
+    }
+
+    @Test
+    public void have_delivery_price() {
+        assertThat(cartService.getDeliveryPrice(39_999L)).isEqualTo(2_500L);
+    }
+
+    @Test
+    public void no_delivery_price() {
+        assertThat(cartService.getDeliveryPrice(40_000L)).isEqualTo(0L);
     }
 }

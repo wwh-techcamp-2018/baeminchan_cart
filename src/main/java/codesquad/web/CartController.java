@@ -19,8 +19,14 @@ public class CartController {
     @GetMapping("/cart")
     public String show(Model model, NativeWebRequest webRequest) {
         List<CartProductDto> cartProducts = cartService.getCartProducts(cartService.findById(SessionUtils.getCartIdFromSession(webRequest)));
+        Long productTotalPrice = cartService.computeCartTotalPrice(cartProducts);
+        Long deliveryPrice = cartService.getDeliveryPrice(productTotalPrice);
+
         model.addAttribute("cartProducts", cartProducts);
-        model.addAttribute("totalCartPrice", cartService.computeCartTotalPrice(cartProducts));
+        model.addAttribute("totalProductPrice", productTotalPrice);
+        model.addAttribute("deliveryPrice", deliveryPrice);
+        model.addAttribute("totalCartPrice", productTotalPrice + deliveryPrice);
+
         return "cart";
     }
 }

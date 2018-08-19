@@ -21,6 +21,9 @@ public class CartService {
     @Autowired
     private CartRepository cartRepository;
 
+    private static final Long DELIVERY_PRICE_REFERENCE = 40_000L;
+    private static final Long DELIVERY_PRICE = 2_500L;
+
     @Transactional
     public Cart create() {
         return cartRepository.save(Cart.builder().build());
@@ -54,8 +57,13 @@ public class CartService {
 
     private List<CartProductDto> getCartProductsListFrom(HashMap<Long, Integer> products) {
         List<CartProductDto> cartProducts = new ArrayList<>();
-        products.forEach((k, v) -> cartProducts.add(
-                CartProductDto.from(productRepository.findById(k).orElseThrow(() -> new ResourceNotFoundException("반찬이 존재하지 않습니다.")), v)));
+        products.forEach(
+                (k, v) -> cartProducts.add(CartProductDto.from(productRepository.findById(k)
+                        .orElseThrow(() -> new ResourceNotFoundException("반찬이 존재하지 않습니다.")), v)));
         return cartProducts;
+    }
+
+    public Long getDeliveryPrice(Long productTotalPrice) {
+        return (productTotalPrice >= DELIVERY_PRICE_REFERENCE) ? 0L : DELIVERY_PRICE;
     }
 }

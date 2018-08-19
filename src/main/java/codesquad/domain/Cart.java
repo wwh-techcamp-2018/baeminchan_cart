@@ -6,7 +6,6 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.DecimalMin;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -27,9 +26,6 @@ public class Cart {
     @Lob
     private HashMap<Long, Integer> products;
 
-    @DecimalMin(value = "0")
-    private Long deliveryCharge;
-
     @DateTimeFormat
     private Date createDate;
 
@@ -46,11 +42,10 @@ public class Cart {
     }
 
     @Builder
-    public Cart(Long id, User user, Long deliveryCharge, Date createDate, Date updatedDate, Date orderDate) {
+    public Cart(Long id, User user, Date createDate, Date updatedDate, Date orderDate) {
         this();
         this.id = id;
         this.user = user;
-        this.deliveryCharge = deliveryCharge;
         this.createDate = createDate;
         this.updatedDate = updatedDate;
         this.orderDate = orderDate;
