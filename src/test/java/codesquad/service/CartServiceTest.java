@@ -1,7 +1,7 @@
 package codesquad.service;
 
 import codesquad.domain.*;
-import codesquad.dto.CartDto;
+import codesquad.dto.CartProductDto;
 import codesquad.exception.ResourceNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,8 +10,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -33,7 +36,7 @@ public class CartServiceTest {
     public void setUp() throws Exception {
         userBuilder = User.builder();
         productBuilder = Product.builder().id(1L);
-        cartBuilder = Cart.builder();
+        cartBuilder = Cart.builder().id(1L);
     }
 
     @Test
@@ -59,7 +62,44 @@ public class CartServiceTest {
         cartService.add(cart.getId(), product.getId());
     }
 
-        when(productRepository.findById(product.getId())).thenReturn(Optional.empty());
-        cartService.add(cart, dto);
+    @Test
+    public void find_by_id() {
+        Cart cart = cartBuilder.build();
+
+        when(cartRepository.findById(cart.getId())).thenReturn(Optional.of(cart));
+        assertThat(cartService.findById(cart.getId())).isEqualTo(cart);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void not_find_by_id() {
+        Cart cart = cartBuilder.build();
+
+        when(cartRepository.findById(cart.getId())).thenReturn(Optional.empty());
+        cartService.findById(cart.getId());
+    }
+
+    @Test
+    public void get_cart_products() {
+        Product product = productBuilder.price(10000L).build();
+        Product otherProduct = productBuilder.id(2L).price(12000L).build();
+        Cart cart = cartBuilder.build();
+
+        cart.addProduct(product.getId(), 2);
+        cart.addProduct(otherProduct.getId(), 1);
+
+        when(productRepository.findById(product.getId())).thenReturn(Optional.of(product));
+        when(productRepository.findById(otherProduct.getId())).thenReturn(Optional.of(otherProduct));
+
+        assertThat(cartService.getCartProducts(cart).get(0).getProductNum()).isEqualTo(2);
+        assertThat(cartService.getCartProducts(cart).get(1).getProductNum()).isEqualTo(1);
+    }
+
+    @Test
+    public void compute_cart_total_price() {
+        List<CartProductDto> cartProductDtos = Arrays.asList(
+                CartProductDto.builder().totalPrice(2000L).build(),
+                CartProductDto.builder().totalPrice(5000L).build());
+
+        assertThat(cartService.computeCartTotalPrice(cartProductDtos)).isEqualTo(7000L);
     }
 }
