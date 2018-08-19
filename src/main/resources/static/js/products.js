@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
-    new Cart();
+    new Products();
 });
 
-class Cart {
+class Products {
     constructor() {
         this.products = {};
         this.unit = ' 개';
