@@ -34,10 +34,10 @@ public class Product {
     private Long price;
 
     @DecimalMin(value = "0")
-    private Long discountRatio;
+    private double discountRatio;
 
     @Builder
-    public Product(Long id, String title, String description, String imgUrl, Long price, Long discountRatio) {
+    public Product(Long id, String title, String description, String imgUrl, Long price, double discountRatio) {
         this.id = id;
         this.title = title;
         this.description = description;

@@ -10,6 +10,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class CartProductDto {
+    private static final Integer CART_NUMBER_REFERENCE = 10;
+    private static final double DISCOUNT_RATIO_REFERENCE = 0.2;
+    private static final double ADDED_DISCOUNT_RATIO = 0.05;
+
     private String imgUrl;
     private String title;
     private Long price;
@@ -28,13 +32,19 @@ public class CartProductDto {
     }
 
     public static CartProductDto from(Product product, Integer productNum) {
+        long discountedPrice = (long) (product.getPrice() * (1 - computeDiscountRatio(product.getDiscountRatio(), productNum)));
+
         return CartProductDto.builder()
                 .imgUrl(product.getImgUrl())
                 .title(product.getTitle())
-                .price(product.getPrice())
+                .price(discountedPrice)
                 .productNum(productNum)
-                .totalPrice(product.getPrice() * productNum)
+                .totalPrice(discountedPrice * productNum)
                 .build();
+    }
+
+    private static double computeDiscountRatio(double discountRatio, Integer productNum) {
+        return (productNum >= CART_NUMBER_REFERENCE && discountRatio < DISCOUNT_RATIO_REFERENCE) ? discountRatio + ADDED_DISCOUNT_RATIO : discountRatio;
     }
 
 }
