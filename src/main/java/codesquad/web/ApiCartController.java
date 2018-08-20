@@ -19,7 +19,7 @@ public class ApiCartController {
     @Autowired
     private CartService cartService;
 
-    @PostMapping("/product/{productId}")
+    @PostMapping("/products/{productId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseModel<Integer> addProduct(@PathVariable Long productId, HttpSession session, NativeWebRequest webRequest) {
         setCartInSessionIfNotExist(session);

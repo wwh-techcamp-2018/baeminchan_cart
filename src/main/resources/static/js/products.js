@@ -39,7 +39,7 @@ class Products {
             if (target.tagName === 'BUTTON') {
                 this.showSelectedProduct(target);
                 fetchManager({
-                    url:'/api/cart/product/' + productId,
+                    url:'/api/cart/products/' + productId,
                     method: "POST",
                     onSuccess: ({json}) => {
                         this.changeCartNumber(json.data);
