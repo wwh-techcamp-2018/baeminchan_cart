@@ -1,11 +1,13 @@
 package codesquad.web;
 
 import codesquad.domain.User;
-import codesquad.exception.ValidationError;
-import codesquad.exception.ValidationErrorResponse;
+import codesquad.domain.UserRepository;
 import codesquad.dto.LoginDTO;
 import codesquad.dto.UserDTO;
+import codesquad.exception.ValidationError;
+import codesquad.exception.ValidationErrorResponse;
 import codesquad.support.test.AcceptanceTest;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,31 +29,44 @@ public class UserControllerAcceptanceTest extends AcceptanceTest {
 
     public static final String SIGNUP_URL = "/users/signup";
     public static final String LOGIN_URL = "/users/login";
+    public static final String DEFAULT_EMAIL = "javajigi@woowahan.com";
+    public static final String DEFAULT_PASSWORD = "87654321";
+
+    private UserDTO dto;
+    private UserDTO signupDTO;
+
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    private UserDTO user;
+    @Autowired
+    UserRepository userRepository;
 
+    @Before
+    public void setUp() throws Exception {
+        userRepository.deleteAll();
+        signupDTO = new UserDTO(DEFAULT_EMAIL, DEFAULT_PASSWORD, DEFAULT_PASSWORD, "javajigi", "010-1234-5678");
+        userRepository.save(User.valueOf(signupDTO, passwordEncoder));
+    }
 
     @Test
     public void signup() throws Exception {
-        user = new UserDTO("javajigi@tech.com", "12345678", "12345678", "javajigi", "010-1234-5678");
-        requestSuccessProcess(SIGNUP_URL, user);
+        dto = new UserDTO("javajigi@tech.com", "12345678", "12345678", "javajigi", "010-1234-5678");
+        requestSuccessProcess(SIGNUP_URL, dto);
     }
 
     @Test
     public void signupAssertPassword() {
-        user = new UserDTO("javajigi@tech.com", "12345678", "12345679", "javajigi", "010-1234-5678");
-        requestFailProcess(SIGNUP_URL, user, Arrays.asList(
+        dto = new UserDTO("javajigi@tech.com", "12345678", "12345679", "javajigi", "010-1234-5678");
+        requestFailProcess(SIGNUP_URL, dto, Arrays.asList(
                 User.FIELD_NAME_PASSWORD
         ));
     }
 
     @Test
     public void signupInvalidUserDTO() {
-        user = new UserDTO("javajigitech.com", "123456", "12345679", "javajigi", "010-1234-5678");
-        ResponseEntity<ValidationErrorResponse> responseEntity = template().postForEntity("/users/signup", user, ValidationErrorResponse.class);
-        requestFailProcess(SIGNUP_URL, user, Arrays.asList(
+        dto = new UserDTO("javajigitech.com", "123456", "12345679", "javajigi", "010-1234-5678");
+        ResponseEntity<ValidationErrorResponse> responseEntity = template().postForEntity("/users/signup", dto, ValidationErrorResponse.class);
+        requestFailProcess(SIGNUP_URL, dto, Arrays.asList(
                 User.FIELD_NAME_PASSWORD,
                 User.FIELD_NAME_EMAIL
         ));
@@ -59,9 +74,7 @@ public class UserControllerAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void duplicateSignup() {
-
-        user = new UserDTO("intae@tech.com", "12345678", "12345678", "intae", "010-1234-5678");
-        requestFailProcess(SIGNUP_URL, user, Arrays.asList(
+        requestFailProcess(SIGNUP_URL, signupDTO, Arrays.asList(
                 User.FIELD_NAME_EMAIL
         ));
     }
@@ -69,8 +82,8 @@ public class UserControllerAcceptanceTest extends AcceptanceTest {
     @Test
     public void login() {
         LoginDTO loginDTO = new LoginDTO();
-        loginDTO.setEmail("intae@tech.com");
-        loginDTO.setPassword("12345678");
+        loginDTO.setEmail(signupDTO.getEmail());
+        loginDTO.setPassword(signupDTO.getPassword());
 
         requestSuccessProcess(LOGIN_URL, loginDTO);
     }
@@ -89,7 +102,7 @@ public class UserControllerAcceptanceTest extends AcceptanceTest {
     @Test
     public void loginValidationPassword() {
         LoginDTO loginDTO = new LoginDTO();
-        loginDTO.setEmail("intae@tech.com");
+        loginDTO.setEmail(signupDTO.getEmail());
         loginDTO.setPassword("somethingwrong");
         requestFailProcess(LOGIN_URL, loginDTO, Arrays.asList(
                 User.FIELD_NAME_PASSWORD
@@ -123,5 +136,4 @@ public class UserControllerAcceptanceTest extends AcceptanceTest {
             log.debug("error message : {}", error.getErrorMessage());
         }
     }
-
 }
