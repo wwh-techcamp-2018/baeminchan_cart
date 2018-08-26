@@ -36,12 +36,12 @@ public class User {
         permissions = UserPermissions.NORMAL;
     }
 
+    @Builder
     public User(long id, String email, String password, String name, String phoneNumber) {
         this(email, password, name, phoneNumber);
         this.id = id;
     }
 
-    @Builder
     public User(String email, String password, String name, String phoneNumber) {
         this();
         this.email = email;

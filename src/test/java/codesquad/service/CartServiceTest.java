@@ -1,8 +1,7 @@
 package codesquad.service;
 
 import codesquad.domain.*;
-import codesquad.dto.CartProductDto;
-import codesquad.exception.ResourceNotFoundException;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,11 +9,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -28,88 +28,67 @@ public class CartServiceTest {
     @InjectMocks
     private CartService cartService;
 
-    private Product.ProductBuilder productBuilder;
-    private User.UserBuilder userBuilder;
-    private Cart.CartBuilder cartBuilder;
+    private User user;
+    private Product product;
+    private Product otherProduct;
+    private Cart cart;
 
     @Before
     public void setUp() throws Exception {
-        userBuilder = User.builder();
-        productBuilder = Product.builder().id(1L);
-        cartBuilder = Cart.builder().id(1L);
-    }
-
-    @Test
-    public void add() {
-        Product product = productBuilder.build();
-        Cart cart = cartBuilder.build();
-
-        when(productRepository.existsById(product.getId())).thenReturn(true);
-        when(cartRepository.findById(cart.getId())).thenReturn(Optional.of(cart));
-        when(cartRepository.save(cart)).thenReturn(cart);
-
-        assertThat(cartService.add(cart.getId(), product.getId()).getProducts().keySet()).contains(product.getId());
-    }
-
-    @Test(expected = ResourceNotFoundException.class)
-    public void add_wrong_product() {
-        Product product = productBuilder
-                .id(Long.MAX_VALUE)
+        user = User.builder().id(1L).build();
+        product = Product.builder()
+                .id(1L)
+                .title("곱창")
+                .price(10_000L)
                 .build();
-        Cart cart = cartBuilder.build();
-
-        when(productRepository.existsById(product.getId())).thenReturn(false);
-        cartService.add(cart.getId(), product.getId());
+        otherProduct = Product.builder()
+                .id(2L)
+                .title("간장게장")
+                .price(9_000L)
+                .build();
+        cart = Cart.builder().id(1L).build();
     }
 
     @Test
-    public void find_by_id() {
-        Cart cart = cartBuilder.build();
+    public void create() {
+        // When
+        when(cartRepository.save(any())).then(returnsFirstArg());
+        Cart cart = cartService.create(user);
 
-        when(cartRepository.findById(cart.getId())).thenReturn(Optional.of(cart));
-        assertThat(cartService.findById(cart.getId())).isEqualTo(cart);
-    }
-
-    @Test(expected = ResourceNotFoundException.class)
-    public void not_find_by_id() {
-        Cart cart = cartBuilder.build();
-
-        when(cartRepository.findById(cart.getId())).thenReturn(Optional.empty());
-        cartService.findById(cart.getId());
+        // Then
+        assertThat(cart.getUser()).isEqualTo(user);
     }
 
     @Test
-    public void get_cart_products() {
-        Product product = productBuilder.price(10_000L).build();
-        Product otherProduct = productBuilder.id(2L).price(12_000L).build();
-        Cart cart = cartBuilder.build();
+    public void updateProductInCart() {
+        // When
+        when(cartRepository.save(any())).then(returnsFirstArg());
+        when(productRepository.findById(any())).thenReturn(Optional.of(product));
+        Cart updatedCart = cartService.updateProductInCart(cart, product, 1);
 
-        cart.addProduct(product.getId(), 2);
-        cart.addProduct(otherProduct.getId(), 1);
+        // Then
+        assertThat(updatedCart.getProducts().keySet()).containsExactly(product.getId());
+        assertThat(updatedCart.getProducts().get(product.getId())).isEqualTo(1);
+    }
 
+    @Test
+    public void getProducts() {
+        cart.updateProductNum(product.getId(), 3);
+        cart.updateProductNum(otherProduct.getId(), 2);
+
+        // When
         when(productRepository.findById(product.getId())).thenReturn(Optional.of(product));
         when(productRepository.findById(otherProduct.getId())).thenReturn(Optional.of(otherProduct));
+        List<Product> products = cartService.getProducts(cart);
 
-        assertThat(cartService.getCartProducts(cart).get(0).getProductNum()).isEqualTo(2);
-        assertThat(cartService.getCartProducts(cart).get(1).getProductNum()).isEqualTo(1);
+        // Then
+        assertThat(products).containsExactly(product, otherProduct);
+
     }
 
-    @Test
-    public void compute_cart_total_price() {
-        List<CartProductDto> cartProductDtos = Arrays.asList(
-                CartProductDto.builder().totalPrice(2_000L).build(),
-                CartProductDto.builder().totalPrice(5_000L).build());
-
-        assertThat(cartService.computeCartTotalPrice(cartProductDtos)).isEqualTo(7_000L);
-    }
-
-    @Test
-    public void have_delivery_price() {
-        assertThat(cartService.getDeliveryPrice(39_999L)).isEqualTo(2_500L);
-    }
-
-    @Test
-    public void no_delivery_price() {
-        assertThat(cartService.getDeliveryPrice(40_000L)).isEqualTo(0L);
+    @After
+    public void tearDown() throws Exception {
+        productRepository.deleteAll();
+        cartRepository.deleteAll();
     }
 }

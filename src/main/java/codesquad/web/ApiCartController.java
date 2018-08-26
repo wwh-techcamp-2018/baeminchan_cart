@@ -1,9 +1,13 @@
 package codesquad.web;
 
 import codesquad.domain.Cart;
+import codesquad.domain.Product;
 import codesquad.domain.ResponseModel;
+import codesquad.dto.CartPriceDto;
+import codesquad.dto.CartProductDto;
 import codesquad.security.SessionUtils;
 import codesquad.service.CartService;
+import codesquad.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,27 +23,58 @@ public class ApiCartController {
     @Autowired
     private CartService cartService;
 
+    @Autowired
+    private ProductService productService;
+
     @PostMapping("/products/{productId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseModel<Integer> addProduct(@PathVariable Long productId, HttpSession session, NativeWebRequest webRequest) {
+    public ResponseModel<Integer> addProductToCart(@PathVariable Long productId, @RequestParam("num") int productNum, HttpSession session, NativeWebRequest webRequest) {
+        // Todo: Extract checking session to prehandle
         setCartInSessionIfNotExist(session);
-        Long cartId = SessionUtils.getCartIdFromSession(webRequest);
+        Cart cart = SessionUtils.getCartFromSession(webRequest).get();
+        setCartUserIfLogin(session, cart, webRequest);
 
-        setCartUserIfLogin(session, webRequest, cartId);
+        Product product = productService.findById(productId);
 
-        return ResponseModel.ofSuccess(cartService.add(cartId, productId).getSumProductNum());
+        Cart updatedCart = cartService.updateProductInCart(cart, product, cart.productNum(productId) + productNum);
+        SessionUtils.setCartInSession(session, updatedCart);
+
+        return ResponseModel.ofSuccess(updatedCart.getSumProductNum());
+    }
+
+    @PostMapping("/product/{productId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseModel<CartProductDto> updateProduct(@PathVariable Long productId, @RequestParam("num") int productNum, HttpSession session, NativeWebRequest webRequest) {
+        Cart cart = SessionUtils.getCartFromSession(webRequest).get();
+        setCartUserIfLogin(session, cart, webRequest);
+
+        Product product = productService.findById(productId);
+
+        Cart updatedCart = cartService.updateProductInCart(cart, product, productNum);
+        SessionUtils.setCartInSession(session, updatedCart);
+
+        return ResponseModel.ofSuccess(CartProductDto.from(updatedCart, product));
+    }
+
+    @GetMapping("/price")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseModel<CartPriceDto> totalPrice(HttpSession session, NativeWebRequest webRequest) {
+        setCartInSessionIfNotExist(session);
+        Cart cart = SessionUtils.getCartFromSession(webRequest).get();
+        setCartUserIfLogin(session, cart, webRequest);
+
+        return ResponseModel.ofSuccess(CartPriceDto.from(cart));
     }
 
     private void setCartInSessionIfNotExist(HttpSession session) {
         if (!SessionUtils.isCart(session)) {
-            SessionUtils.setCartInSession(session, cartService.create().getId());
+            SessionUtils.setCartInSession(session, cartService.create(null));
         }
     }
 
-    private void setCartUserIfLogin(HttpSession session, NativeWebRequest webRequest, Long cartId) {
+    private void setCartUserIfLogin(HttpSession session, Cart cart, NativeWebRequest webRequest) {
         if (SessionUtils.isLoginUser(session)) {
-            Cart cart = cartService.findById(cartId);
-            cart.setUserIfNot(SessionUtils.getUserFromSession(webRequest));
+            cart.setUserIfNot(SessionUtils.getUserFromSession(webRequest).get());
         }
     }
 }

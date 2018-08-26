@@ -4,6 +4,8 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.bmf.kr/static/css/app.v-e740bdcc.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.bmf.kr/web/css/magnific-popup/magnific-popup_1.0.1.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.bmf.kr/web/css/jquery-ui/1.11.4/jquery-ui.151106.min.css">
+<script src="/js/main.js"></script>
+<script src="/js/cart.js"></script>
 {{/block}}
 
 {{#block "contents"}}
@@ -53,7 +55,7 @@
                         {{# cartProducts}}
 
                             <tr class="cart_prd_list" cart_no="12585780" data-hash="I9D6D" data-subscription-flag="0" data-delivery-limit-periods-flag="1"
-                                data-delivery-limit="2018-07-19~2018-08-15">
+                                data-delivery-limit="2018-07-19~2018-08-15" data-id="{{ productId }}">
                                 <td>
                                     <label class="custom_checkbox on">
                                         <i class="chk_box"></i>
@@ -81,7 +83,7 @@
                                     </p>
                                 </td>
                                 <td>
-                                    <span cartdata="" id="productPrice">{{ price }}</span>원
+                                    <span cartdata="" class="productPrice">{{ price }}</span>원
                                 </td>
                                 <td>
                                     <div class="prd_account">
@@ -98,7 +100,8 @@
                                     <button type="button" class="btn btn_white quantity_change_confirm">변경</button>
                                 </td>
                                 <td>
-                                    <span cartdata="origin/sum_final_sell_prc" id="sumSalePrice">{{ totalPrice }}</span>원
+                                    <span cartdata="origin/sum_final_sell_prc"
+                                          class="sumSalePrice">{{ totalPrice }}</span>원
                                 </td>
                                 <td>
                                     <span class="once_only bf_red">정기배송 불가</span>
@@ -146,11 +149,11 @@
                             <dl class="price">
                                 <dt>상품 금액</dt>
                                 <dd>
-                                    <span pricedata="" id="salePrice">{{ totalCartPrice }}</span>원
+                                    <span pricedata="" id="salePrice">{{ cartPrice.totalProductPrice }}</span>원
                                 </dd>
                                 <dt>배송비</dt>
                                 <dd>
-                                    <span pricedata="" id="shippingFee">{{ deliveryPrice }}</span>원
+                                    <span pricedata="" id="shippingFee">{{ cartPrice.deliveryCharge }}</span>원
                                     <p class="msg">40,000원 이상 구매 시 배송비 무료</p>
                                 </dd>
                             </dl>
@@ -158,7 +161,7 @@
                             <dl class="total">
                                 <dt>총 주문금액</dt>
                                 <dd>
-                                    <span class="number" pricedata="" id="totalPrice">{{ totalCartPrice }}</span>
+                                    <span class="number" pricedata="" id="totalPrice">{{ cartPrice.totalPrice }}</span>
                                     <span class="won">원</span>
                                     <p class="msg save-point">포인트
                                         <span id="mileage" pricedata="total_milage">208</span>p</p>

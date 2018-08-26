@@ -1,17 +1,14 @@
 package codesquad.service;
 
-import codesquad.domain.Cart;
-import codesquad.domain.CartRepository;
-import codesquad.domain.ProductRepository;
-import codesquad.dto.CartProductDto;
+import codesquad.domain.*;
 import codesquad.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CartService {
@@ -21,49 +18,31 @@ public class CartService {
     @Autowired
     private CartRepository cartRepository;
 
-    private static final Long DELIVERY_PRICE_REFERENCE = 40_000L;
-    private static final Long DELIVERY_PRICE = 2_500L;
 
-    @Transactional
-    public Cart create() {
-        return cartRepository.save(Cart.builder().build());
+    public Cart create(User user) {
+        return cartRepository.save(Cart.builder().user(user).build());
     }
 
     @Transactional
-    public Cart add(Long cartId, Long productId) {
-        if (!productRepository.existsById(productId)) {
-            throw new ResourceNotFoundException("반찬이 존재하지 않습니다.");
-        }
-        Cart cart = findById(cartId);
-        cart.addProduct(productId, 1);
+    public Cart updateProductInCart(Cart cart, Product product, Integer productNum) {
+        cart.updateProductNum(product.getId(), productNum);
+        cart.totalProductsPrice(getProducts(cart));
+        cart.updateDeliveryCharge();
+
         return cartRepository.save(cart);
     }
 
-    public Cart findById(Long cartId) {
-        return cartRepository.findById(cartId).orElseThrow(() -> new ResourceNotFoundException("장바구니가 존재하지 않습니다."));
-    }
-
-    public List<CartProductDto> getCartProducts(Cart cart) {
-        return getCartProductsListFrom(cart.getProducts());
-    }
-
-    public Long computeCartTotalPrice(List<CartProductDto> cartProducts) {
-        Long cartTotalPrice = 0L;
-        for (CartProductDto dto : cartProducts) {
-            cartTotalPrice += dto.getTotalPrice();
+    public List<Product> getProducts(Cart cart) {
+        if (!cart.isEmpty()) {
+            return cart.productsIdList().stream().map((id) -> findByProductId(id)).collect(Collectors.toList());
         }
-        return cartTotalPrice;
+        return Collections.emptyList();
     }
 
-    private List<CartProductDto> getCartProductsListFrom(HashMap<Long, Integer> products) {
-        List<CartProductDto> cartProducts = new ArrayList<>();
-        products.forEach(
-                (k, v) -> cartProducts.add(CartProductDto.from(productRepository.findById(k)
-                        .orElseThrow(() -> new ResourceNotFoundException("반찬이 존재하지 않습니다.")), v)));
-        return cartProducts;
-    }
-
-    public Long getDeliveryPrice(Long productTotalPrice) {
-        return (productTotalPrice >= DELIVERY_PRICE_REFERENCE) ? 0L : DELIVERY_PRICE;
+    private Product findByProductId(Long id) {
+        // Todo: Add ControllerAdvice and error responseModel
+        return productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("반찬이 존재하이 않습니다."));
     }
 }
+
+
