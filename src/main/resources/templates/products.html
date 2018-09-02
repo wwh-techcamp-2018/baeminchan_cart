@@ -57,7 +57,7 @@
 	                              <img src="{{imgUrl}}" alt="">
 
                                 <a href="/product/{{id}}" ga_id="17435" ga_name="{{description}}">
-                                  <div class="thumb_badge"><span class="num">20</span><span class="unit">%</span></div>
+                                  <div class="thumb_badge"><span class="amount">20</span><span class="unit">%</span></div>
                                 </a>
                             </div>
                             <dl class="prds_lst_info">
@@ -72,13 +72,14 @@
                                 </dd>
                                 <dd class="prd_to_basket">
                                     <div class="prd_account clearfix">
-                                        <label><input class="buy_cnt" type="text" name="amount" value="1" data-name="{{title}}" data-no="17435" data-price="" data-hash="H62C9" data-min="1" data-max="-1"></label>
+                                        <label><input class="buy_cnt" type="text" name="amount" value=1 data-name="{{title}}" data-no="17435" data-price="" data-hash="H62C9" data-min="1" data-max="-1"></label>
                                         <span>
-                                            <a href="#" title="수량 더하기" class="up">수량 더하기</a>
-                                            <a href="#" title="수량 빼기" class="down">수량 빼기</a>
+                                            <a href="#" title="수량 더하기" class="up amount">수량 더하기</a>
+                                            <a href="#" title="수량 빼기" class="down amount">수량 빼기</a>
                                         </span>
                                     </div>
                                     <button class="btn btn_gray prd_thumb_btn cart" data-role="add-to-cart-button" data-hash="H62C9" data-price="4640">
+                                        <input type="hidden" value="{{id}}" class="product_id"/>
                                       <span>담기</span>
                                     </button>
                                 </dd>
@@ -94,8 +95,14 @@
                     </h3>
                     <div class="empty">
                         <p class="top_box_number">
-                            <span class="txt" style="display:;" id="cart_display_none">담은상품이<br>없습니다.</span>
+                            {{^banchanCart}}
+                                <span class="txt" style="display:;" id="cart_display_none">담은상품이<br>없습니다.</span>
+                            {{/banchanCart}}
+                            {{#banchanUser}}
+                                <span class="txt" style="display:;" id="cart_display_block">{{basket.length}}</span>
                             <strong class="number" id="cart_display_exist" style="display:none"><span id="basket-counter" class="number_txt">0</span><span class="unit">개</span></strong>
+                            {{/banchanUser}}
+
                         </p>
                         <a href="/cart" id="go_to_cart" class="go_to_basket">장바구니 이동 <span>&gt;</span></a>
                     </div>
@@ -108,4 +115,5 @@
             </div>
         </div>
     </div>
+<script src="/js/cart.js"></script>
 {{/block}}
