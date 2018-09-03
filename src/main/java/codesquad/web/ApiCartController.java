@@ -3,8 +3,8 @@ package codesquad.web;
 import codesquad.domain.Cart;
 import codesquad.domain.Product;
 import codesquad.domain.ResponseModel;
-import codesquad.dto.CartPriceDto;
-import codesquad.dto.CartProductDto;
+import codesquad.dto.CartPriceDTO;
+import codesquad.dto.CartProductDTO;
 import codesquad.security.SessionUtils;
 import codesquad.service.CartService;
 import codesquad.service.ProductService;
@@ -44,7 +44,7 @@ public class ApiCartController {
 
     @PostMapping("/product/{productId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseModel<CartProductDto> updateProduct(@PathVariable Long productId, @RequestParam("num") int productNum, HttpSession session, NativeWebRequest webRequest) {
+    public ResponseModel<CartProductDTO> updateProduct(@PathVariable Long productId, @RequestParam("num") int productNum, HttpSession session, NativeWebRequest webRequest) {
         Cart cart = SessionUtils.getCartFromSession(webRequest).get();
         setCartUserIfLogin(session, cart, webRequest);
 
@@ -53,17 +53,17 @@ public class ApiCartController {
         Cart updatedCart = cartService.updateProductInCart(cart, product, productNum);
         SessionUtils.setCartInSession(session, updatedCart);
 
-        return ResponseModel.ofSuccess(CartProductDto.from(updatedCart, product));
+        return ResponseModel.ofSuccess(CartProductDTO.from(updatedCart, product));
     }
 
     @GetMapping("/price")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseModel<CartPriceDto> totalPrice(HttpSession session, NativeWebRequest webRequest) {
+    public ResponseModel<CartPriceDTO> totalPrice(HttpSession session, NativeWebRequest webRequest) {
         setCartInSessionIfNotExist(session);
         Cart cart = SessionUtils.getCartFromSession(webRequest).get();
         setCartUserIfLogin(session, cart, webRequest);
 
-        return ResponseModel.ofSuccess(CartPriceDto.from(cart));
+        return ResponseModel.ofSuccess(CartPriceDTO.from(cart));
     }
 
     private void setCartInSessionIfNotExist(HttpSession session) {

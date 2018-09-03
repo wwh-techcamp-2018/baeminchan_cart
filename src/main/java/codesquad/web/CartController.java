@@ -2,8 +2,8 @@ package codesquad.web;
 
 import codesquad.domain.Cart;
 import codesquad.domain.Product;
-import codesquad.dto.CartPriceDto;
-import codesquad.dto.CartProductDto;
+import codesquad.dto.CartPriceDTO;
+import codesquad.dto.CartProductDTO;
 import codesquad.security.SessionUtils;
 import codesquad.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +27,9 @@ public class CartController {
         setCartUserIfLogin(session, cart, webRequest);
 
         List<Product> products = cartService.getProducts(cart);
-        model.addAttribute("cartProducts", CartProductDto.listFrom(cart, products));
+        model.addAttribute("cartProducts", CartProductDTO.listFrom(cart, products));
 
-        model.addAttribute("cartPrice", CartPriceDto.from(cart));
+        model.addAttribute("cartPrice", CartPriceDTO.from(cart));
 
         return "cart";
     }

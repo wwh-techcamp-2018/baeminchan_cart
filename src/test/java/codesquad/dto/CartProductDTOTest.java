@@ -22,7 +22,7 @@ public class CartProductDTOTest {
         Cart cart = new Cart(productIds);
 
         // When
-        CartProductDto dto = CartProductDto.from(cart, product);
+        CartProductDTO dto = CartProductDTO.from(cart, product);
 
         // Then
         assertThat(dto.getTitle()).isEqualTo(product.getTitle());
@@ -42,7 +42,7 @@ public class CartProductDTOTest {
         Cart cart = new Cart(productIds);
 
         // When
-        List<CartProductDto> dtoList = CartProductDto.listFrom(cart, Arrays.asList(product, otherProduct));
+        List<CartProductDTO> dtoList = CartProductDTO.listFrom(cart, Arrays.asList(product, otherProduct));
 
         // Then
         assertThat(dtoList.stream().map((e) -> e.getTitle()).collect(Collectors.toList())).containsExactly(product.getTitle(), otherProduct.getTitle());

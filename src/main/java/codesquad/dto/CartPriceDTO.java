@@ -9,19 +9,19 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CartPriceDto {
+public class CartPriceDTO {
     private Long totalProductPrice;
     private Long deliveryCharge;
     private Long totalPrice;
 
     @Builder
-    public CartPriceDto(Long totalProductPrice, Long deliveryCharge, Long totalPrice) {
+    public CartPriceDTO(Long totalProductPrice, Long deliveryCharge, Long totalPrice) {
         this.totalProductPrice = totalProductPrice;
         this.deliveryCharge = deliveryCharge;
         this.totalPrice = totalPrice;
     }
 
-    public static CartPriceDto from(Cart cart) {
+    public static CartPriceDTO from(Cart cart) {
         Long productsPrice = 0L;
         Long deliveryCharge = 0L;
 
@@ -30,7 +30,7 @@ public class CartPriceDto {
             deliveryCharge = cart.getDeliveryCharge();
         }
 
-        return CartPriceDto.builder()
+        return CartPriceDTO.builder()
                 .totalProductPrice(productsPrice)
                 .deliveryCharge(deliveryCharge)
                 .totalPrice(productsPrice + deliveryCharge)

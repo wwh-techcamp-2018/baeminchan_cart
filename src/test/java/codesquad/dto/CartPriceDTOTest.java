@@ -20,7 +20,7 @@ public class CartPriceDTOTest {
         cart.setDeliveryCharge(2_500L);
 
         // When
-        CartPriceDto dto = CartPriceDto.from(cart);
+        CartPriceDTO dto = CartPriceDTO.from(cart);
 
         // Then
         assertThat(dto.getDeliveryCharge()).isEqualTo(2_500L);
@@ -33,7 +33,7 @@ public class CartPriceDTOTest {
         Cart cart = Cart.builder().build();
 
         // When
-        CartPriceDto dto = CartPriceDto.from(cart);
+        CartPriceDTO dto = CartPriceDTO.from(cart);
 
         // Then
         assertThat(dto.getDeliveryCharge()).isEqualTo(0L);
