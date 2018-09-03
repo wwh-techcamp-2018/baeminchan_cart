@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function (evt) {
-    const email = getEmail()
+    const email = getEmail();
 
     const submitButton = $(".btn.btn_mint.btn_big");
     submitButton.addEventListener("click", function (evt) {
