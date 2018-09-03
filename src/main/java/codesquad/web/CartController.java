@@ -29,7 +29,7 @@ public class CartController {
         List<Product> products = cartService.getProducts(cart);
         model.addAttribute("cartProducts", CartProductDTO.listFrom(cart, products));
 
-        model.addAttribute("cartPrice", CartPriceDTO.from(cart));
+        model.addAttribute("cartPrice", CartPriceDTO.from(cart, products));
 
         return "cart";
     }

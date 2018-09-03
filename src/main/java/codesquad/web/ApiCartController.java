@@ -63,7 +63,7 @@ public class ApiCartController {
         Cart cart = SessionUtils.getCartFromSession(webRequest).get();
         setCartUserIfLogin(session, cart, webRequest);
 
-        return ResponseModel.ofSuccess(CartPriceDTO.from(cart));
+        return ResponseModel.ofSuccess(CartPriceDTO.from(cart, cartService.getProducts(cart)));
     }
 
     private void setCartInSessionIfNotExist(HttpSession session) {

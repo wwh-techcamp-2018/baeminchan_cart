@@ -26,9 +26,6 @@ public class CartService {
     @Transactional
     public Cart updateProductInCart(Cart cart, Product product, Integer productNum) {
         cart.updateProductNum(product.getId(), productNum);
-        cart.totalProductsPrice(getProducts(cart));
-        cart.updateDeliveryCharge();
-
         return cartRepository.save(cart);
     }
 

@@ -4,7 +4,8 @@ import codesquad.domain.Cart;
 import codesquad.domain.Product;
 import org.junit.Test;
 
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -12,15 +13,13 @@ public class CartPriceDTOTest {
     @Test
     public void create_cartDTO() {
         // Given
-        HashMap<Long, Integer> productIds = new HashMap<>();
-        productIds.put(Product.builder().price(2_000L).build().getId(), 5);
-
+        LinkedHashMap<Long, Integer> productIds = new LinkedHashMap<>();
+        Product product = Product.builder().price(2_000L).build();
+        productIds.put(product.getId(), 5);
         Cart cart = new Cart(productIds);
-        cart.setProductsTotalPrice(10_000L);
-        cart.setDeliveryCharge(2_500L);
 
         // When
-        CartPriceDTO dto = CartPriceDTO.from(cart);
+        CartPriceDTO dto = CartPriceDTO.from(cart, Arrays.asList(product));
 
         // Then
         assertThat(dto.getDeliveryCharge()).isEqualTo(2_500L);
@@ -33,7 +32,7 @@ public class CartPriceDTOTest {
         Cart cart = Cart.builder().build();
 
         // When
-        CartPriceDTO dto = CartPriceDTO.from(cart);
+        CartPriceDTO dto = CartPriceDTO.from(cart, Arrays.asList());
 
         // Then
         assertThat(dto.getDeliveryCharge()).isEqualTo(0L);

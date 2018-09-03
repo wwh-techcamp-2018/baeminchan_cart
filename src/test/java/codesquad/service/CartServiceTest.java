@@ -63,7 +63,6 @@ public class CartServiceTest {
     public void updateProductInCart() {
         // When
         when(cartRepository.save(any())).then(returnsFirstArg());
-        when(productRepository.findById(any())).thenReturn(Optional.of(product));
         Cart updatedCart = cartService.updateProductInCart(cart, product, 1);
 
         // Then

@@ -1,5 +1,6 @@
 package codesquad.domain;
 
+import codesquad.common.CartValue;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,10 +9,7 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Getter
@@ -28,41 +26,31 @@ public class Cart {
     private User user;
 
     // Todo: Consider replacing productId to product
-    @MapKeyJoinColumn
     @CollectionTable
-    @Lob
-    private HashMap<Long, Integer> products;
+    @ElementCollection
+    private Map<Long, Integer> products = new LinkedHashMap<>();
 
     @DateTimeFormat
+    @Column
     private Date createDate;
 
     @DateTimeFormat
+    @Column
     private Date updatedDate;
 
-    @DateTimeFormat
-    private Date orderDate;
+    @Column
+    private boolean buy = false;
 
-    private Long productsTotalPrice;
-
-    private Long deliveryCharge;
-
-    private boolean buy;
-
-    @Builder
-    public Cart(Long id, User user, Date createDate, Date updatedDate, Date orderDate, Long productsTotalPrice, Long deliveryCharge, boolean buy) {
-        this.id = id;
-        this.user = user;
-        this.products = new HashMap<>();
-        this.createDate = createDate;
-        this.updatedDate = updatedDate;
-        this.orderDate = orderDate;
-        this.productsTotalPrice = productsTotalPrice;
-        this.deliveryCharge = deliveryCharge;
-        this.buy = buy;
+    public Cart(LinkedHashMap<Long, Integer> products) {
+        this.products = products;
     }
 
-    public Cart(HashMap<Long, Integer> products) {
-        this.products = products;
+    @Builder
+    public Cart(Long id, User user, Date createDate, Date updatedDate) {
+        this.id = id;
+        this.user = user;
+        this.createDate = createDate;
+        this.updatedDate = updatedDate;
     }
 
     public void updateProductNum(Long productId, Integer productNum) {
@@ -82,8 +70,12 @@ public class Cart {
         }
     }
 
-    public void totalProductsPrice(List<Product> productList) {
-        this.productsTotalPrice = productList.stream()
+    public Long computeTotalProductsPrice(List<Product> productList) {
+        if (productList.isEmpty()) {
+            return 0L;
+        }
+
+        return productList.stream()
                 .filter((prd) -> products.containsKey(prd.getId()))
                 .mapToLong((prd) -> productsPrice(prd)).sum();
     }
@@ -99,10 +91,10 @@ public class Cart {
         return new ArrayList<>(products.keySet());
     }
 
-    public void updateDeliveryCharge() {
-        this.deliveryCharge = (this.productsTotalPrice >= CartStaticValue.DELIVERY_CHARGE_REFERENCE)
-                ? 0
-                : CartStaticValue.DELIVERY_CHARGE;
+    public Long getDeliveryCharge(Long totalPrice) {
+        return (totalPrice >= CartValue.DELIVERY_CHARGE_REFERENCE || totalPrice == 0)
+                ? 0L
+                : CartValue.DELIVERY_CHARGE;
     }
 
     public boolean isEmpty() {
@@ -115,13 +107,6 @@ public class Cart {
 
     private Long productsPrice(Product product) {
         Integer productNum = products.get(product.getId());
-        return (long) computeDiscountedPrice(product.getPrice(), productNum, product.getDiscountRatio()) * productNum;
-    }
-
-    private double computeDiscountedPrice(Long price, Integer number, double discountedRatio) {
-        return (number >= CartStaticValue.FREE_DEIVERY_PRODUCT_NUM
-                && discountedRatio < CartStaticValue.DISCOUNT_RATIO_LIMIT)
-                ? price * (1 - discountedRatio - CartStaticValue.ADDITIONAL_DISCOUNT_RATIO)
-                : price * (1 - discountedRatio);
+        return CartValue.getDiscountedPrice(product, productNum) * productNum;
     }
 }

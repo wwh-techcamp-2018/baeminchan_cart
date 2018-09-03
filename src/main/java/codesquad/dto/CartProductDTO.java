@@ -1,5 +1,6 @@
 package codesquad.dto;
 
+import codesquad.common.CartValue;
 import codesquad.domain.Cart;
 import codesquad.domain.Product;
 import lombok.Builder;
@@ -40,7 +41,7 @@ public class CartProductDTO {
     public static CartProductDTO from(Cart cart, Product product) {
         Long productId = product.getId();
         Integer productNum = cart.productNum(productId);
-        Long discountedPrice = (long) (product.getPrice() * (1 - computeDiscountRatio(product.getDiscountRatio(), productNum)));
+        Long discountedPrice = CartValue.getDiscountedPrice(product, productNum);
 
         return CartProductDTO.builder()
                 .productId(productId)
@@ -56,10 +57,6 @@ public class CartProductDTO {
         return products.stream()
                 .map((product) -> from(cart, product))
                 .collect(Collectors.toList());
-    }
-
-    private static double computeDiscountRatio(double discountRatio, Integer productNum) {
-        return (productNum >= CART_NUMBER_REFERENCE && discountRatio < DISCOUNT_RATIO_REFERENCE) ? discountRatio + ADDED_DISCOUNT_RATIO : discountRatio;
     }
 
 }

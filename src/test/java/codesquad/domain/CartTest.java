@@ -1,17 +1,19 @@
 package codesquad.domain;
 
+import codesquad.common.CartValue;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CartTest {
     private Product.ProductBuilder productBuilder;
     private Product.ProductBuilder otherProductBuilder;
-    private HashMap<Product, Integer> products;
+    private Map<Product, Integer> products;
     private Cart cart;
 
     @Before
@@ -59,80 +61,15 @@ public class CartTest {
         assertThat(cart.getUser()).isEqualTo(user);
     }
 
-    @Test
-    public void compute_10_same_product_discounted_under_twenty() {
-        // Given
-        Product product = productBuilder.build();
-        Integer productNum = CartStaticValue.FREE_DEIVERY_PRODUCT_NUM;
-        Cart cart = cartWithProduct(product, productNum);
-
-        // When
-        cart.totalProductsPrice(Arrays.asList(product));
-
-        double discountedPrice = product.getPrice() *
-                (1 - product.getDiscountRatio() - CartStaticValue.ADDITIONAL_DISCOUNT_RATIO) *
-                productNum;
-
-        // Then
-        assertThat(cart.getProductsTotalPrice()).isEqualTo((long) discountedPrice);
-    }
-
-    @Test
-    public void compute_9_same_product_discounted_under_twenty() {
-        // Given
-        Product product = productBuilder
-                .discountRatio(CartStaticValue.DISCOUNT_RATIO_LIMIT - 0.1)
-                .build();
-
-        Integer productNum = CartStaticValue.FREE_DEIVERY_PRODUCT_NUM - 1;
-        Cart cart = cartWithProduct(product, productNum);
-
-        // When
-        cart.totalProductsPrice(Arrays.asList(product));
-
-        double discountedPrice = product.getPrice() *
-                (1 - product.getDiscountRatio()) *
-                productNum;
-
-        // Then
-        assertThat(cart.getProductsTotalPrice()).isEqualTo((long) discountedPrice);
-    }
-
-    @Test
-    public void compute_10_same_product_discounted_over_twenty() {
-        // Given
-        Product product = otherProductBuilder
-                .discountRatio(CartStaticValue.DISCOUNT_RATIO_LIMIT)
-                .build();
-
-        Integer productNum = CartStaticValue.FREE_DEIVERY_PRODUCT_NUM;
-        Cart cart = cartWithProduct(product, productNum);
-
-        // When
-        cart.totalProductsPrice(Arrays.asList(product));
-
-        double discountedPrice = product.getPrice() *
-                (1 - product.getDiscountRatio()) *
-                productNum;
-
-        // Then
-        assertThat(cart.getProductsTotalPrice()).isEqualTo((long) discountedPrice);
-    }
 
     @Test
     public void notFreeDeliveryCharge() {
-        Cart cart = Cart.builder().productsTotalPrice(39_999L).build();
-        cart.updateDeliveryCharge();
-
-        assertThat(cart.getDeliveryCharge()).isEqualTo(2_500L);
+        assertThat(cart.getDeliveryCharge(CartValue.DELIVERY_CHARGE_REFERENCE - 1)).isEqualTo(2_500L);
     }
 
     @Test
     public void freeDeliveryCharge() {
-        Cart cart = Cart.builder().productsTotalPrice(40_000L).build();
-        cart.updateDeliveryCharge();
-
-        assertThat(cart.getDeliveryCharge()).isEqualTo(0);
+        assertThat(cart.getDeliveryCharge(CartValue.DELIVERY_CHARGE_REFERENCE)).isEqualTo(0);
     }
 
     @Test
@@ -173,7 +110,7 @@ public class CartTest {
     }
 
     private Cart cartWithProduct(Product product, Integer productNum) {
-        HashMap<Long, Integer> productIds = new HashMap<>();
+        LinkedHashMap<Long, Integer> productIds = new LinkedHashMap<>();
         productIds.put(product.getId(), productNum);
         return new Cart(productIds);
     }

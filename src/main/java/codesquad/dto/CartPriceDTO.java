@@ -1,10 +1,13 @@
 package codesquad.dto;
 
 import codesquad.domain.Cart;
+import codesquad.domain.Product;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,14 +24,9 @@ public class CartPriceDTO {
         this.totalPrice = totalPrice;
     }
 
-    public static CartPriceDTO from(Cart cart) {
-        Long productsPrice = 0L;
-        Long deliveryCharge = 0L;
-
-        if (!cart.isEmpty()) {
-            productsPrice = cart.getProductsTotalPrice();
-            deliveryCharge = cart.getDeliveryCharge();
-        }
+    public static CartPriceDTO from(Cart cart, List<Product> products) {
+        Long productsPrice = cart.computeTotalProductsPrice(products);
+        Long deliveryCharge = cart.getDeliveryCharge(productsPrice);
 
         return CartPriceDTO.builder()
                 .totalProductPrice(productsPrice)
