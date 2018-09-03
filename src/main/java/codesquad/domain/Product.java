@@ -1,11 +1,12 @@
 package codesquad.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Product {
@@ -23,7 +24,15 @@ public class Product {
     private String imgUrl;
 
     @DecimalMin(value = "0")
-    private Long price;
+    private int price;
+
+    private double discountRate;
+
+    @OneToMany(mappedBy="product", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+    @JsonIgnore
+    private List<CartItem> cartItemList = new ArrayList<CartItem>();
+
+    public Product() {}
 
     public Long getId() {
         return id;
@@ -41,7 +50,15 @@ public class Product {
         return imgUrl;
     }
 
-    public Long getPrice() {
+    public int getPrice() {
         return price;
+    }
+
+    public double getDiscountRate() {
+        return discountRate;
+    }
+
+    private int calculateDiscountedPrice() {
+        return (int)(this.price * (1 - (discountRate * 0.01)));
     }
 }

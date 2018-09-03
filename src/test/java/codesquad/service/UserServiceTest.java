@@ -1,7 +1,7 @@
 package codesquad.service;
 
 import codesquad.domain.User;
-import codesquad.domain.UserRepository;
+import codesquad.repository.UserRepository;
 import codesquad.dto.LoginDTO;
 import codesquad.exception.UserVerificationException;
 import org.junit.Before;

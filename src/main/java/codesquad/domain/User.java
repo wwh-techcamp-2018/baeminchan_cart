@@ -31,6 +31,10 @@ public class User {
     @Column(nullable = false)
     private UserPermissions permissions;
 
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(unique=true)
+    private Cart cart;
+
     public User() {
         permissions = UserPermissions.NORMAL;
     }
