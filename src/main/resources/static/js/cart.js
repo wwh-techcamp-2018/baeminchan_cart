@@ -37,7 +37,7 @@ class Cart {
         if (target.classList.contains('down')) {
             const buyCnt = this.buyCntBox(target);
             if (buyCnt.value <= 1) {
-                alert("수량이 1보다 작을 순 없습니다.");
+                popUpErrorMessage("수량이 1보다 작을 순 없습니다.");
                 return;
             }
             buyCnt.value = Number(buyCnt.value) - 1;

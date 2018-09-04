@@ -38,7 +38,7 @@ function displayErrors(status, errors) {
 
     let appendText = "";
     for(message of errors) {
-        appendText += message.errorMessage + "<br />";
+        appendText += message.errorMessage + "<br/>";
     }
     $(".error-message-holder").innerHTML = appendText;
 }

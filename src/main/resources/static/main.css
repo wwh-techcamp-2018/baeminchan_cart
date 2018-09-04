@@ -1512,3 +1512,14 @@ a:focus {
   width: 250px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
+
+.error-box {
+    display: none;
+    height: 40px;
+}
+
+.show-error-box {
+    background-color: #f46679;
+    color: #fff;
+    display: block;
+}

@@ -31,3 +31,12 @@ function fetchManager({url, method, body, headers}) {
     });
 }
 
+function popUpErrorMessage(text) {
+    const errorBox = $('.error-box');
+    errorBox.innerHTML = text;
+    errorBox.classList.toggle('show-error-box');
+    setTimeout(() => {
+        errorBox.classList.toggle('show-error-box');
+    }, 3000);
+}
+
