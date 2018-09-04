@@ -12,31 +12,32 @@ document.addEventListener("DOMContentLoaded", function (evt) {
             "phoneNumber": getPhoneNumber(),
         };
 
-        fetchManager({
-            url: "/users/signup",
-            method: "POST",
-            headers: {"content-type": "application/json"},
-            body: JSON.stringify(postObject),
-            onSuccess: () => {
+        requestSignUp(postObject)
+            .then(() => {
                 location.href = '/';
-            },
-            onFailed: displayErrors,
-            onError: () => {
-                alert('요청중 문제가 발생하였습니다. 재접속 후 시도해주세요.');
-            }
-        });
-
-    })
+            }).catch(({status, errors}) => {
+                displayErrors(status, errors);
+            });
+    });
 
 });
 
-function displayErrors(result) {
-    if(!result) {
+function requestSignUp(postObject) {
+    return fetchManager({
+        url: "/users/signup",
+        method: "POST",
+        headers: {"content-type": "application/json"},
+        body: JSON.stringify(postObject),
+    });
+}
+
+function displayErrors(status, errors) {
+    if(!status && !errors) {
         window.location.href = "/users/login";
     }
 
     let appendText = "";
-    for(message of result.json.errors) {
+    for(message of errors) {
         appendText += message.errorMessage + "<br />";
     }
     $(".error-message-holder").innerHTML = appendText;

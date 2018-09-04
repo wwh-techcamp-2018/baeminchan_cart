@@ -7,28 +7,30 @@ document.addEventListener("DOMContentLoaded", function(evt) {
             "password": getUserPassword()
         };
 
-        fetchManager({
-            url: "/users/login",
-            method: "POST",
-            headers: {"content-type": "application/json"},
-            body: JSON.stringify(postObject),
-            onSuccess: () => {
+        requestLogin(postObject)
+            .then(() => {
                 location.href = '/';
-            },
-            onFailed: displayErrors,
-            onError: () => {
-                alert('요청중 문제가 발생하였습니다. 재접속 후 시도해주세요.');
-            }
-        });
+            }).catch(({status, errors}) => {
+                displayErrors(errors);
+            });
     });
 
 
 });
 
-function displayErrors(result) {
+function requestLogin(postObject) {
+    return fetchManager({
+        url: "/users/login",
+        method: "POST",
+        headers: {"content-type": "application/json"},
+        body: JSON.stringify(postObject),
+    });
+}
+
+function displayErrors(errors) {
     let appendText = "";
     $(".error-message-holder").innerHTML = ""
-    for(message of result.json.errors) {
+    for(message of errors) {
         appendText += message.errorMessage + "<br />";
     }
     $(".error-message-holder").innerHTML = appendText;

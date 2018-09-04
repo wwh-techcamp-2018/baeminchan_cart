@@ -17,32 +17,39 @@ class Products {
     }
 
     addProductInCart() {
-        this.products.addEventListener('click', (e) => {
-            const target = e.target;
+        this.products.addEventListener('click', (e) => { this.clickEventHandler(e) });
+    }
 
-            if (target.classList.contains('prd_thumb_btn')) {
-                const productId = target.getAttribute('data-id');
-                this.fetchAddProduct(target, productId);
-                this.showSelectedProduct(target);
+    clickEventHandler({target}) {
+        if (target.classList.contains('prd_thumb_btn')) {
+            const productId = target.getAttribute('data-id');
+            this.requestToAddProduct(target, productId)
+                .then(({data}) => {
+                    this.changeCartNumber(data);
+                    this.showSelectedProduct(target);
+                }).catch(({errors}) => {
+                    // Todo: Errors
+                });
+            return;
+        }
+
+        if (target.classList.contains('up')) {
+            const buyCnt = this.buyCntBox(target);
+            buyCnt.value = Number(buyCnt.value) + 1;
+            return;
+        }
+
+        if (target.classList.contains('down')) {
+            const buyCnt = this.buyCntBox(target);
+            if (buyCnt.value <= 1) {
+                alert("수량이 1보다 작을 순 없습니다.");
                 return;
             }
+            buyCnt.value = Number(buyCnt.value) - 1;
+            return;
+        }
 
-            if (target.classList.contains('up')) {
-                const buyCnt = this.buyCntBox(target);
-                buyCnt.value = Number(buyCnt.value) + 1;
-                return;
-            }
-
-            if (target.classList.contains('down')) {
-                const buyCnt = this.buyCntBox(target);
-                if (buyCnt.value <= 1) {
-                    alert("수량이 1보다 작을 순 없습니다.");
-                    return;
-                }
-                buyCnt.value = Number(buyCnt.value) - 1;
-                return;
-            }
-        })
+        return;
     }
 
     changeCartNumber(cartNum) {
@@ -60,19 +67,10 @@ class Products {
         }, 2000);
     }
 
-    fetchAddProduct(target, productId) {
-        fetchManager({
+    requestToAddProduct(target, productId) {
+        return fetchManager({
             url:'/api/cart/products/' + productId + "?num=" + this.buyCntBox(target).value,
             method: "POST",
-            onSuccess: ({json}) => {
-                this.changeCartNumber(json.data);
-            },
-            onFailed: () => {
-                alert('잘못된 요청입니다.');
-            },
-            onError: () => {
-                alert('요청중 문제가 발생하였습니다. 재접속 후 시도해주세요.');
-            }
         });
     }
 
