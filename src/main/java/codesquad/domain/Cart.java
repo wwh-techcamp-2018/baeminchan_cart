@@ -6,12 +6,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.*;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -30,15 +33,12 @@ public class Cart {
     @ElementCollection
     private Map<Long, Integer> products = new LinkedHashMap<>();
 
-    @DateTimeFormat
-    @Column
-    private Date createDate;
+    @CreatedDate
+    private Date createAt;
 
-    @DateTimeFormat
-    @Column
-    private Date updatedDate;
+    @LastModifiedDate
+    private Date updatedAt;
 
-    @Column
     private boolean buy = false;
 
     public Cart(LinkedHashMap<Long, Integer> products) {
@@ -46,11 +46,11 @@ public class Cart {
     }
 
     @Builder
-    public Cart(Long id, User user, Date createDate, Date updatedDate) {
+    public Cart(Long id, User user, Date createAt, Date updatedAt) {
         this.id = id;
         this.user = user;
-        this.createDate = createDate;
-        this.updatedDate = updatedDate;
+        this.createAt = createAt;
+        this.updatedAt = updatedAt;
     }
 
     public void updateProductNum(Long productId, Integer productNum) {
