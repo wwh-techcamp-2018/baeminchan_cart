@@ -36,7 +36,6 @@ public class ApiCartController {
     @PostMapping("/products/{productId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseModel<Integer> addProduct(@CartSession Cart cart, @PathVariable Long productId, @RequestParam("add") int productNum, HttpSession session) {
-        Product product = productService.findById(productId);
         Cart updatedCart = cartService.addProduct(cart, productId, productNum);
         SessionUtils.setCartInSession(session, updatedCart);
 
@@ -46,7 +45,6 @@ public class ApiCartController {
     @PutMapping("/products/{productId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseModel<Integer> updateProduct(@CartSession Cart cart, @PathVariable Long productId, @RequestParam("num") int productNum, HttpSession session) {
-        Product product = productService.findById(productId);
         Cart updatedCart = cartService.updateProduct(cart, productId, productNum);
         SessionUtils.setCartInSession(session, updatedCart);
 
@@ -70,7 +68,7 @@ public class ApiCartController {
 
     @GetMapping("/price")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseModel<CartPriceDTO> totalPrice(@CartSession Cart cart, HttpSession session) {
+    public ResponseModel<CartPriceDTO> totalPrice(@CartSession Cart cart) {
         return ResponseModel.ofSuccess(CartPriceDTO.from(cart, cartService.getProducts(cart)));
     }
 }
