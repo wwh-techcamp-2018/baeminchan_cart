@@ -18,6 +18,11 @@ public class BaeminchanController {
         return "products";
     }
 
+    @GetMapping("/cart")
+    public String cart() {
+        return "cart";
+    }
+
     @GetMapping("/product/{id}")
     public String product(@PathVariable long id, Model model) {
         model.addAttribute("product", productService.findById(id));
