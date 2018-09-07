@@ -1,6 +1,7 @@
 package codesquad.service;
 
 import codesquad.domain.*;
+import codesquad.exception.ResourceNotFoundException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,38 +52,47 @@ public class CartServiceTest {
 
     @Test
     public void create() {
-        // When
         when(cartRepository.save(any())).then(returnsFirstArg());
         Cart cart = cartService.create(user);
 
-        // Then
         assertThat(cart.getUser()).isEqualTo(user);
     }
 
     @Test
-    public void updateProductInCart() {
-        // When
+    public void add_product_number() {
+        cart.updateProductNum(product.getId(), 3);
         when(cartRepository.save(any())).then(returnsFirstArg());
-        Cart updatedCart = cartService.updateProductInCart(cart, product, 1);
+        Cart updatedCart = cartService.addProduct(cart, product.getId(), 2);
 
-        // Then
+        assertThat(updatedCart.getProducts().get(product.getId())).isEqualTo(5);
+    }
+
+    @Test
+    public void update_product_number() {
+        when(cartRepository.save(any())).then(returnsFirstArg());
+        Cart updatedCart = cartService.updateProduct(cart, product.getId(), 1);
+
         assertThat(updatedCart.getProducts().keySet()).containsExactly(product.getId());
         assertThat(updatedCart.getProducts().get(product.getId())).isEqualTo(1);
     }
 
     @Test
-    public void getProducts() {
+    public void get_products() {
         cart.updateProductNum(product.getId(), 3);
         cart.updateProductNum(otherProduct.getId(), 2);
 
-        // When
         when(productRepository.findById(product.getId())).thenReturn(Optional.of(product));
         when(productRepository.findById(otherProduct.getId())).thenReturn(Optional.of(otherProduct));
         List<Product> products = cartService.getProducts(cart);
 
-        // Then
         assertThat(products).containsExactly(product, otherProduct);
+    }
 
+    @Test(expected = ResourceNotFoundException.class)
+    public void get_wrong_product() {
+        cart.updateProductNum(100L, 3);
+
+        cartService.getProducts(cart);
     }
 
     @After

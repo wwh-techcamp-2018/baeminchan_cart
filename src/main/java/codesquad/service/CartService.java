@@ -4,7 +4,6 @@ import codesquad.domain.*;
 import codesquad.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,9 +22,13 @@ public class CartService {
         return cartRepository.save(Cart.builder().user(user).build());
     }
 
-    @Transactional
-    public Cart updateProductInCart(Cart cart, Product product, Integer productNum) {
-        cart.updateProductNum(product.getId(), productNum);
+    public Cart updateProduct(Cart cart, Long productId, Integer productNum) {
+        cart.updateProductNum(productId, productNum);
+        return cartRepository.save(cart);
+    }
+
+    public Cart addProduct(Cart cart, Long productId, Integer productNum) {
+        cart.updateProductNum(productId, cart.productNum(productId) + productNum);
         return cartRepository.save(cart);
     }
 

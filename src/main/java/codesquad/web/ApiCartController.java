@@ -37,8 +37,7 @@ public class ApiCartController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseModel<Integer> addProduct(@CartSession Cart cart, @PathVariable Long productId, @RequestParam("add") int productNum, HttpSession session) {
         Product product = productService.findById(productId);
-
-        Cart updatedCart = cartService.updateProductInCart(cart, product, cart.productNum(productId) + productNum);
+        Cart updatedCart = cartService.addProduct(cart, productId, productNum);
         SessionUtils.setCartInSession(session, updatedCart);
 
         return ResponseModel.ofSuccess(updatedCart.productNum(productId));
@@ -48,8 +47,7 @@ public class ApiCartController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseModel<Integer> updateProduct(@CartSession Cart cart, @PathVariable Long productId, @RequestParam("num") int productNum, HttpSession session) {
         Product product = productService.findById(productId);
-
-        Cart updatedCart = cartService.updateProductInCart(cart, product, productNum);
+        Cart updatedCart = cartService.updateProduct(cart, productId, productNum);
         SessionUtils.setCartInSession(session, updatedCart);
 
         return ResponseModel.ofSuccess(updatedCart.productNum(productId));
