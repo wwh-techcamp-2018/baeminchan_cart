@@ -24,7 +24,9 @@ class Products {
         if (target.classList.contains('prd_thumb_btn')) {
             const productId = target.getAttribute('data-id');
             this.requestToAddProduct(target, productId)
-                .then(({data}) => {
+                .then(() => {
+                    return this.requestToCountAllProducts();
+                }).then(({data}) => {
                     this.changeCartNumber(data);
                     this.showSelectedProduct(target);
                 }).catch(({errors}) => {
@@ -69,8 +71,15 @@ class Products {
 
     requestToAddProduct(target, productId) {
         return fetchManager({
-            url:'/api/cart/products/' + productId + "?num=" + this.buyCntBox(target).value,
+            url:'/api/cart/products/' + productId + "?add=" + this.buyCntBox(target).value,
             method: "POST",
+        });
+    }
+
+    requestToCountAllProducts() {
+        return fetchManager({
+            url:'/api/cart/products/count',
+            method: "GET",
         });
     }
 
