@@ -63,7 +63,7 @@ public class ApiCartController {
 
     @GetMapping("/products")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseModel<List<CartProductDTO>> getProductsDetails(@CartSession Cart cart) {
+    public ResponseModel<List<CartProductDTO>> getProductListDetails(@CartSession Cart cart) {
         List<Product> products = cartService.getProducts(cart);
         return ResponseModel.ofSuccess(CartProductDTO.listFrom(cart, products));
     }
