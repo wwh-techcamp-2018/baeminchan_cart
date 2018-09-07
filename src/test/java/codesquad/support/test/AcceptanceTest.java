@@ -1,5 +1,6 @@
 package codesquad.support.test;
 
+import codesquad.domain.ResponseModel;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +19,20 @@ public abstract class AcceptanceTest {
     public TestRestTemplate template() {
         return template;
     }
+
+    protected <T, R> ResponseEntity<ResponseModel<R>> requestJson(String path, HttpMethod method, T body, ParameterizedTypeReference<ResponseModel<R>> typeRef, String cookie) {
+        return template().exchange(path, method, new HttpEntity<>(body, getJsonHeader(cookie)), typeRef);
+    }
+
+    protected HttpHeaders getJsonHeader(String cookie) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        if (cookie != null) {
+            headers.add("cookie", cookie);
+        }
+        return headers;
+    }
+
 
 }
 
