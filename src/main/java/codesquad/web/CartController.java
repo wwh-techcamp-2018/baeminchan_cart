@@ -35,7 +35,7 @@ public class CartController {
     }
 
     private void setCartInSessionIfNotExist(HttpSession session) {
-        if (!SessionUtils.isCart(session)) {
+        if (!SessionUtils.hasCartSession(session)) {
             SessionUtils.setCartInSession(session, cartService.create(null));
         }
     }

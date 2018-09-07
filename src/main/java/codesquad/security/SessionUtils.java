@@ -32,7 +32,7 @@ public class SessionUtils {
         return session.getAttribute(USER_SESSION_KEY) != null;
     }
 
-    public static boolean isCart(HttpSession session) {
+    public static boolean hasCartSession(HttpSession session) {
         return session.getAttribute(CART_SESSION_KEY) != null;
     }
 
