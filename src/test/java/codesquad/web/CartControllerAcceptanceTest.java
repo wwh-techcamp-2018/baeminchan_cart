@@ -66,7 +66,8 @@ public class CartControllerAcceptanceTest extends AcceptanceTest {
     public void update_product() {
         productOneNum = 10;
 
-        ResponseEntity<ResponseModel<Integer>> response = requestJson(String.format(CART_URL.concat("/products/%d?num=%d"), productOne.getId(), productOneNum),
+        ResponseEntity<ResponseModel<Integer>> response = requestJson(
+                String.format(CART_URL.concat("/products/%d?num=%d"), productOne.getId(), productOneNum),
                 HttpMethod.PUT, null, new ParameterizedTypeReference<ResponseModel<Integer>>() {
                 }, cookie);
 
@@ -89,7 +90,6 @@ public class CartControllerAcceptanceTest extends AcceptanceTest {
 
     @Test
     public void get_product_list_details() {
-        // Given
         Product productTwo = productRepository.save(Product.builder()
                 .title("혼밥")
                 .price(12_000L)
@@ -99,30 +99,35 @@ public class CartControllerAcceptanceTest extends AcceptanceTest {
         addProduct(productOne, productOneNum);
         addProduct(productTwo, productTwoNum);
 
-        // When
         ResponseEntity<ResponseModel<List<CartProductDTO>>> response = requestJson(CART_URL.concat("/products"),
                 HttpMethod.GET, null, new ParameterizedTypeReference<ResponseModel<List<CartProductDTO>>>() {
                 }, cookie);
 
-        // Then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().getData()).hasSize(2);
     }
 
     @Test
     public void get_total_price() {
-        // Given
         addProduct(productOne, productOneNum);
 
-        // When
         ResponseEntity<ResponseModel<CartPriceDTO>> response = requestJson(CART_URL.concat("/price"),
                 HttpMethod.GET, null, new ParameterizedTypeReference<ResponseModel<CartPriceDTO>>() {
                 }, cookie);
 
-        // Then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().getData().getTotalProductPrice()).isEqualTo(productOne.getPrice() * productOneNum);
         assertThat(response.getBody().getData().getDeliveryCharge()).isEqualTo(CartValue.DELIVERY_CHARGE);
+    }
+
+    @Test
+    public void delete_product() {
+        addProduct(productOne, productOneNum);
+
+        ResponseEntity<Void> response = requestJson(String.format(CART_URL.concat("/products/%d"), productOne.getId()),
+                HttpMethod.DELETE, null, cookie);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     private ResponseEntity<ResponseModel<Integer>> requestCartProductsCount() {
@@ -132,7 +137,8 @@ public class CartControllerAcceptanceTest extends AcceptanceTest {
     }
 
     private void addProduct(Product product, Integer productNum) {
-        ResponseEntity<ResponseModel<Integer>> response = requestJson(String.format("/api/cart/products/%d?add=%d", product.getId(), productNum),
+        ResponseEntity<ResponseModel<Integer>> response = requestJson(
+                String.format(CART_URL.concat("/products/%d?add=%d"), product.getId(), productNum),
                 HttpMethod.POST, null, new ParameterizedTypeReference<ResponseModel<Integer>>() {
                 }, cookie);
 

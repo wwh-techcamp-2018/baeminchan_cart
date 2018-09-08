@@ -1,6 +1,7 @@
 package codesquad.domain;
 
 import codesquad.common.CartValue;
+import codesquad.exception.ResourceNotFoundException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,6 +34,10 @@ public class Cart {
     @ElementCollection
     private Map<Long, Integer> products = new LinkedHashMap<>();
 
+    @CollectionTable
+    @ElementCollection
+    private Map<Long, Integer> isDeleted = new LinkedHashMap<>();
+
     @CreatedDate
     private Date createAt;
 
@@ -54,9 +59,6 @@ public class Cart {
     }
 
     public void updateProductNum(Long productId, Integer productNum) {
-        if (!products.containsKey(productId)) {
-            products.put(productId, 0);
-        }
         products.put(productId, productNum);
     }
 
@@ -108,5 +110,15 @@ public class Cart {
     private Long productsPrice(Product product) {
         Integer productNum = products.get(product.getId());
         return CartValue.getDiscountedPrice(product, productNum) * productNum;
+    }
+
+    public void delete(Long productId) {
+        if (!products.containsKey(productId)) {
+            throw new ResourceNotFoundException("존재하지 않는 반찬입니다.");
+        }
+
+        isDeleted.put(productId, isDeleted.getOrDefault(productId, 0) + products.get(productId));
+
+        products.remove(productId);
     }
 }

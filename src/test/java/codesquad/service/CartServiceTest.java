@@ -88,6 +88,15 @@ public class CartServiceTest {
         assertThat(products).containsExactly(product, otherProduct);
     }
 
+    @Test
+    public void delete_product() {
+        cart.updateProductNum(product.getId(), 3);
+
+        cartService.deleteProduct(cart, product.getId());
+
+        assertThat(cart.getProducts()).isEmpty();
+    }
+
     @Test(expected = ResourceNotFoundException.class)
     public void get_wrong_product() {
         cart.updateProductNum(100L, 3);

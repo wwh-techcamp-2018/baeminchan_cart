@@ -1,112 +1,116 @@
 package codesquad.domain;
 
 import codesquad.common.CartValue;
+import codesquad.exception.ResourceNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CartTest {
-    private Product.ProductBuilder productBuilder;
-    private Product.ProductBuilder otherProductBuilder;
-    private Map<Product, Integer> products;
+    private Product productOne;
+    private Product productTwo;
+    private Integer productOneNum;
     private Cart cart;
 
     @Before
     public void setUp() throws Exception {
-        productBuilder = Product.builder()
+        productOne = Product.builder()
                 .id(1L)
                 .title("곱창")
-                .price(10_000L);
-        otherProductBuilder = Product.builder()
+                .price(10_000L)
+                .build();
+        productTwo = Product.builder()
                 .id(2L)
                 .title("간장게장")
-                .price(10_000L);
-
-        cart = Cart.builder().build();
+                .price(10_000L)
+                .build();
+        productOneNum = 3;
+        cart = cartWithProduct(productOne, productOneNum);
     }
 
     @Test
     public void update_product_num() {
-        Product product = productBuilder.build();
-        Product otherProduct = otherProductBuilder.build();
+        cart.updateProductNum(productTwo.getId(), 4);
 
-        cart.updateProductNum(product.getId(), 2);
-        cart.updateProductNum(otherProduct.getId(), 4);
-
-        assertThat(cart.getProducts().keySet()).contains(product.getId(), otherProduct.getId());
+        assertThat(cart.getProducts().keySet()).contains(productOne.getId(), productTwo.getId());
         assertThat(cart.getProducts().keySet().size()).isEqualTo(2);
     }
 
     @Test
     public void get_sum_product_num() {
-        Product product = productBuilder.build();
-        Product otherProduct = otherProductBuilder.build();
+        Integer productTwoNum = 4;
+        cart.updateProductNum(productTwo.getId(), productTwoNum);
 
-        cart.updateProductNum(product.getId(), 2);
-        cart.updateProductNum(otherProduct.getId(), 4);
-
-        assertThat(cart.getSumProductNum()).isEqualTo(6);
+        assertThat(cart.getSumProductNum()).isEqualTo(productOneNum + productTwoNum);
     }
 
     @Test
     public void set_user_if_not() {
         User user = User.builder().build();
+        Cart cart = Cart.builder().build();
         cart.setUserIfNot(user);
 
         assertThat(cart.getUser()).isEqualTo(user);
     }
 
-
     @Test
-    public void notFreeDeliveryCharge() {
-        assertThat(cart.getDeliveryCharge(CartValue.DELIVERY_CHARGE_REFERENCE - 1)).isEqualTo(2_500L);
+    public void not_free_delivery_charge() {
+        assertThat(Cart.builder().build()
+                .getDeliveryCharge(CartValue.DELIVERY_CHARGE_REFERENCE - 1))
+                .isEqualTo(2_500L);
     }
 
     @Test
-    public void freeDeliveryCharge() {
-        assertThat(cart.getDeliveryCharge(CartValue.DELIVERY_CHARGE_REFERENCE)).isEqualTo(0);
+    public void free_delivery_charge() {
+        assertThat(Cart.builder().build()
+                .getDeliveryCharge(CartValue.DELIVERY_CHARGE_REFERENCE))
+                .isEqualTo(0);
     }
 
     @Test
-    public void productNum() {
-        Product product = productBuilder.build();
-        cart.updateProductNum(product.getId(), 2);
-
-        assertThat(cart.productNum(product.getId())).isEqualTo(2);
+    public void get_product_number() {
+        assertThat(cart.productNum(productOne.getId())).isEqualTo(productOneNum);
     }
 
     @Test
-    public void productNum_not_exist_product() {
-        Product product = productBuilder.build();
-
-        assertThat(cart.productNum(product.getId())).isEqualTo(0);
+    public void product_number_not_exist_product() {
+        assertThat(Cart.builder().build().productNum(productOne.getId())).isEqualTo(0);
     }
 
     @Test
-    public void productsIdList() {
-        Product product = productBuilder.build();
-        Product otherProduct = otherProductBuilder.build();
+    public void products_id_list() {
+        cart.updateProductNum(productTwo.getId(), 4);
 
-        cart.updateProductNum(product.getId(), 2);
-        cart.updateProductNum(otherProduct.getId(), 4);
-
-        assertThat(cart.productsIdList()).contains(product.getId(), otherProduct.getId());
+        assertThat(cart.productsIdList()).contains(productOne.getId(), productTwo.getId());
     }
 
     @Test
-    public void productsIdList_no_product() {
-        assertThat(cart.productsIdList()).isEqualTo(Arrays.asList());
+    public void products_id_list_no_product() {
+        assertThat(Cart.builder().build().productsIdList()).isEqualTo(Arrays.asList());
     }
 
     @Test
-    public void emptyProductCart() {
-        assertThat(cart.isEmpty()).isTrue();
-        assertThat(cartWithProduct(productBuilder.build(), 2).isEmpty()).isFalse();
+    public void check_empty_cart() {
+        assertThat(Cart.builder().build().isEmpty()).isTrue();
+        assertThat(cartWithProduct(productOne, 2).isEmpty()).isFalse();
+    }
+
+    @Test
+    public void delete_product() {
+        cart.delete(productOne.getId());
+
+        assertThat(cart.getProducts()).isEmpty();
+        assertThat(cart.getIsDeleted().keySet()).contains(productOne.getId());
+        assertThat(cart.getIsDeleted().get(productOne.getId())).isEqualTo(productOneNum);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void delete_wrong_product() {
+        Cart.builder().build().delete(productOne.getId());
     }
 
     private Cart cartWithProduct(Product product, Integer productNum) {

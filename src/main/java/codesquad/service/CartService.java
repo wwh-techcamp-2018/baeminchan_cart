@@ -40,8 +40,12 @@ public class CartService {
     }
 
     private Product findByProductId(Long id) {
-        // Todo: Add ControllerAdvice and error responseModel
-        return productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("반찬이 존재하이 않습니다."));
+        return productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("반찬이 존재하지 않습니다."));
+    }
+
+    public void deleteProduct(Cart cart, Long productId) {
+        cart.delete(productId);
+        cartRepository.save(cart);
     }
 }
 

@@ -24,6 +24,10 @@ public abstract class AcceptanceTest {
         return template().exchange(path, method, new HttpEntity<>(body, getJsonHeader(cookie)), typeRef);
     }
 
+    protected <T> ResponseEntity<Void> requestJson(String path, HttpMethod method, T body, String cookie) {
+        return template().exchange(path, method, new HttpEntity<>(body, getJsonHeader(cookie)), Void.class);
+    }
+
     protected HttpHeaders getJsonHeader(String cookie) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

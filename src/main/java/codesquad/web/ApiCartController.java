@@ -49,14 +49,18 @@ public class ApiCartController {
         SessionUtils.setCartInSession(session, updatedCart);
 
         return ResponseModel.ofSuccess(updatedCart.productNum(productId));
-
     }
 
     @GetMapping("/products/{productId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseModel<CartProductDTO> getProductDetails(@CartSession Cart cart, @PathVariable Long productId) {
-        Product product = productService.findById(productId);
-        return ResponseModel.ofSuccess(CartProductDTO.from(cart, product));
+        return ResponseModel.ofSuccess(CartProductDTO.from(cart, productService.findById(productId)));
+    }
+
+    @DeleteMapping("/products/{productId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteProduct(@CartSession Cart cart, @PathVariable Long productId) {
+        cartService.deleteProduct(cart, productId);
     }
 
     @GetMapping("/products")
