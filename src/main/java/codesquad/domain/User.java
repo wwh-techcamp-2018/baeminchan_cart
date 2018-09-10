@@ -52,13 +52,13 @@ public class User {
 
     public void matchPassword(String rawPassword, PasswordEncoder passwordEncoder) {
         if (!passwordEncoder.matches(rawPassword, password))
-            throw new UserVerificationException(FIELD_NAME_PASSWORD, "비밀번호를 확인하기 바랍니다.");
+            throw new UserVerificationException("비밀번호를 확인하기 바랍니다.");
         ;
     }
 
     public static User valueOf(UserDTO userDTO, PasswordEncoder passwordEncoder) {
         if (!userDTO.passwordConfirm())
-            throw new UserVerificationException(FIELD_NAME_PASSWORD, "비밀번호를 확인하기 바랍니다.");
+            throw new UserVerificationException("비밀번호를 확인하기 바랍니다.");
         return new User(userDTO.getEmail(), passwordEncoder.encode(userDTO.getPassword()), userDTO.getName(), userDTO.getPhoneNumber());
     }
 

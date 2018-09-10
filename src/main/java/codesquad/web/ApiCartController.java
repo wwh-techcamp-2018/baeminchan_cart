@@ -1,8 +1,8 @@
 package codesquad.web;
 
+import codesquad.common.ResponseModel;
 import codesquad.domain.Cart;
 import codesquad.domain.Product;
-import codesquad.domain.ResponseModel;
 import codesquad.dto.CartPriceDTO;
 import codesquad.dto.CartProductDTO;
 import codesquad.security.CartSession;

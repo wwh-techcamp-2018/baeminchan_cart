@@ -1,11 +1,13 @@
 package codesquad.service;
 
+import codesquad.common.Message;
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
 import codesquad.dto.LoginDTO;
 import codesquad.dto.UserDTO;
 import codesquad.exception.UserVerificationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +17,13 @@ import javax.annotation.Resource;
 public class UserService {
 
     @Resource(name = "userRepository")
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private MessageSourceAccessor messageSourceAccessor;
 
     public void save(UserDTO userDTO) {
         isUniqueUser(userDTO.getEmail());
@@ -28,14 +33,14 @@ public class UserService {
 
     public User login(LoginDTO loginDTO) {
         User validUser = userRepository.findByEmail(loginDTO.getEmail())
-                .orElseThrow(() -> new UserVerificationException(User.FIELD_NAME_EMAIL, "입력된 email이 존재하지 않습니다."));
+                .orElseThrow(() -> new UserVerificationException(messageSourceAccessor.getMessage(Message.NOT_EXIST_EMAIL)));
         validUser.matchPassword(loginDTO.getPassword(), passwordEncoder);
         return validUser;
     }
 
     void isUniqueUser(String email) {
         if (userRepository.findByEmail(email).isPresent())
-            throw new UserVerificationException(User.FIELD_NAME_EMAIL, "이미 등록된 사용자 email 입니다.");
+            throw new UserVerificationException(messageSourceAccessor.getMessage(Message.EXIST_DULICATED_EMAIL));
     }
 
 }

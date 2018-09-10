@@ -1,12 +1,14 @@
 package codesquad.exception;
 
-public class UserVerificationException extends RuntimeException {
-    private ValidationError error;
-    public UserVerificationException(String fieldname, String errorMessage) {
-        error = new ValidationError(fieldname, errorMessage);
-    }
+import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-    public ValidationError getError() {
-        return error;
+@NoArgsConstructor
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+public class UserVerificationException extends RuntimeException {
+    public UserVerificationException(String message) {
+        super(message);
     }
 }
+

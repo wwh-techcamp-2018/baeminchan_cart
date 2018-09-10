@@ -1,8 +1,10 @@
 package codesquad.service;
 
+import codesquad.common.Message;
 import codesquad.domain.*;
 import codesquad.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -17,6 +19,8 @@ public class CartService {
     @Autowired
     private CartRepository cartRepository;
 
+    @Autowired
+    private MessageSourceAccessor messageSourceAccessor;
 
     public Cart create(User user) {
         return cartRepository.save(Cart.builder().user(user).build());
@@ -40,7 +44,8 @@ public class CartService {
     }
 
     private Product findByProductId(Long id) {
-        return productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("반찬이 존재하지 않습니다."));
+        return productRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException(messageSourceAccessor.getMessage(Message.NOT_EXIST_PRODUCT)));
     }
 
     public void deleteProduct(Cart cart, Long productId) {

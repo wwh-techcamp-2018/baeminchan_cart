@@ -1,5 +1,6 @@
 package codesquad.service;
 
+import codesquad.common.Message;
 import codesquad.domain.User;
 import codesquad.domain.UserRepository;
 import codesquad.dto.LoginDTO;
@@ -10,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
@@ -25,6 +27,9 @@ public class UserServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private MessageSourceAccessor messageSourceAccessor;
 
     private User user;
 
@@ -42,6 +47,7 @@ public class UserServiceTest {
     @Test(expected = UserVerificationException.class)
     public void isUniqueUser() {
         when(userRepository.findByEmail("javajigi@tech.com")).thenReturn(Optional.ofNullable(user));
+        when(messageSourceAccessor.getMessage(Message.EXIST_DULICATED_EMAIL)).thenReturn(Message.EXIST_DULICATED_EMAIL);
         userService.isUniqueUser(user.getEmail());
     }
 
@@ -49,6 +55,7 @@ public class UserServiceTest {
     @Test(expected = UserVerificationException.class)
     public void loginNotSignup() {
         when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
+        when(messageSourceAccessor.getMessage(Message.NOT_EXIST_EMAIL)).thenReturn(Message.NOT_EXIST_EMAIL);
 
         loginDTO.setEmail(user.getEmail());
         loginDTO.setPassword("123456");

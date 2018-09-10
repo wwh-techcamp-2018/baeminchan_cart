@@ -1,5 +1,6 @@
 package codesquad.service;
 
+import codesquad.common.Message;
 import codesquad.domain.*;
 import codesquad.exception.ResourceNotFoundException;
 import org.junit.After;
@@ -9,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.context.support.MessageSourceAccessor;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +18,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -25,6 +28,9 @@ public class CartServiceTest {
 
     @Mock
     private ProductRepository productRepository;
+
+    @Mock
+    private MessageSourceAccessor messageSourceAccessor;
 
     @InjectMocks
     private CartService cartService;
@@ -100,6 +106,8 @@ public class CartServiceTest {
     @Test(expected = ResourceNotFoundException.class)
     public void get_wrong_product() {
         cart.updateProductNum(100L, 3);
+
+        when(messageSourceAccessor.getMessage(anyString())).thenReturn(Message.NOT_EXIST_PRODUCT);
 
         cartService.getProducts(cart);
     }
