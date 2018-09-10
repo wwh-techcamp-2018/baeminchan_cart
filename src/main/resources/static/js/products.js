@@ -20,7 +20,10 @@ class Products {
         this.products.addEventListener('click', (e) => { this.clickEventHandler(e) });
     }
 
-    clickEventHandler({target}) {
+    clickEventHandler(e) {
+        e.preventDefault();
+        const target = e.target;
+
         if (target.classList.contains('prd_thumb_btn')) {
             const productId = target.getAttribute('data-id');
             this.requestToAddProduct(target, productId)

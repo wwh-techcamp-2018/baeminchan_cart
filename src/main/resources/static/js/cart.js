@@ -10,6 +10,7 @@ class Cart {
         this.shippingFee = $('#shippingFee');
         this.totalPrice = $('#totalPrice');
         this.allSelectionBox = $('#check_all_cart_item');
+        this.baseUrl = '/api/cart/';
         this.renderCartData();
 
         this.registerEvent();
@@ -83,9 +84,9 @@ class Cart {
             return;
         }
 
-        this.requestToUpdateProduct(productId, productNum, target)
+        this.request(this.baseUrl + 'products/' + productId + "?num=" + productNum, 'PUT')
             .then(() => {
-                return this.requestProduct(productId);
+                return this.request(this.baseUrl + 'products/' + productId, 'GET');
             }).then(({data}) => {
                 this.changeProductData(data, target)
                 return this.renderTotalPrice();
@@ -95,7 +96,7 @@ class Cart {
     }
 
     deleteProduct(target) {
-        return this.requestDeletionProduct(this.getProductId(target))
+        return this.request(this.baseUrl + 'products/' + this.getProductId(target), 'DELETE')
                 .then(() => {
                     return this.removeProductInTable(target);
                 }).then(() => {
@@ -119,7 +120,7 @@ class Cart {
     getRequestTargetList(targetList) {
         const requestList = [];
         for (let target of targetList) {
-            requestList.push(this.requestDeletionProduct(this.getProductId(target)));
+            requestList.push(this.request(this.baseUrl + 'products/' + this.getProductId(target), 'DELETE'));
         }
         return requestList;
     }
@@ -146,7 +147,7 @@ class Cart {
     }
 
     renderCartData() {
-        this.requestProductList()
+        this.request(this.baseUrl + 'products', 'GET')
             .then(({data}) => {
                 data.forEach((productData) => {
                     $('table.cart > tbody').insertAdjacentHTML('beforeend', this.productDetailsTemplate(productData))
@@ -158,44 +159,16 @@ class Cart {
     }
 
     renderTotalPrice() {
-        return this.requestTotalPrice()
+        return this.request(this.baseUrl + 'price', 'GET')
             .then(({data}) => {
                 this.changeTotalPrice(data);
             });
     }
 
-    requestProductList() {
+    request(path, method) {
         return fetchManager({
-            url:'/api/cart/products',
-            method: "GET",
-        });
-    }
-
-    requestProduct(productId) {
-        return fetchManager({
-            url:'/api/cart/products/' + productId,
-            method: "GET",
-        });
-    }
-
-    requestToUpdateProduct(productId, productNum, target) {
-        return fetchManager({
-            url:'/api/cart/products/' + productId + "?num=" + productNum,
-            method: "PUT",
-        });
-    }
-
-    requestTotalPrice() {
-        return fetchManager({
-            url:'/api/cart/price',
-            method: "GET",
-        });
-    }
-
-    requestDeletionProduct(productId) {
-        return fetchManager({
-            url:'/api/cart/products/' + productId,
-            method: "DELETE",
+            url: path,
+            method: method,
         });
     }
 
