@@ -149,6 +149,15 @@ public class CartControllerAcceptanceTest extends AcceptanceTest {
         }
     }
 
+    @Test
+    public void get_wrong_product() {
+        ResponseEntity<ResponseModel<CartProductDTO>> response = requestJson(String.format(CART_URL.concat("/products/%d"), 100L),
+                HttpMethod.GET, null, new ParameterizedTypeReference<ResponseModel<CartProductDTO>>() {
+                }, cookie);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
     private void assertCartProductsNumber(ResponseEntity<ResponseModel<Integer>> response, Integer number) {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().getData()).isEqualTo(number);
