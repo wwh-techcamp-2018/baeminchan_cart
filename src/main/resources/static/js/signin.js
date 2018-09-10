@@ -28,12 +28,7 @@ function requestLogin(postObject) {
 }
 
 function displayErrors(errors) {
-    let appendText = "";
-    $(".error-message-holder").innerHTML = ""
-    for(message of errors) {
-        appendText += message.errorMessage + "<br />";
-    }
-    $(".error-message-holder").innerHTML = appendText;
+    $(".error-message-holder").innerHTML = errorMessage(errors);
 
 }
 

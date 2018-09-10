@@ -40,3 +40,6 @@ function popUpErrorMessage(text) {
     }, 3000);
 }
 
+function errorMessage(errors) {
+    return errors.map((e) => e.message).reduce((prev, curr) => prev + "<br/>" + curr);
+}

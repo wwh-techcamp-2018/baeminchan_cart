@@ -36,11 +36,7 @@ function displayErrors(status, errors) {
         window.location.href = "/users/login";
     }
 
-    let appendText = "";
-    for(message of errors) {
-        appendText += message.errorMessage + "<br/>";
-    }
-    $(".error-message-holder").innerHTML = appendText;
+    $(".error-message-holder").innerHTML = errorMessage(errors);
 }
 
 function getEmail() {

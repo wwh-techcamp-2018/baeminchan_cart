@@ -91,7 +91,7 @@ class Cart {
                 this.changeProductData(data, target)
                 return this.renderTotalPrice();
             }).catch(({errors}) => {
-                // Todo: Errors
+                popUpErrorMessage(errorMessage(errors));
             });
     }
 
@@ -102,7 +102,7 @@ class Cart {
                 }).then(() => {
                     return this.renderTotalPrice();
                 }).catch(({errors}) => {
-                    // Todo: Errors
+                    popUpErrorMessage(errorMessage(errors));
                 });
     }
 
@@ -113,7 +113,7 @@ class Cart {
                 }).then(() => {
                     return this.renderTotalPrice();
                 }).catch(({errors}) => {
-                    // Todo: Errors
+                    popUpErrorMessage(errorMessage(errors));
                 });
     }
 
@@ -154,7 +154,7 @@ class Cart {
                 });
                 this.renderTotalPrice();
             }).catch(({errors}) => {
-                // Todo: Errors
+                popUpErrorMessage(errorMessage(errors));
             });
     }
 

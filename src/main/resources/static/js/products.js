@@ -33,7 +33,9 @@ class Products {
                     this.changeCartNumber(data);
                     this.showSelectedProduct(target);
                 }).catch(({errors}) => {
-                    // Todo: Errors
+                    popUpErrorMessage(errors.reduce((prev, curr) =>
+                        prev + "<br/>" + curr
+                    ));
                 });
             return;
         }
