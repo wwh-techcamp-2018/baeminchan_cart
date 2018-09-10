@@ -9,6 +9,7 @@ class Cart {
         this.salePrice = $('#salePrice');
         this.shippingFee = $('#shippingFee');
         this.totalPrice = $('#totalPrice');
+        this.allSelectionBox = $('#check_all_cart_item');
         this.renderCartData();
 
         this.registerEvent();
@@ -45,7 +46,31 @@ class Cart {
             return;
         }
 
+        if (target.classList.contains('delete_cart_item')) {
+            this.deleteProduct(target);
+            return;
+        }
+
+        if (target.classList.contains('btn-select-delete')) {
+            const selected = this.getCheckBoxArray().filter(e => e.checked);
+            this.deleteProductList(selected);
+            return;
+        }
+
+        if (target.classList.contains('all_product_chk')) {
+            this.toggleAllSelectionBox();
+            return;
+        }
+
+        if (target.classList.contains('product_chk')) {
+            this.checkAllBoxSelected();
+            return;
+        }
         return;
+    }
+
+    getCheckBoxArray() {
+        return Array.prototype.slice.call($All('input[type=checkbox].product_chk'));
     }
 
     getProductId(target) {
@@ -63,10 +88,61 @@ class Cart {
                 return this.requestProduct(productId);
             }).then(({data}) => {
                 this.changeProductData(data, target)
-                this.renderTotalPrice();
+                return this.renderTotalPrice();
             }).catch(({errors}) => {
                 // Todo: Errors
             });
+    }
+
+    deleteProduct(target) {
+        return this.requestDeletionProduct(this.getProductId(target))
+                .then(() => {
+                    return this.removeProductInTable(target);
+                }).then(() => {
+                    return this.renderTotalPrice();
+                }).catch(({errors}) => {
+                    // Todo: Errors
+                });
+    }
+
+    deleteProductList(targetList) {
+        Promise.all(this.getRequestTargetList(targetList))
+                .then(() => {
+                    targetList.forEach((target) => this.removeProductInTable(target));
+                }).then(() => {
+                    return this.renderTotalPrice();
+                }).catch(({errors}) => {
+                    // Todo: Errors
+                });
+    }
+
+    getRequestTargetList(targetList) {
+        const requestList = [];
+        for (let target of targetList) {
+            requestList.push(this.requestDeletionProduct(this.getProductId(target)));
+        }
+        return requestList;
+    }
+
+    removeProductInTable(target) {
+        target.closest('tr').remove();
+        this.allSelectionBox.checked = false;
+    }
+
+    toggleAllSelectionBox() {
+        if (this.allSelectionBox.checked) {
+            this.getCheckBoxArray().forEach(e => { e.checked = true; });
+            return;
+        }
+        this.getCheckBoxArray().forEach(e => { e.checked = false; });
+    }
+
+    checkAllBoxSelected() {
+        if ($All('.product_chk').length == this.getCheckBoxArray().filter(e => e.checked).length) {
+            this.allSelectionBox.checked = true;
+            return;
+        }
+        this.allSelectionBox.checked = false;
     }
 
     renderCartData() {
@@ -116,6 +192,13 @@ class Cart {
         });
     }
 
+    requestDeletionProduct(productId) {
+        return fetchManager({
+            url:'/api/cart/products/' + productId,
+            method: "DELETE",
+        });
+    }
+
     changeProductData(data, target) {
         const targetTd = target.closest('td').parentNode;
         targetTd.querySelector('.productPrice').innerHTML = data.price;
@@ -138,8 +221,7 @@ class Cart {
                 data-delivery-limit="2018-07-19~2018-08-15" data-id="${data.productId}">
                 <td>
                     <label class="custom_checkbox on">
-                        <i class="chk_box"></i>
-                        <input type="checkbox" name="cart_select" class="bf hidden_chk">
+                        <input type="checkbox" name="cart_select" class="bf product_chk">
                     </label>
                 </td>
                 <td class="thumb">
