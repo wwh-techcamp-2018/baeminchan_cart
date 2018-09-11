@@ -23,8 +23,9 @@ class Products {
     clickEventHandler(e) {
         e.preventDefault();
         const target = e.target;
+        const targetClasses = target.classList;
 
-        if (target.classList.contains('prd_thumb_btn')) {
+        if (targetClasses.contains('prd_thumb_btn')) {
             const productId = target.getAttribute('data-id');
             this.requestToAddProduct(target, productId)
                 .then(() => {
@@ -40,13 +41,13 @@ class Products {
             return;
         }
 
-        if (target.classList.contains('up')) {
+        if (targetClasses.contains('up')) {
             const buyCnt = this.buyCntBox(target);
             buyCnt.value = Number(buyCnt.value) + 1;
             return;
         }
 
-        if (target.classList.contains('down')) {
+        if (targetClasses.contains('down')) {
             const buyCnt = this.buyCntBox(target);
             if (buyCnt.value <= 1) {
                 popUpErrorMessage("수량이 1보다 작을 순 없습니다.");

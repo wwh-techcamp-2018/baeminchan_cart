@@ -25,19 +25,21 @@ class Cart {
     }
 
     clickEventHandler({target}) {
-        if (target.classList.contains('quantity_change_confirm')) {
+        const targetClasses = target.classList;
+
+        if (targetClasses.contains('quantity_change_confirm')) {
             const productId = this.getProductId(target);
             this.updateProductNum(productId, target);
             return;
         }
 
-        if (target.classList.contains('up')) {
+        if (targetClasses.contains('up')) {
             const buyCnt = this.buyCntBox(target);
             buyCnt.value = Number(buyCnt.value) + 1;
             return;
         }
 
-        if (target.classList.contains('down')) {
+        if (targetClasses.contains('down')) {
             const buyCnt = this.buyCntBox(target);
             if (buyCnt.value <= 1) {
                 popUpErrorMessage("수량이 1보다 작을 순 없습니다.");
@@ -47,24 +49,24 @@ class Cart {
             return;
         }
 
-        if (target.classList.contains('delete_cart_item')) {
-            this.deleteProduct(target);
+        if (targetClasses.contains('delete_cart_item')) {
+            this.updateProductDeletion(target);
             return;
         }
 
-        if (target.classList.contains('btn-select-delete')) {
+        if (targetClasses.contains('btn-select-delete')) {
             const selected = this.getCheckBoxArray().filter(e => e.checked);
-            this.deleteProductList(selected);
+            this.updateProductListDeletion(selected);
             return;
         }
 
-        if (target.classList.contains('all_product_chk')) {
+        if (targetClasses.contains('all_product_chk')) {
             this.toggleAllSelectionBox();
             return;
         }
 
-        if (target.classList.contains('product_chk')) {
-            this.checkAllBoxSelected();
+        if (targetClasses.contains('product_chk')) {
+            this.confirmAllCheckBox();
             return;
         }
         return;
@@ -95,7 +97,7 @@ class Cart {
             });
     }
 
-    deleteProduct(target) {
+    updateProductDeletion(target) {
         return this.request(this.baseUrl + 'products/' + this.getProductId(target), 'DELETE')
                 .then(() => {
                     return this.removeProductInTable(target);
@@ -106,7 +108,7 @@ class Cart {
                 });
     }
 
-    deleteProductList(targetList) {
+    updateProductListDeletion(targetList) {
         Promise.all(this.getRequestTargetList(targetList))
                 .then(() => {
                     targetList.forEach((target) => this.removeProductInTable(target));
@@ -138,12 +140,16 @@ class Cart {
         this.getCheckBoxArray().forEach(e => { e.checked = false; });
     }
 
-    checkAllBoxSelected() {
-        if ($All('.product_chk').length == this.getCheckBoxArray().filter(e => e.checked).length) {
+    confirmAllCheckBox() {
+        if (this.isAllCheckBoxSelected()) {
             this.allSelectionBox.checked = true;
             return;
         }
         this.allSelectionBox.checked = false;
+    }
+
+    isAllCheckBoxSelected() {
+        return $All('.product_chk').length === this.getCheckBoxArray().filter(e => e.checked).length;
     }
 
     renderCartData() {
