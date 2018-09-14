@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -101,7 +102,7 @@ public class CartTest {
 
     @Test
     public void delete_product() {
-        cart.delete(productOne.getId());
+        cart.deleteProduct(productOne.getId());
 
         assertThat(cart.getProducts()).isEmpty();
         assertThat(cart.getIsDeleted().keySet()).contains(productOne.getId());
@@ -110,7 +111,17 @@ public class CartTest {
 
     @Test(expected = ResourceNotFoundException.class)
     public void delete_wrong_product() {
-        Cart.builder().build().delete(productOne.getId());
+        Cart.builder().build().deleteProduct(productOne.getId());
+    }
+
+    @Test
+    public void delete_multi_products() {
+        cart.updateProductNum(productTwo.getId(), 3);
+        List<Long> productIds = Arrays.asList(productOne.getId(), productTwo.getId());
+
+        cart.deleteMultiProducts(productIds);
+
+        assertThat(cart.getProducts()).isEmpty();
     }
 
     private Cart cartWithProduct(Product product, Integer productNum) {

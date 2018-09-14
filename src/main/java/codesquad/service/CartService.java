@@ -43,14 +43,23 @@ public class CartService {
         return Collections.emptyList();
     }
 
+    public void deleteProduct(Cart cart, Long productId) {
+        cart.deleteProduct(productId);
+        cartRepository.save(cart);
+    }
+
+    public void deleteMultiProducts(Cart cart, List<String> productIds) {
+        cart.deleteMultiProducts(convertStringToLong(productIds));
+        cartRepository.save(cart);
+    }
+
+    private List<Long> convertStringToLong(List<String> productIds) {
+        return productIds.stream().map((id) -> Long.parseLong(id)).collect(Collectors.toList());
+    }
+
     private Product findByProductId(Long id) {
         return productRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException(messageSourceAccessor.getMessage(Message.NOT_EXIST_PRODUCT)));
-    }
-
-    public void deleteProduct(Cart cart, Long productId) {
-        cart.delete(productId);
-        cartRepository.save(cart);
     }
 }
 

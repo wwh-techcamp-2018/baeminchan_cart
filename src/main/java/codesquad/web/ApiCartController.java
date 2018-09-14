@@ -63,6 +63,13 @@ public class ApiCartController {
         cartService.deleteProduct(cart, productId);
     }
 
+    @DeleteMapping("/products")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteMultiProducts(@CartSession Cart cart, @RequestBody List<String> productIds) {
+        cartService.deleteMultiProducts(cart, productIds);
+    }
+
+
     @GetMapping("/products")
     @ResponseStatus(HttpStatus.OK)
     public ResponseModel<List<CartProductDTO>> getProductListDetails(@CartSession Cart cart) {

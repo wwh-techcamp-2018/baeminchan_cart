@@ -16,6 +16,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -130,6 +131,38 @@ public class CartControllerAcceptanceTest extends AcceptanceTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
+    @Test
+    public void delete_multi_products() {
+        Product productTwo = productRepository.save(Product.builder()
+                .title("혼밥")
+                .price(12_000L)
+                .imgUrl("/static/img/productTwo.png")
+                .build());
+        addProduct(productOne, productOneNum);
+        addProduct(productTwo, 2);
+
+        ResponseEntity<Void> response = requestJson(
+                CART_URL.concat("/products"), HttpMethod.DELETE,
+                Arrays.asList(productOne.getId(), productTwo.getId()),
+                cookie);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    public void get_wrong_product() {
+        ResponseEntity<ResponseModel<CartProductDTO>> response = requestJson(String.format(CART_URL.concat("/products/%d"), 100L),
+                HttpMethod.GET, null, new ParameterizedTypeReference<ResponseModel<CartProductDTO>>() {
+                }, cookie);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    private void assertCartProductsNumber(ResponseEntity<ResponseModel<Integer>> response, Integer number) {
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().getData()).isEqualTo(number);
+    }
+
     private ResponseEntity<ResponseModel<Integer>> requestCartProductsCount() {
         return requestJson(CART_URL.concat("/products/count"),
                 HttpMethod.GET, null, new ParameterizedTypeReference<ResponseModel<Integer>>() {
@@ -147,19 +180,5 @@ public class CartControllerAcceptanceTest extends AcceptanceTest {
         if (cookie == null) {
             cookie = response.getHeaders().getFirst(response.getHeaders().SET_COOKIE);
         }
-    }
-
-    @Test
-    public void get_wrong_product() {
-        ResponseEntity<ResponseModel<CartProductDTO>> response = requestJson(String.format(CART_URL.concat("/products/%d"), 100L),
-                HttpMethod.GET, null, new ParameterizedTypeReference<ResponseModel<CartProductDTO>>() {
-                }, cookie);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-    }
-
-    private void assertCartProductsNumber(ResponseEntity<ResponseModel<Integer>> response, Integer number) {
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().getData()).isEqualTo(number);
     }
 }

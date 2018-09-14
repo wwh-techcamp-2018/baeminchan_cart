@@ -12,8 +12,10 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.support.MessageSourceAccessor;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
@@ -101,6 +103,19 @@ public class CartServiceTest {
         cartService.deleteProduct(cart, product.getId());
 
         assertThat(cart.getProducts()).isEmpty();
+        assertThat(cart.getIsDeleted().keySet()).contains(product.getId());
+    }
+
+    @Test
+    public void delete_multiple_products() {
+        cart.updateProductNum(product.getId(), 3);
+        cart.updateProductNum(otherProduct.getId(), 2);
+
+        cartService.deleteMultiProducts(cart,
+                Arrays.asList(product.getId(), otherProduct.getId()).stream().map((id) -> String.valueOf(id)).collect(Collectors.toList()));
+
+        assertThat(cart.getProducts()).isEmpty();
+        assertThat(cart.getIsDeleted().keySet()).contains(product.getId(), otherProduct.getId());
     }
 
     @Test(expected = ResourceNotFoundException.class)

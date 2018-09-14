@@ -109,14 +109,18 @@ class Cart {
     }
 
     updateProductListDeletion(targetList) {
-        Promise.all(this.getRequestTargetList(targetList))
-                .then(() => {
-                    targetList.forEach((target) => this.removeProductInTable(target));
-                }).then(() => {
-                    return this.renderTotalPrice();
-                }).catch(({errors}) => {
-                    popUpErrorMessage(errorMessage(errors));
-                });
+        return this.request(
+                this.baseUrl + 'products',
+                'DELETE',
+                JSON.stringify(targetList.map(this.getProductId)),
+                { 'Content-Type': 'application/json' }
+            ).then(() => {
+                targetList.forEach((target) => this.removeProductInTable(target));
+            }).then(() => {
+                return this.renderTotalPrice();
+            }).catch(({errors}) => {
+                popUpErrorMessage(errorMessage(errors));
+            });
     }
 
     getRequestTargetList(targetList) {
@@ -171,10 +175,12 @@ class Cart {
             });
     }
 
-    request(path, method) {
+    request(path, method, body, headers) {
         return fetchManager({
             url: path,
             method: method,
+            body: body,
+            headers: headers
         });
     }
 

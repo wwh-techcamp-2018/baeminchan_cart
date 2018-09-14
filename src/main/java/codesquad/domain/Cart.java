@@ -103,6 +103,20 @@ public class Cart {
         return this.products.isEmpty();
     }
 
+    public void deleteProduct(Long productId) {
+        if (!products.containsKey(productId)) {
+            throw new ResourceNotFoundException("존재하지 않는 반찬입니다.");
+        }
+
+        isDeleted.put(productId, isDeleted.getOrDefault(productId, 0) + products.get(productId));
+
+        products.remove(productId);
+    }
+
+    public void deleteMultiProducts(List<Long> productIds) {
+        productIds.stream().forEach(id -> deleteProduct(id));
+    }
+
     private boolean matchUser(User user) {
         return this.user == user;
     }
@@ -112,13 +126,4 @@ public class Cart {
         return CartValue.getDiscountedPrice(product, productNum) * productNum;
     }
 
-    public void delete(Long productId) {
-        if (!products.containsKey(productId)) {
-            throw new ResourceNotFoundException("존재하지 않는 반찬입니다.");
-        }
-
-        isDeleted.put(productId, isDeleted.getOrDefault(productId, 0) + products.get(productId));
-
-        products.remove(productId);
-    }
 }
