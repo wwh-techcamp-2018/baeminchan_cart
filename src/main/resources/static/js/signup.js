@@ -12,28 +12,31 @@ document.addEventListener("DOMContentLoaded", function (evt) {
             "phoneNumber": getPhoneNumber(),
         };
 
-        fetchManager({
-            url: "/users/signup",
-            method: "POST",
-            headers: {"content-type": "application/json"},
-            body: JSON.stringify(postObject),
-            callback: displayErrors
-        });
-
-    })
+        requestSignUp(postObject)
+            .then(() => {
+                location.href = '/';
+            }).catch(({status, errors}) => {
+                displayErrors(status, errors);
+            });
+    });
 
 });
 
-function displayErrors(result) {
-    if(!result) {
+function requestSignUp(postObject) {
+    return fetchManager({
+        url: "/users/signup",
+        method: "POST",
+        headers: {"content-type": "application/json"},
+        body: JSON.stringify(postObject),
+    });
+}
+
+function displayErrors(status, errors) {
+    if(!status && !errors) {
         window.location.href = "/users/login";
     }
 
-    let appendText = "";
-    for(message of result.errors) {
-        appendText += message.errorMessage + "<br />";
-    }
-    $(".error-message-holder").innerHTML = appendText;
+    $(".error-message-holder").innerHTML = errorMessage(errors);
 }
 
 function getEmail() {

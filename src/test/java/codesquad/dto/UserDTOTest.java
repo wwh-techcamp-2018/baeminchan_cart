@@ -1,6 +1,5 @@
-package codesquad.domain;
+package codesquad.dto;
 
-import codesquad.dto.UserDTO;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

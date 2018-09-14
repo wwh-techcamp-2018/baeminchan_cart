@@ -1,6 +1,7 @@
 package codesquad.exception;
 
 
+import codesquad.common.ResponseModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,23 +18,35 @@ import java.util.List;
 import java.util.Optional;
 
 @RestControllerAdvice
-public class ValidationAdvice {
+public class ControllerAdvice {
 
-    private static final Logger log = LoggerFactory.getLogger(ValidationAdvice.class);
+    private static final Logger log = LoggerFactory.getLogger(ControllerAdvice.class);
 
     @Autowired
     MessageSourceAccessor messageSourceAccessor;
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ValidationErrorResponse handlerValidationException(MethodArgumentNotValidException exception){
-        ValidationErrorResponse response = new ValidationErrorResponse();
+    public ResponseModel<?> handleValidationException(MethodArgumentNotValidException exception) {
+        ResponseModel.ErrorResponseBuilder errorResponseBuilder = ResponseModel.error();
         List<ObjectError> errors = exception.getBindingResult().getAllErrors();
         for(ObjectError objectError : errors){
             FieldError fieldError = (FieldError)objectError;
-            response.addError(new ValidationError(fieldError.getField(), getErrorMessage(fieldError)));
+            errorResponseBuilder.addError(fieldError.getField(), getErrorMessage(fieldError));
         }
-        return response;
+        return errorResponseBuilder.build();
+    }
+
+    @ExceptionHandler(UserVerificationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseModel<?> handleUserVerification(UserVerificationException e) {
+        return ResponseModel.error(e.getMessage()).build();
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseModel<?> handleResourceNotFound(ResourceNotFoundException e) {
+        return ResponseModel.error(e.getMessage()).build();
     }
 
     private String getErrorMessage(FieldError fieldError) {
@@ -49,12 +62,6 @@ public class ValidationAdvice {
             return Optional.empty();
         }
         return Optional.of(codes[0]);
-    }
-
-    @ExceptionHandler(UserVerificationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ValidationErrorResponse ununiqueException(UserVerificationException exception){
-        return new ValidationErrorResponse().addError(exception.getError());
     }
 
 }

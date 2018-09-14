@@ -7,29 +7,28 @@ document.addEventListener("DOMContentLoaded", function(evt) {
             "password": getUserPassword()
         };
 
-        fetchManager({
-            url: "/users/login",
-            method: "POST",
-            headers: {"content-type": "application/json"},
-            body: JSON.stringify(postObject),
-            callback: displayErrors
-        });
+        requestLogin(postObject)
+            .then(() => {
+                location.href = '/';
+            }).catch(({status, errors}) => {
+                displayErrors(errors);
+            });
     });
 
 
 });
 
-function displayErrors(result) {
-    if(!result) {
-        window.location.href = "/";
-    }
-    let appendText = "";
-    $(".error-message-holder").innerHTML = ""
-    for(message of result.errors) {
-        appendText += message.errorMessage + "<br />";
+function requestLogin(postObject) {
+    return fetchManager({
+        url: "/users/login",
+        method: "POST",
+        headers: {"content-type": "application/json"},
+        body: JSON.stringify(postObject),
+    });
+}
 
-    }
-    $(".error-message-holder").innerHTML = appendText;
+function displayErrors(errors) {
+    $(".error-message-holder").innerHTML = errorMessage(errors);
 
 }
 

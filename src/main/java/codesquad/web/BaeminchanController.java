@@ -1,14 +1,11 @@
 package codesquad.web;
 
-import codesquad.security.SessionUtils;
 import codesquad.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
-import javax.servlet.http.HttpSession;
 
 @Controller
 public class BaeminchanController {
@@ -21,15 +18,15 @@ public class BaeminchanController {
         return "products";
     }
 
+    @GetMapping("/cart")
+    public String cart() {
+        return "cart";
+    }
+
     @GetMapping("/product/{id}")
     public String product(@PathVariable long id, Model model) {
         model.addAttribute("product", productService.findById(id));
         return "product";
-    }
-
-    @GetMapping("/cart")
-    public String cart(Model model) {
-        return "cart";
     }
 
     @GetMapping("/order")
